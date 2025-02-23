@@ -1,6 +1,6 @@
 ---
-title: "Rugby: 6 Nation Rugby Results Web App"
-subtitle: "An interactive application to analyse the historical results played by the teams of the six nations and the rugby champ"
+title: "Rugby Results Web App"
+subtitle: "An interactive application to analyse the historical results played by the teams of the six nations and the rugby championship"
 date-created: "2025-02-17"
 author: "Peter Gray"
 categories: ["Data Visualization", "R Programming", "2025", "Rugby", "shinyapp", "plotly"]
