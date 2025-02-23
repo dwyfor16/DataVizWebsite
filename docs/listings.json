@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/biostatistics.html",
+    "items": [
+      "/biostatistics/MastersThesis.html"
+    ]
+  },
+  {
     "listing": "/datavis.html",
     "items": [
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week07.html",
@@ -14,12 +20,6 @@
     "items": [
       "/maps/uk_maps.html",
       "/maps/middle_earth.html"
-    ]
-  },
-  {
-    "listing": "/biostatistics.html",
-    "items": [
-      "/biostatistics/MastersThesis.html"
     ]
   }
 ]
