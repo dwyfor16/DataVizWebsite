@@ -1,5 +1,4 @@
-{
-  "dependencies": {
-    "@quarto/netlify-plugin-quarto": "^0.0.5"
-  }
+"dependencies": {
+  "@quarto/netlify-plugin-quarto": "^0.0.5",
+  "quarto": "git+https://github.com/quarto-dev/quarto-cli.git"
 }
