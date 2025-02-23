@@ -1,0 +1,268 @@
+---
+title: "TidyTuesday Week 7: FBI Crime Reporting"
+subtitle: "An analysis of US Law Enforcement Reporting to the National Crime Agency"
+author: "Peter Gray"
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulisation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week07a.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+    theme: solar
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Figure 1](thumbnails/TidyTues_Week07a.png)
+
+#### R code
+
+```{r}
+
+# Set Up ------------------------------------------------------------------
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(survival)){install.packages("survival"); library(survival)}
+if(!require(survminer)){install.packages("survminer"); library(survminer)}
+if(!require(ggfortify)){install.packages("ggfortify"); library(ggfortify)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(sysfonts)){install.packages("sysfonts"); library(sysfonts)}
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+if(!require(RColorBrewer)){install.packages("RColorBrewer"); library(RColorBrewer)}
+if(!require(maps)){install.packages("maps"); library(maps)}
+if(!require(sf)){install.packages("sf"); library(sf)}
+if(!require(rlist)){install.packages("rlist"); library(rlist)}
+
+wd <- getwd()
+
+
+
+# Graph Style -------------------------------------------------------------
+
+
+
+font_add_google("Roboto Mono", "roboto_mono")
+font <- "roboto_mono"
+showtext_auto()
+
+# Color palette
+color <- palette.colors(palette = "Okabe-Ito")
+color <- append(color, "#40B0A6")
+color[1] <- "#D41159"
+
+
+Custom_Style <- function() {
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(family=font,
+                                       size=28,
+                                       face="bold",
+                                       color="#222222"),
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          size=20,
+                                          color="#222222"),
+    plot.caption = ggplot2::element_text(family=font,
+                                         size=12,
+                                         color="#222222"),
+    
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(family=font, 
+                                         size=12, 
+                                         face="bold", 
+                                         color="#222222"),
+    # legend.text.align = 0,
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=9,
+                                        color="#222222"),
+    
+    # Axis format
+    axis.text = ggplot2::element_text(family = font,
+                                      size=10,
+                                      color="#222222"),
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10), size =8),
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    axis.title = ggplot2::element_text(family=font, 
+                                       size=12, 
+                                       face="bold", 
+                                       color="#222222"),
+    
+    
+    # Grid lines
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    # Very pale cream/yellow background
+    panel.background = element_rect(fill = "#FFFBF0",  
+                                    color = "#FFFBF0", 
+                                    linewidth = 0.5, 
+                                    linetype = "solid"),
+    plot.background = element_rect(fill = "#FFFBF0",  
+                                   color = "#FFFBF0", 
+                                   linewidth = 0.5, 
+                                   linetype = "solid"),
+    legend.background = element_rect(fill = "#FFFBF0",  
+                                     color = "#FFFBF0", 
+                                     linewidth = 0.5, 
+                                     linetype = "solid"),
+    
+    
+  )
+}
+
+
+# Load the Data -----------------------------------------------------------
+
+
+agencies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-18/agencies.csv') %>% 
+  mutate(is_nibrs = case_when(
+    is_nibrs == TRUE ~ "Yes",
+    is_nibrs == FALSE ~ "No",
+    TRUE ~ NA
+  ))
+
+
+# Simple Agency Graph -----------------------------------------------------
+
+states <- c("New York", "Texas", "Massachusetts", "California", "Oklahoma", "Illinois")
+
+AgencyType <-agencies %>% 
+  filter(state %in% states) %>% 
+  group_by(state, agency_type) %>% 
+  summarise(n= n())
+
+p1 <- AgencyType %>% 
+  group_by(state) %>%  # Ensure percentage is calculated within each state
+  mutate(percent = n / sum(n)) %>%  # Compute percent per state
+  ggplot(aes(x = state, y = percent, fill = agency_type)) + 
+  geom_bar(stat = "identity", position = "fill") +  
+  geom_text(aes(label = scales::percent(percent, accuracy = 1)),  
+            position = position_stack(vjust = 0.5),  
+            size = 3,  
+            family = font,  
+            color = "black") +  
+  labs(subtitle = str_wrap("The percentage of agencies reporting into the NIBRS by state", 60), x = "State", y = "Percent", fill ="State") +  
+  Custom_Style() +  
+  scale_y_continuous(labels = scales::percent_format()) +  
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+
+
+# Mapping PD reporting by Masseucsuttes, California New York versus Texas --------------------------------------------------------
+
+police_data <- agencies %>% 
+  select(longitude, latitude, state, is_nibrs, agency_type) %>% 
+  filter(!is.na(longitude) & !is.na(latitude))  
+
+sf_data <- st_as_sf(police_data, coords = c("longitude", "latitude"), crs = 4326)
+
+loop <- map_data("state") %>% 
+  filter(region %in% c("new york", "texas", "massachusetts", "california", "oklahoma", "illinois")) %>% 
+  arrange(region)
+
+state <- unique(loop$region)
+
+police_state <- sf_data %>% 
+  mutate(state = tolower(state)) %>%  # Convert to lowercase
+  filter(state %in% c("new york", "texas", "massachusetts", "california", "oklahoma", "illinois"))
+
+policestate <- unique(police_state$state)
+
+list_of_maps <- list()
+s=2
+for (s in 1:length(state)) {
+  
+  # Ensure state filtering is correct
+  state_map <- map_data("state") %>% 
+    filter(region == state[s])
+  
+  police_filtered <- police_state %>% 
+    filter(state == policestate[s])  # Use a fresh filter for each iteration
+  
+  p2 <- ggplot() +
+    geom_polygon(data = state_map, 
+                 aes(x = long, y= lat, group = group), fill = color[4]) +
+    geom_sf(data = police_filtered, aes(color = is_nibrs), size = 0.2) +
+    labs(subtitle = str_to_title(state[s]),
+         x = "Longitude",
+         y = "Latitude",
+         fill = "Density",
+         color = "Reports to NIBRS") + 
+    Custom_Style() +
+    scale_color_manual(values = c(color[1], color[2])) +
+    theme(
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      panel.grid = element_blank(),
+      plot.title = ggplot2::element_text(family=font,
+                                         size=20,
+                                         face="bold",
+                                         color="#222222")
+    )
+  
+  list_of_maps[[s]] <- p2
+}
+
+combined <-  wrap_plots(list_of_maps) +
+  Custom_Style() +
+  plot_annotation(title = "TidyTuesday: Law Enforcement feeding into FBI databasess",
+                  theme = Custom_Style()) +
+  theme(caption = element_text(hjust =  0.5))
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week07a.png", 
+  plot = combined, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week07b.png", 
+  plot = p1, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/TidyTues_Week07a.png", 
+  plot = combined, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/TidyTues_Week07b.png", 
+  plot = p1, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+
+```
