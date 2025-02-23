@@ -1,0 +1,194 @@
+---
+title: "TidyTuesday Week 6: CDC Archive Data Analysis"
+subtitle: "An Analysis of the CDC datasets archived/purged by the Trump administration"
+author: "Peter Gray"
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis, kaplan-meier]
+image: "thumbnails/TidyTues_Week06.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+    theme: solar
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Thumbnail](thumbnails/TidyTues_Week06a.png)
+![Thumbnail](thumbnails/TidyTues_Week06b.png)
+
+#### R code
+
+```{r}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(survival)){install.packages("survival"); library(survival)}
+if(!require(survminer)){install.packages("survminer"); library(survminer)}
+if(!require(ggfortify)){install.packages("ggfortify"); library(ggfortify)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(sysfonts)){install.packages("sysfonts"); library(sysfonts)}
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+if(!require(RColorBrewer)){install.packages("RColorBrewer");library(RColorBrewer)}
+
+font_add_google("Roboto Mono", "roboto_mono")
+font <- "roboto_mono"
+showtext_auto()
+
+# Color palette
+color <- palette.colors(palette = "Okabe-Ito")
+color <- append(color, "#40B0A6")
+color[1] <- "#D41159"
+
+
+Custom_Style <- function() {
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(family=font,
+                                       size=28,
+                                       face="bold",
+                                       color="#222222"),
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          size=20,
+                                          color="#222222"),
+    plot.caption = ggplot2::element_text(family=font,
+                                         size=12,
+                                         color="#222222"),
+    
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(family=font, 
+                                         size=12, 
+                                         face="bold", 
+                                         color="#222222"),
+    # legend.text.align = 0,
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=9,
+                                        color="#222222"),
+    
+    # Axis format
+    axis.text = ggplot2::element_text(family = font,
+                                      size=10,
+                                      color="#222222"),
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    axis.title = ggplot2::element_text(family=font, 
+                                         size=12, 
+                                         face="bold", 
+                                         color="#222222"),
+    
+    
+    # Grid lines
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    # Very pale cream/yellow background
+    panel.background = element_rect(fill = "#FFFBF0",  
+                                    color = "#FFFBF0", 
+                                    linewidth = 0.5, 
+                                    linetype = "solid"),
+    plot.background = element_rect(fill = "#FFFBF0",  
+                                   color = "#FFFBF0", 
+                                   linewidth = 0.5, 
+                                   linetype = "solid"),
+    legend.background = element_rect(fill = "#FFFBF0",  
+                                     color = "#FFFBF0", 
+                                     linewidth = 0.5, 
+                                     linetype = "solid"),
+    
+    
+  )
+}
+
+
+
+
+cdc_datasets <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-11/cdc_datasets.csv')
+fpi_codes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-11/fpi_codes.csv')
+omb_codes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-11/omb_codes.csv')
+
+
+
+Agency <- omb_codes %>% 
+  group_by(agency_name) %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  slice(1: 10)
+
+p1 <- Agency %>% 
+  ggplot(aes(x = fct_reorder(agency_name, n, .desc = TRUE), y = n)) +   # Explicitly set y to n
+  geom_col(aes(fill = as.factor(agency_name))) +   # Use geom_col() instead of geom_bar()
+  labs(subtitle = str_wrap("CDC Database Archiving: Top 10 Agencies  that have archived databases since 2016", 40), x = "Agency Name", y = "Count (n)", fill = "Agency Name") + 
+  geom_text(aes(label = paste0("n = ", n)), 
+            vjust = -0.5,   # Position above the bar
+            size = 4,       # Adjusted size for better readability
+            family = font) +
+  Custom_Style() +
+  scale_fill_manual(values = color) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width =10)) +
+  theme(legend.position = "none",
+    legend.title = element_blank(),
+        axis.text.x = element_text(size = 6))
+
+timeline_data <- cdc_datasets %>% 
+  mutate(
+    level_of_access = case_when(
+      public_access_level %in% c("public", "public domain") ~ "Public Access",
+      public_access_level == "restricted public" ~ "Restricted Access",
+      public_access_level == "non-public" ~ "No Public Access",
+      TRUE ~ "Unspecified"
+    ),
+    issued = as.Date(issued)
+  )  %>% 
+  filter(!is.na(issued)) |>
+  arrange(issued) %>% 
+  mutate(
+    Time_to_Archiv = as.numeric(issued - min(issued)),
+    Evt = 1,
+    archival_date = min(issued) + Time_to_Archiv
+  )
+
+
+min <- min(timeline_data$issued)
+
+km_fit <- survfit(Surv(Time_to_Archiv, Evt) ~ 1, data = timeline_data)
+
+km_df <- data.frame(
+  time = km_fit$time,
+  survival = km_fit$surv,
+  cumulative_events = 1 - km_fit$surv,
+  archival_date = min(timeline_data$issued) + km_fit$time
+)
+
+p2 <- ggplot(km_df, aes(x = archival_date, y = cumulative_events)) +
+  geom_step(color = "#40B0A6") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +  # Format x-axis as years
+  labs(x = "Year", y = "Archival Events", subtitle = str_wrap("Kaplan-Meier Curve of Archiving of CDC Databases", 40), caption = "Each step signifies an increase in database archiving \n TidyTuesday: Week 6, 2025") +
+  Custom_Style() +
+  theme(axis.text.y = element_blank())
+
+
+p_combined <- p1 + p2 
+
+
+p_combined +
+  Custom_Style() +
+  plot_annotation(title = "CDC Database Archiving Analysis",
+                  theme = Custom_Style()) +
+  theme(caption = element_text(hjust =  0.5))
+
+
+
+
+```

@@ -1,0 +1,757 @@
+---
+title: "UK Population"
+subtitle: "My first foray into GIS work in R visualising the UK population"
+author: "Peter Gray"
+categories: ["GIS", "Data Visualization", "R Programming", "2024"]
+tags: [GIS, R, data visulation, ggplot2, Map work, tidyverse]
+image: "thumbnails/UK_population.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+    theme: solar
+editor_options: 
+  chunk_output_type: inline
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Thumbnail](thumbnails/UK_population.png)
+
+
+```{r}
+
+if(!require(tidyverse)){install.packages("tidyverse");library(tidyverse)}
+if(!require(ggplot2)){install.packages("ggplot2");library(ggplot2)}
+if(!require(ggrepel)){install.packages("ggrepel");library(ggrepel)}
+if(!require(sf)){install.packages("sf");library(sf)}
+if(!require(eurostat)){install.packages("eurostat");library(eurostat)}
+if(!require(classInt)){install.packages("classInt");library(classInt)}
+if(!require(giscoR)){install.packages("giscoR");library(giscoR)}
+if(!require(cartogram)){install.packages("cartogram");library(cartogram)}
+if(!require(rayshader)){install.packages("rayshader");library(rayshader)}
+if(!require(sysfonts)){install.packages("sysfonts");library(sysfonts)}
+if(!require(showtext)){install.packages("showtext");library(showtext)}
+
+# Define Fonts 
+
+
+sysfonts::font_add_google("Roboto Mono")
+showtext::showtext_auto()
+
+get_polygon <- function() {
+  # st_area returns square meters so we get square km by dividing the result by 1000
+  df$area_sqkm <- as.numeric(sf::st_area(df) / 1000000)
+  
+  deu_polygon <- df |>
+    dplyr::mutate(pop_per_sqr_km = values / area_sqkm)
+  return(deu_polygon)
+}
+
+custom_theme <- function() {
+  theme_minimal() +
+    theme(
+      text = element_text(size = 12),
+      axis.line = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks = element_blank(),
+      axis.title.y = element_blank(),
+      legend.position =  "bottom",
+      legend.text = element_text(size = 30, color = "grey20"),
+      legend.title = element_text(size = 40, color = "grey20"),
+      legend.spacing.y = unit(0.25, "cm"),
+      legend.spacing.x = unit(0.25, "cm"),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.margin = unit(
+        c(t = 0, r = 0, b = 0, l = 0), "lines"
+      ),
+      plot.background = element_rect(fill = "#f5f5f2", color = NA),
+      panel.background = element_rect(fill = "#f5f5f2", color = NA),
+      legend.background = element_rect(fill = "#f5f5f2", color = NA),
+      panel.border = element_blank(),
+    )
+}
+
+# colors
+cols <- rev(c(
+  "#004225", "#2e8b57",
+  "#4682b4", "#5f9ea0",
+  "#20b2aa", "#008b8b",
+  "#b0e0e6"
+))
+
+
+
+make_polygon_map <- function(polygon, theme) {
+  p1 <-
+    ggplot(polygon) +
+    geom_sf(aes(fill = pop_per_sqr_km),
+            color = "grey20",
+            size = .1
+    ) +
+    scale_fill_gradientn(
+      name = "",
+      colours = cols,
+      breaks = breaks,
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax)
+    ) +
+    guides(fill = guide_legend(
+      direction = "horizontal",
+      keyheight = unit(1.15, units = "mm"),
+      keywidth = unit(15, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = .5,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )) +
+    theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  return(p1)
+}
+
+
+# Label Regions -----------------------------------------------------------
+
+label_regions <- function(coordinates) {
+  ggrepel::geom_text_repel(coordinates[1:5, ],
+                           mapping = aes(x = long, y = lat, label = NAME_LATN),
+                           colour = "grey20",
+                           fontface = "bold",
+                           size = 10,
+                           segment.colour = "grey20",
+                           segment.alpha = .9,
+                           segment.linetype = 3,
+                           segment.size = .25,
+                           nudge_x = .95,
+                           nudge_y = .15,
+                           direction = "x"
+  )
+}
+
+
+
+
+
+make_point_map <- function(coordinates, labels) {
+  p2 <-
+    ggplot() +
+    geom_sf(
+      data = polygon,
+      fill = "transparent",
+      color = "grey20",
+      size = .1
+    ) +
+    geom_sf(
+      data = points,
+      mapping = aes(
+        size = pop_1000s,
+        geometry = geometry
+      ), color = cols[5],
+      alpha = .5
+    ) +
+    scale_size(
+      breaks = breaks,
+      range = c(1, 10),
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax),
+      name = ""
+    ) +
+    guides(
+      color = "none",
+      size = guide_legend(
+        direction = "vertical",
+        title.position = "top",
+        title.hjust = 0.5,
+        label.hjust = 0,
+        nrow = 1,
+        byrow = F,
+        reverse = F,
+        label.position = "bottom"
+      )
+    ) +
+    custom_theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  
+  # Add label regions only if labels = TRUE
+  if (labels) {
+    p2 <- p2 + label_regions(coordinates)
+  }
+  
+  return(p2)
+}
+
+
+get_cartogram <- function(df) {
+  deu_cart <- df %>% 
+    sf::st_transform(crs = crsLAEA) |>
+    cartogram::cartogram_cont(
+      weight = "pop_1000s",
+      itermax = 5
+    ) |>
+    sf::st_transform(crs = crsLONGLAT)
+  return(deu_cart)
+}
+
+
+make_cartogram <- function(cart, coordinates, labels) {
+  p3a <-
+    ggplot(cart) +
+    geom_sf(aes(fill = pop_1000s),
+            color = "grey20",
+            size = .1
+    ) +
+    scale_fill_gradientn(
+      name = "",
+      colours = cols,
+      breaks = breaks,
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax)
+    ) +
+    guides(fill = guide_legend(
+      direction = "horizontal",
+      keyheight = unit(1.15, units = "mm"),
+      keywidth = unit(15, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = .5,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )) +
+    custom_theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  
+  # Add label regions only if labels = TRUE
+  if (labels) {
+    p3a <- p3a + label_regions(coordinates)
+  }
+  
+  return(p3a)
+}
+
+
+get_ncontig_cartogram <- function(data) {
+  deu_ncart <- data %>% 
+    sf::st_transform(crs = crsLAEA) %>% 
+    cartogram::cartogram_ncont(
+      weight = "pop_1000s",
+      inplace = F
+    )
+  return(deu_ncart)
+}
+
+
+
+
+
+make_ncontig_cartogram <- function(ncart, nuts, theme) {
+  p3b <-
+    ggplot(ncart) +
+    geom_sf(aes(fill = pop_1000s),
+            color = NA,
+            size = 0
+    ) +
+    geom_sf(
+      data = nuts, fill = "transparent",
+      color = "grey20", size = .1
+    ) +
+    scale_fill_gradientn(
+      name = "",
+      colours = cols,
+      breaks = breaks,
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax)
+    ) +
+    guides(fill = guide_legend(
+      position = "bottom",
+      direction = "horizontal",
+      keyheight = unit(1.15, units = "mm"),
+      keywidth = unit(15, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = .5,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )) +
+    theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  return(p3b)
+}
+
+get_dorling_cartogram <- function(data) {
+  dorling_cart <- data %>% 
+    filter(!is.na(values)) %>% 
+    st_transform(crs = crsLAEA) %>% 
+    cartogram::cartogram_dorling(
+      weight = "pop_1000s"
+    )
+  return(dorling_cart)
+}
+
+
+
+make_dorling_cartogram <- function(dorling_cart, theme) {
+  p3c <-
+    ggplot(dorling_cart) +
+    geom_sf(aes(fill = pop_1000s),
+            color = NA,
+            size = 0
+    ) +
+    scale_fill_gradientn(
+      name = "",
+      colours = cols,
+      breaks = breaks,
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax)
+    ) +
+    guides(fill = guide_legend(
+      position = , "bottom",
+      direction = "horizontal",
+      keyheight = unit(1.15, units = "mm"),
+      keywidth = unit(15, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = .5,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )) +
+    theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  return(p3c)
+}
+
+
+
+get_dot_density <- function(data) {
+  num_dots <- ceiling(dplyr::select(as.data.frame(data), pop_1000s)) %>% 
+    filter(!is.na(pop_1000s))
+  dots <- map_df(
+    names(num_dots),
+    ~ sf::st_sample(df, size = num_dots[, .x], type = "random") %>% 
+      sf::st_cast("POINT") %>% 
+      sf::st_coordinates() %>% 
+      as_tibble() %>% 
+      setNames(c("long", "lat"))
+  )
+  return(dots)
+}
+
+make_dot_density_map <- function(dots, nuts, labels, coordinates, theme) {
+  p4 <-
+    ggplot(dots) +
+    geom_sf(
+      data = nuts, fill = "transparent",
+      color = "grey20", size = .1
+    ) +
+    geom_point(
+      data = dots, aes(x = long, y = lat),
+      color = cols[5], size = .1, shape = 19, alpha = .2
+    ) +
+    theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  
+  # Add label regions only if labels = TRUE
+  if (labels) {
+    p4 <- p4 + label_regions(coordinates)
+  }
+  
+  
+  return(p4)
+}
+
+get_grid <- function(country) {
+  
+  sf <- giscoR::gisco_get_countries(
+    year = "2020",
+    epsg = "4326",
+    resolution = "3",
+    country = country
+  )
+  
+  sf_transf <- sf |>
+    sf::st_transform(3575)
+  
+  grid <- sf_transf |>
+    sf::st_make_grid(cellsize = 50000) |>
+    sf::st_intersection(sf_transf) |>
+    st_cast("MULTIPOLYGON") |>
+    sf::st_sf() |>
+    dplyr::mutate(id = row_number()) |>
+    sf::st_transform(crs = crsLONGLAT)
+  
+  
+  return(grid)
+}
+
+
+get_aggregated_grid <- function(grid, points) {
+  grid_final <- grid %>% 
+    sf::st_join(points) %>% 
+    dplyr::group_by(id) %>% 
+    dplyr::summarise_at(
+      vars(pop_1000s),
+      list(pop_sum = sum)
+    ) %>% 
+    drop_na(pop_sum) %>% 
+    sf::st_sf() %>% 
+    sf::st_transform(crs = crsLONGLAT)
+  return(grid_final)
+}
+
+
+
+make_grid_map <- function(data, coordinates, labels, theme) {
+  p5 <-
+    ggplot(data) +
+    geom_sf(aes(fill = pop_sum),
+            color = "grey20",
+            size = .1
+    ) +
+    scale_fill_gradientn(
+      name = "",
+      colours = cols,
+      breaks = breaks,
+      labels = round(breaks, 0),
+      limits = c(vmin, vmax)
+    ) +
+    guides(fill = guide_legend(
+      direction = "horizontal",
+      keyheight = unit(1.15, units = "mm"),
+      keywidth = unit(15, units = "mm"),
+      title.position = "top",
+      title.hjust = 0.5,
+      label.hjust = .5,
+      nrow = 1,
+      byrow = T,
+      reverse = F,
+      label.position = "bottom"
+    )) +
+    theme() +
+    labs(
+      y = "",
+      subtitle = "",
+      x = "",
+      title = "",
+      caption = ""
+    )
+  return(p5)
+  
+  # Add label regions only if labels = TRUE
+  if (labels) {
+    p5 <- p5 + label_regions(coordinates)
+  }
+  
+}
+
+
+make_raster_matrix <- function(data) {
+  pop_rast <- terra::rasterize(
+    data,
+    terra::rast(data, resolution = .01),
+    data$pop_sum
+  ) %>%  terra::na.omit()
+  
+  pop_mat <- rayshader::raster_to_matrix(pop_rast)
+  
+  return(pop_mat)
+}
+
+
+# Defining LongLat --------------------------------------------------------
+
+# longlat
+crsLONGLAT <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+# Lambert
+crsLAEA <-  "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs"
+
+country = "UK"
+
+# Get  internal boundaries ---------------------------------
+
+
+nuts3 <- giscoR::gisco_get_nuts(
+  year = "2021",
+  epsg = "4326",
+  resolution = "3",
+  nuts_level = "3",
+  country = country
+)
+
+
+# Get the population data -------------------------------------------------
+
+
+pop_df <- eurostat::get_eurostat("demo_r_pjangrp3",
+                                 time_format = "num"
+) %>% 
+  dplyr::filter(
+    sex == "T" &
+      unit == "NR" &
+      age == "TOTAL" &
+      grepl("UK", geo) &
+      TIME_PERIOD == 2019 # No data available after that - likely due to
+  ) %>% 
+  dplyr::select(geo, values) %>% 
+  dplyr:: rename(NUTS_ID = geo) # rename for Merge
+
+df <- nuts3 %>% 
+  dplyr::left_join(pop_df, by = "NUTS_ID")
+
+
+# Draw the ploygons -------------------------------------------------------
+
+polygon <- get_polygon()
+
+vmin <- min(polygon$pop_per_sqr_km, na.rm = T)
+vmax <- max(polygon$pop_per_sqr_km, na.rm = T)
+
+
+brk <- round(classIntervals(polygon$pop_per_sqr_km,
+                            n = 6,
+                            style = "equal")$brks, 0) %>% 
+  head(-1) %>% 
+  tail(-1) %>% 
+  append(vmax)
+
+breaks <- c(vmin, brk)
+
+
+map1 <- make_polygon_map(polygon = polygon, theme = custom_theme) %>% 
+  print()
+
+ggsave(
+  filename = paste0(country, "_population_polygon.png"),
+  width = 6, height = 8.5, dpi = 600, device = "png",
+  bg = "#f5f5f2", map1)
+
+
+# Draw the Points on the Map ----------------------------------------------
+
+
+# normalize population size
+df$pop_1000s <- df$values / 1000
+
+vmin <- min(df$pop_1000s, na.rm = T)
+vmax <- max(df$pop_1000s, na.rm = T)
+
+# bins
+brk <- round(classIntervals(df$pop_1000s,
+                            n = 6,
+                            style = "equal"
+)$brks, 0) %>% 
+  head(-1) %>% 
+  tail(-1) %>% 
+  append(vmax)
+
+# breaks
+breaks <- c(vmin, brk)
+
+points <- df %>% 
+  sf::st_centroid()
+
+coords <- points %>% 
+  dplyr::mutate(
+    long = unlist(map(geometry, 1)),
+    lat = unlist(map(geometry, 2))
+  ) %>% 
+  dplyr::select(NAME_LATN, long, lat, pop_1000s) %>% 
+  sf::st_drop_geometry() %>% 
+  as.data.frame() %>% 
+  dplyr::arrange(desc(pop_1000s))
+
+#Just want the capitals maps
+
+cities_data <- data.frame(
+  NAME_LATN = c("Cardiff", "London", "Edinburgh", "Belfast"),
+  lat = c(51.4816, 51.5074, 55.9533, 54.5973),
+  long = c(-3.1791, -0.1278, -3.1883, -5.9301)
+)
+
+
+
+
+map2 <- make_point_map(coordinates= cities_data, labels = T) %>% 
+  print()
+
+ggsave(
+  filename = paste0(country, "_population_polygon_point.png"),
+  width = 6, height = 8.5, dpi = 600, device = "png",
+  bg = "white", map2
+)
+
+
+# Cartogram ---------------------------------------------------------------
+
+
+cart <- get_cartogram(df)
+
+map3a <- make_cartogram(cart, coordinates= cities_data, labels = T)
+
+
+ggsave(
+  filename = paste0(country, "_population_cartogram.png"),
+  width = 6, height = 8.5, dpi = 600,
+  device = "png", bg = "white", map3a
+)
+
+
+# Non-contiguous Area Cartogram -------------------------------------------
+
+ncart <- get_ncontig_cartogram(data = df)
+
+map3b <- make_ncontig_cartogram(ncart = ncart, nuts = nuts3, theme = custom_theme())
+
+
+
+# Dorling -----------------------------------------------------------------
+
+
+dorling_cart <- get_dorling_cartogram(data = df)
+
+
+map3c <- make_dorling_cartogram(dorling_cart = dorling_cart, theme = custom_theme)
+
+
+ggsave(
+  filename = paste0(country, "_population_dorling_cartogram.png"),
+  width = 7, height = 7.5, dpi = 600, device = "png",
+  bg = "white", map3c)
+
+
+# Dot Density -------------------------------------------------------------
+
+dots <- get_dot_density(data = df)
+
+
+map4 <- make_dot_density_map(dots = dots, nuts = nuts3, labels = T, coordinates = cities_data, theme = custom_theme)
+
+
+ggsave(
+  filename = paste0(country, "_population_dot_density.png"),
+  width = 6, height = 8.5, dpi = 600, device = "png",
+  bg = "white", map4
+)
+
+grid <- get_grid(country = country)
+
+
+grid_final <- get_aggregated_grid(grid = grid, points = points)
+
+
+vmin <- min(grid_final$pop_sum, na.rm = T)
+vmax <- max(grid_final$pop_sum, na.rm = T)
+
+brk <- round(classIntervals(grid_final$pop_sum,
+                            n = 6,
+                            style = "equal"
+)$brks, 0) %>% 
+  head(-1) %>% 
+  tail(-1) %>% 
+  append(vmax)
+
+breaks <- c(vmin, brk)
+
+
+map5 <- make_grid_map(data = grid_final, coordinates = cities_data, labels = T, theme =custom_theme)
+
+ggsave(
+  filename = paste0(country, "_population_grid.png"),
+  width = 6, height = 8.5, dpi = 600, device = "png",
+  bg = "#f5f5f2", map5
+)
+
+pop_mat <- make_raster_matrix(data = grid_final)
+
+h <- 762
+w <- 916
+
+texture <- grDevices::colorRampPalette(cols, bias = 3)(21)                      
+
+
+pop_mat %>% 
+  rayshader::height_shade(texture = texture) %>% 
+  rayshader::plot_3d(
+    heightmap = pop_mat,
+    solid = F,
+    soliddepth = 0,
+    z = 20,
+    shadowdepth = 0,
+    shadow_darkness = .75,
+    windowsize = c(w, h),
+    phi = 65,
+    zoom = .6,
+    theta = -30,
+    background = "white"
+  )
+
+# rayshader::render_camera(phi = 35, zoom = .6, theta = -20)
+# 
+# rayshader::render_highquality(
+#   filename = "germany_population_3d.png",
+#   samples = 500,
+#   preview = T,
+#   light = T,
+#   lightdirection = 0,
+#   lightcolor = "white",
+#   lightintensity = 1000,
+#   interactive = F,
+#   width = w, height = h
+# )
+```

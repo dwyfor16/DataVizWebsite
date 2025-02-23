@@ -1,0 +1,27 @@
+---
+title: "Data Visualizations"
+description: "A webpage showcasing my data visualisation projects"
+date-modified: now
+categories: [ggplot, Data Visualisation, R, Python, quarto]
+tags: [R, ggplot2, tidyverse, data-analysis]
+
+
+listing:
+  id: "data_visualisations"
+  contents: data_visualisations
+  sort: "date desc"
+  type: default
+  categories: numbered
+  grid-item-border: false
+  grid-columns: 2
+  table-hover: true
+  date-format: "D MMM, YYYY"
+  feed: true
+  fields: [date, image, title]
+  sort-ui: [date, title]
+  page-size: 10
+
+---
+
+::: {#data_visualisations} 
+:::

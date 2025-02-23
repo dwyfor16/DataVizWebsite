@@ -1,0 +1,27 @@
+/* css styles */
+
+/* fonts*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Navbar*/
+.footer {
+    font-size: 20px;
+  }
+
+.navbar {
+  font-size: 24px;
+}
+.navbar-logo {
+  max-height: 125px;
+  max-width: 125px;
+}
+.navbar-title {
+  font-size: 32px;
+}
+
+  

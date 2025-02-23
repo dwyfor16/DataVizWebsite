@@ -1,0 +1,21 @@
+---
+title: ""
+image: _site/images/logo.png
+about: 
+  template: solana    
+  image-shape: round
+  image-width: 20em
+categories: [Biostatistics, R, Python, Data Analysis, Data Visualisation, GIS, Epidemiology, Market Access, Health Economics, Quarto]
+tags: [Biostatistics, R, Python, Data Analysis, Data Visualisation, GIS, Epidemiology, Market Access, Health Economics, Quarto]
+---
+
+## About Me
+
+I am a statistical programmer with 7 years experience in Pharmaceutical Market Access and Health Economics. I have a Masters Degree in Epidemiology from the Charité – Universitätsmedizin Berlin and a Master's in Biomedical Research from Cardiff University.
+
+I fell into R and Python Programming coupled with data analysis and have kept going with it.
+
+## Skills and Interests
+
+-   Biostatistics, R, Python, Data Analysis, Data Visualisation, GIS, Epidemiology, Market Access, Health Economics
+

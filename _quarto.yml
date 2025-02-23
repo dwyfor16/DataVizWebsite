@@ -1,0 +1,47 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  description: "A Website showcasing my data analysis, visualisation, and general doodling"
+  page-navigation: true
+  back-to-top-navigation: true
+  navbar:
+    logo: _site/images/logo.png
+    background: "#FFD700"
+    toggle-position: left
+    title: "Peter's Data Visualisation"
+    collapse-below: lg
+    right:
+      - text: "Data Visualisation"
+        href: datavis
+        aria-label: datavis.page
+      - text: "Maps"
+        href: maps.qmd
+        aria-label: maps page
+      - text: "Biostatistics"
+        href: biostatistics.qmd
+        aria-label: maps page
+
+  page-footer:
+    border: TRUE
+    right: "Built Using Quarto<br>Copyright: Peter Gray 2025  "
+    center: 
+      - text: "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bluesky_logo.svg/1024px-Bluesky_logo.svg.png' alt='Bluesky' style='width: 20px; vertical-align: middle;'>"
+        href: https://bsky.app/profile/dwyfor16.bsky.social
+      - icon: linkedin
+        href: https://www.linkedin.com/in/peter-gray-36194935/de
+      - icon: github
+        href: https://github.com/dwyfor16
+
+format:
+  html:
+    theme:
+      - solar
+    css: styles.css
+    code-link: False
+    link-external-newwindow: False
+
+execute:
+  freeze: auto
+  warning: false

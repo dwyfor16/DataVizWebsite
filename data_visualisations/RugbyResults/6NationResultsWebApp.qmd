@@ -1,0 +1,29 @@
+---
+title: "Rugby: 6 Nation Rugby Results Web App"
+subtitle: "An interactive application to analyse the historical results played by the teams of the six nations and the rugby champ"
+date-created: "2025-02-17"
+author: "Peter Gray"
+categories: ["Data Visualization", "R Programming", "2025", "Rugby", "shinyapp", "plotly"]
+tags: [R, data visulation, ggplot2, patchwork, tidyverse, sports]
+image: "thumbnails/WalesversusIreland.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    self-contained: true
+editor_options: 
+  chunk_output_type: inline
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+This was my first attempt at building a Shiny App based on my previous project. It is more flexible with some interactive text when you hover over the tiles.
+
+[Link to Web App](https://eh1prp-dwyfor16.shinyapps.io/rugbyresultsapp/)
+
+![Figure 1](thumbnails/WalesversusIreland.png)

@@ -1,0 +1,24 @@
+[
+  {
+    "listing": "/datavis.html",
+    "items": [
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week07.html",
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html",
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html",
+      "/data_visualisations/RugbyResults/6NationResultsWebApp.html"
+    ]
+  },
+  {
+    "listing": "/maps.html",
+    "items": [
+      "/maps/uk_maps.html",
+      "/maps/middle_earth.html"
+    ]
+  },
+  {
+    "listing": "/biostatistics.html",
+    "items": [
+      "/biostatistics/MastersThesis.html"
+    ]
+  }
+]

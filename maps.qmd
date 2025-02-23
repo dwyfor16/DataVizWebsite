@@ -1,0 +1,27 @@
+---
+title: "Maps"
+description: "A webpage showing my GIS projects"
+date-modified: now
+categories: [gis, Data Visualisation, R, Python, quarto]
+tags: [R, ggplot2, tidyverse, gis]
+
+
+listing:
+  id: "maps"
+  contents: maps
+  sort: "date desc"
+  type: default
+  categories: numbered
+  grid-item-border: false
+  grid-columns: 2
+  table-hover: true
+  date-format: "D MMM, YYYY"
+  feed: true
+  fields: [date, image, title]
+  sort-ui: [date, title]
+  page-size: 10
+
+---
+
+::: {#maps} 
+:::
