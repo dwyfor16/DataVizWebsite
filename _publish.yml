@@ -1,4 +1,4 @@
 - source: project
   netlify:
     - id: 7a7cd9eb-5812-4082-a49b-e046d89feb35
-      url: 'https://pgdatavizandstats.netlify.app/'
+      url: 'https://pgdatavizandstats.netlify.app'
