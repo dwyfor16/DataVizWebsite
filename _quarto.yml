@@ -16,7 +16,7 @@ website:
       - text: "Data Visualisation"
         href: datavis
         aria-label: datavis.page
-      - text: "Maps"
+      - text: "Maps/GIS"
         href: maps.qmd
         aria-label: maps page
       - text: "Biostatistics"
