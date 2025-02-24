@@ -224,7 +224,7 @@ server <- function(input, output) {
     graph_colours <- winner_colors[names(winner_colors) %in% graph_winner]
     
     p1 <- ggplot(df, aes(y = game_number_in_decade, x = factor(decade), fill = Who_Won)) +
-      geom_tile(aes(text = paste0("Year: ", format(as.Date(date), "%Y"))), color = "black") +  # Black border around tiles
+      geom_tile(aes(text = paste0("Date: ", format(as.Date(date), "%d %b %Y"))), color = "black") +  # Black border around tiles
       scale_fill_manual(values = graph_colours) +  # Apply custom colors
       geom_text(aes(label = paste0(home_score, "-", away_score)),  
                 color = alpha("darkgrey", 0.75),  
@@ -237,7 +237,7 @@ server <- function(input, output) {
         fill = "Victor",
         title = paste0("Historical Results of ", input$home_team,  " versus ", input$away_team, " (", min_year,"-", max_year, ")"),
         subtitle = "Hover over cell to see year of the game",
-        caption = "Magenta = World Cup Game (Excludes World Cup Warm Up Games)"
+        caption = "Magenta = World Cup Game"
       ) +
       Custom_Style() +
       theme(text = element_text(family = "Roboto"))
@@ -284,7 +284,7 @@ server <- function(input, output) {
           font = list(family = "Roboto", size = 12, color = "white")  # Set the legend items font to Roboto
         ),
         annotations = list(
-          x = 1, y = 0, text = "Magenta = World Cup Game (Excludes World Cup Warm Up Games)",  # Change the position here
+          x = 1, y = 0, text = "Magenta = World Cup Game",  # Change the position here
           xref = 'paper', yref = 'paper', showarrow = FALSE,
           xanchor = 'right', yanchor = 'auto', xshift = 0, yshift = 0,
           font = list(family = "Roboto", size = 10, color = "magenta")

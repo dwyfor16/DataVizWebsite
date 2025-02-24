@@ -1,0 +1,258 @@
+---
+title: "TidyTuesday Week 8: "
+subtitle: "Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US"
+author: "Peter Gray"
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulisation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week08a.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Figure 1](thumbnails/TidyTues_Week08a.png)
+```{r}
+
+
+gc()
+rm(list = ls())
+graphics.off()
+cat('\014')
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(ggfortify)){install.packages("ggfortify"); library(ggfortify)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(sysfonts)){install.packages("sysfonts"); library(sysfonts)}
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+if(!require(RColorBrewer)){install.packages("RColorBrewer"); library(RColorBrewer)}
+if(!require(maps)){install.packages("maps"); library(maps)}
+
+if(!require(rlist)){install.packages("rlist"); library(rlist)}
+
+wd <- getwd()
+
+
+
+
+font_add_google("Roboto Mono", "roboto_mono")
+font <- "roboto_mono"
+showtext_auto()
+
+# Color palette
+color <- palette.colors(palette = "Okabe-Ito")
+color <- append(color, "gold")
+color[1] <- "#D41159"
+
+
+Custom_Style <- function() {
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(family=font,
+                                       size=24,
+                                       face="bold",
+                                       color="#222222"),
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          size=18,
+                                          color="#222222"),
+    plot.caption = ggplot2::element_text(family=font,
+                                         size=10,
+                                         color="#222222"),
+    
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(family=font, 
+                                         size=12, 
+                                         face="bold", 
+                                         color="#222222"),
+    # legend.text.align = 0,
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=9,
+                                        color="#222222"),
+    
+    # Axis format
+    axis.text = ggplot2::element_text(family = font,
+                                      size=10,
+                                      color="#222222"),
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10), size =8),
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    axis.title = ggplot2::element_text(family=font, 
+                                       size=12, 
+                                       face="bold", 
+                                       color="#222222"),
+    
+    
+    # Grid lines
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    # Very pale cream/yellow background
+    panel.background = element_rect(fill = "#FFFBF0",  
+                                    color = "#FFFBF0", 
+                                    linewidth = 0.5, 
+                                    linetype = "solid"),
+    plot.background = element_rect(fill = "#FFFBF0",  
+                                   color = "#FFFBF0", 
+                                   linewidth = 0.5, 
+                                   linetype = "solid"),
+    legend.background = element_rect(fill = "#FFFBF0",  
+                                     color = "#FFFBF0", 
+                                     linewidth = 0.5, 
+                                     linetype = "solid"),
+    
+    
+  )
+}
+
+
+article_dat <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-25/article_dat.csv')
+model_dat <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-02-25/model_dat.csv')
+
+# Data Cleaning 
+
+#Fucntion to simplify races
+
+simplify_race <- function(race) {
+  case_when(
+    grepl("African American|Black|NonBlack, Non-Hispanic Black", race, ignore.case = TRUE) ~ "Black",
+    grepl("White|Caucasian|Non-Hispanic White", race, ignore.case = TRUE) ~ "White",
+    grepl("Asian", race, ignore.case = TRUE) ~ "Asian",
+    grepl("Hispanic|Latino", race, ignore.case = TRUE) ~ "Hispanic",
+    grepl("Native American|Alaskan", race, ignore.case = TRUE) ~ "Native American",
+    grepl("Pacific Islander|Hawaiian", race, ignore.case = TRUE) ~ "Pacific Islander",
+    grepl("Unknown|Other|Multiple", race, ignore.case = TRUE) ~ "Other",
+    TRUE ~ NA
+  )
+}
+
+
+# Publications mentioning Race --------------------------------------------
+
+
+race_count <- article_dat %>% 
+  mutate(across(starts_with(c("race", "eth")), simplify_race)) %>% 
+  rowwise() %>%
+  group_by(across(starts_with(c("race", "eth")))) %>% 
+  summarise() %>%
+  pivot_longer(cols = everything(), values_to = "race") %>% 
+  filter(!is.na(race) & race != "NA") %>% 
+  count(race, sort = TRUE)  
+
+p1 <- race_count %>% 
+  ggplot(aes(x = reorder(race, n), y = n, fill = race)) +  
+  geom_bar(stat = "identity") +  
+  geom_text(aes(label = paste0("n = ", n), fontface = "bold"), hjust = -0.1, size = 3, angle = 0) +  # Add text labels on top of bars
+  labs(subtitle = str_wrap("Race Count Distribution of Reproductive Rights studies in the US (2010-2023)", 40),
+       x = "Race",
+       y = "Count",
+       fill = "Race") +
+  Custom_Style() +
+  coord_flip()  
+
+
+
+
+
+race_year_count <- article_dat %>%
+  mutate(across(starts_with(c("race", "eth")), simplify_race)) %>%
+  pivot_longer(cols = starts_with(c("race", "eth")), values_to = "race", names_to = "race_column") %>%
+  filter(!is.na(race) & race != "NA" & race != "") %>%
+  group_by(year, race) %>%
+  summarise(n = n(), .groups = 'drop') %>% 
+  group_by(year) %>% 
+  mutate(percent = n / sum(n)) %>% 
+  arrange(desc(percent)) %>% 
+  ungroup()
+
+p2 <- race_year_count %>% 
+  ggplot(aes(x = year, y = percent, fill = race)) +  
+  geom_col() +
+  geom_text(aes(label = scales::percent(percent, accuracy = 1), fontface = "bold"),  
+            position = position_stack(vjust = 0.5),  
+            size = 3,  
+            family = font,
+            color = "black") +  
+  labs(subtitle = str_wrap("Proportion of Articles related to Reproductive rights mentioning each race (2010-2023)", 40),
+       x = "Race",
+       y = "Percent", fill ="Race") +  
+  Custom_Style() +  
+  scale_y_continuous(labels = scales::percent_format())
+
+
+# Combined Plot
+
+p1 + p2 +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")  &
+  plot_annotation(title = str_wrap('Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US', 80),
+                  subtitle = "TidyTuesday: Week 8, 2025",
+                  theme = Custom_Style()) &
+  theme(caption = element_text(hjust =  0.5),
+        plot.subtitle = element_text(size = 16))
+
+
+
+# Clean the data
+
+# just want stratified studies
+
+
+data <- model_dat %>%
+  filter(
+    subanalysis == "No",
+    measure == "OR",          # Ensures reference group includes 'White'
+    !grepl("none", covariates, ignore.case = TRUE),     # Filters out rows where covariates is 'none'
+    outcome == "severe maternal morbidity",
+    model_number == 5
+  ) %>% 
+  mutate(doi = factor(doi))
+
+doi <- unique(factor(data$doi))
+d = 2
+list_of_plots <- list()
+
+
+data_i <- data %>% 
+  filter(doi == doi[d]) %>% 
+  filter(compare != "Unknown")
+
+
+measure <- unique(data_i$measure)
+endpoint <- unique(data_i$outcome)
+citation <- unique(data_i$doi)
+
+
+
+p3 <- ggplot(data_i, aes(x = point, y = reorder(compare, point))) +  
+  geom_point(size = 3, color = "blue") +  # Points for estimates
+  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = "black") +  # Confidence intervals
+  geom_vline(xintercept = 1, linetype = "dashed", color = "red") +  # Reference line at 1
+  labs(title = str_wrap(paste0('Forest Plot: ', endpoint), 80),
+                  subtitle = "TidyTuesday: Week 8, 2025",
+    x = paste0(measure, " (95% CI)"),
+    y = "Comparison Group",
+    caption = paste("Doi: ",citation, collapse = "\n")
+  ) +
+  annotate("text", x = 0.5, y = length(unique(data_i$compare)) + 0.5, label = "Favourable compared with White Women", color = "green", hjust = 0) +
+  annotate("text", x = 1.5, y = length(unique(data_i$compare)) + 0.5, label = "Outcomes Worsened compared with White Women", color = "red", hjust = 1) +
+  Custom_Style()
+
+
+p3
+
+
+```

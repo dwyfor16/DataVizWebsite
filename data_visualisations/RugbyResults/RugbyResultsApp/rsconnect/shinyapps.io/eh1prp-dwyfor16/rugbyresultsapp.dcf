@@ -5,7 +5,7 @@ account: eh1prp-dwyfor16
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14033580
-bundleId: 9822918
+bundleId: 9848686
 url: https://eh1prp-dwyfor16.shinyapps.io/rugbyresultsapp/
 version: 1
 asMultiple: FALSE
