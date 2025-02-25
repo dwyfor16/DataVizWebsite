@@ -2,6 +2,7 @@
 title: "TidyTuesday Week 5: Simpsons Data Analysis"
 subtitle: "An Analysis of data reagrding the Simpsons TV Series"
 author: "Peter Gray"
+date: "2025-02-02" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis]
 image: "thumbnails/TidyTues_Week05.png"

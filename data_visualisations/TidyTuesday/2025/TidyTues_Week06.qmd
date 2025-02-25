@@ -2,6 +2,7 @@
 title: "TidyTuesday Week 6: CDC Archive Data Analysis"
 subtitle: "An Analysis of the CDC datasets archived/purged by the Trump administration"
 author: "Peter Gray"
+date: "2025-02-11" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis, kaplan-meier]
 image: "thumbnails/TidyTues_Week06.png"
@@ -12,7 +13,6 @@ format:
     code-tools: false
     code-summary: "Display code"
     self-contained: true
-    theme: solar
 editor_options: 
   chunk_output_type: console
 execute: 

@@ -1,7 +1,8 @@
 ---
-title: "TidyTuesday Week 8: "
+title: "TidyTuesday Week 8: Racial Disparities in US Reproductive Medicine"
 subtitle: "Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US"
 author: "Peter Gray"
+date: "2025-02-25" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulisation, ggplot2, patchwork, tidyverse]
 image: "thumbnails/TidyTues_Week08a.png"
@@ -27,10 +28,10 @@ execute:
 ```{r}
 
 
-gc()
-rm(list = ls())
-graphics.off()
-cat('\014')
+# gc()
+# rm(list = ls())
+# graphics.off()
+# cat('\014')
 
 if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
 if(!require(ggfortify)){install.packages("ggfortify"); library(ggfortify)}
@@ -39,12 +40,9 @@ if(!require(sysfonts)){install.packages("sysfonts"); library(sysfonts)}
 if(!require(showtext)){install.packages("showtext"); library(showtext)}
 if(!require(RColorBrewer)){install.packages("RColorBrewer"); library(RColorBrewer)}
 if(!require(maps)){install.packages("maps"); library(maps)}
-
-if(!require(rlist)){install.packages("rlist"); library(rlist)}
+if(!require(rcrossref)){install.packages("rcrossref"); library(rcrossref)}
 
 wd <- getwd()
-
-
 
 
 font_add_google("Roboto Mono", "roboto_mono")
@@ -139,6 +137,34 @@ simplify_race <- function(race) {
   )
 }
 
+# function to extract study title from doi using crossref package
+
+get_study_info <- function(doi) {
+  
+  res <- cr_works(doi = doi)
+  
+  if (is.null(res$data)) {
+    return(list(title = NA, first_author = NA))
+  }
+  
+  title <- res$data$title
+  
+  authors <- res$data$author
+  first_author <- if(!is.null(authors) && length(authors) > 0) {
+    
+    authors[[1]]$family
+    
+  } else {
+    
+    NA
+    
+  }
+  
+  doi <-res$data$doi
+  
+  return(list(title = title, first_author = first_author, doi = doi))
+  
+}
 
 # Publications mentioning Race --------------------------------------------
 
@@ -178,6 +204,8 @@ race_year_count <- article_dat %>%
   arrange(desc(percent)) %>% 
   ungroup()
 
+
+
 p2 <- race_year_count %>% 
   ggplot(aes(x = year, y = percent, fill = race)) +  
   geom_col() +
@@ -195,20 +223,8 @@ p2 <- race_year_count %>%
 
 # Combined Plot
 
-p1 + p2 +
-  plot_layout(guides = "collect") &
-  theme(legend.position = "bottom")  &
-  plot_annotation(title = str_wrap('Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US', 80),
-                  subtitle = "TidyTuesday: Week 8, 2025",
-                  theme = Custom_Style()) &
-  theme(caption = element_text(hjust =  0.5),
-        plot.subtitle = element_text(size = 16))
-
-
 
 # Clean the data
-
-# just want stratified studies
 
 
 data <- model_dat %>%
@@ -222,37 +238,62 @@ data <- model_dat %>%
   mutate(doi = factor(doi))
 
 doi <- unique(factor(data$doi))
-d = 2
-list_of_plots <- list()
+d = 1
 
 
 data_i <- data %>% 
-  filter(doi == doi[d]) %>% 
-  filter(compare != "Unknown")
+  filter(compare != "Unknown") 
 
+
+data_i <- data_i %>%
+  rowwise() %>%
+  mutate(info = list(get_study_info(doi)),
+         citation = paste0(info$first_author[[1]], " et. al: ", info$doi)) %>% 
+  select(-info) 
 
 measure <- unique(data_i$measure)
 endpoint <- unique(data_i$outcome)
-citation <- unique(data_i$doi)
+study_title <- unique(data_i$citation)
 
 
 
 p3 <- ggplot(data_i, aes(x = point, y = reorder(compare, point))) +  
-  geom_point(size = 3, color = "blue") +  # Points for estimates
-  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = "black") +  # Confidence intervals
+  geom_point(size = 3, aes(color = compare)) +  # Points for estimates
+  geom_errorbarh(aes(xmin = lower, xmax = upper, color = compare), height = 0.2) +  # Confidence intervals
   geom_vline(xintercept = 1, linetype = "dashed", color = "red") +  # Reference line at 1
-  labs(title = str_wrap(paste0('Forest Plot: ', endpoint), 80),
-                  subtitle = "TidyTuesday: Week 8, 2025",
-    x = paste0(measure, " (95% CI)"),
-    y = "Comparison Group",
-    caption = paste("Doi: ",citation, collapse = "\n")
+  labs(subtitle = paste0('Forest Plot: ', str_to_title(endpoint), " compared with White Women"),
+       x = paste0(measure, " (95% CI)"),
+       y = "Comparison Group",
+       color = "Race", 
+       caption = paste("Doi: ", study_title, collapse = "\n")
   ) +
   annotate("text", x = 0.5, y = length(unique(data_i$compare)) + 0.5, label = "Favourable compared with White Women", color = "green", hjust = 0) +
   annotate("text", x = 1.5, y = length(unique(data_i$compare)) + 0.5, label = "Outcomes Worsened compared with White Women", color = "red", hjust = 1) +
-  Custom_Style()
+  facet_wrap(~ paste(citation, sep = ": "), labeller = labeller(group = function(x) str_wrap(x, width = 20))) +
+  Custom_Style() +
+  theme(
+    strip.background = element_rect(fill = "#FFFBF0", color = "#FFFBF0"), # Green background with white border
+    strip.text = element_text(size = 8, face = "bold", color = "black", family = font, hjust = 0) # White bold text
+  )
 
 
-p3
+
+# Combine plots with legend between p1/p2 and p3
+combined_plot <- (p1 + p2) / 
+  p3 +
+  plot_layout(
+    guides = "collect"
+  ) &
+  theme(legend.position = "bottom") &
+  plot_annotation(
+    title = str_wrap('Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US', 80),
+    subtitle = "TidyTuesday: Week 8, 2025",
+    theme = Custom_Style()
+  ) &
+  theme(
+    caption = element_text(hjust = 0.5),
+    plot.subtitle = element_text(size = 16)
+  )
 
 
 ```

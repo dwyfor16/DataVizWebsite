@@ -2,6 +2,7 @@
 title: "MSc Epidemiology: Thesis"
 subtitle: "A Retrospective Analysis of German Non‐Specific Lower Back Pain Patients and their Patient Pathway Before and After Emergency Department Treatment"
 author: "Peter Gray"
+date: "2023-09" 
 categories: ["Biostatistics", "Lower Back Pain", "R Programming", "2023", "Data Analysis", "Germany", "Emergency Department"]
 tags: [Biostatistics, Lower Back Pain, R Programming, Data Analysis", Germany, Emergency Department]
 image: "Images/Thumbnails/Thesis.png"
@@ -12,7 +13,6 @@ format:
     code-tools: false
     code-summary: "Display code"
     self-contained: true
-    theme: solar
 editor_options: 
   chunk_output_type: console
 execute: 

@@ -2,7 +2,8 @@
 title: "Lord of the Rings: Scale of Middle Earth"
 subtitle: "A visuaisation of how big Middle Earth is compared with the size of Europe. Sam and Frodo walked a long way! Hobbiton is centered on Cardiff in Wales - just because"
 author: "Peter Gray"
-categories: ["GIS", "Data Visualization", "R Programming", "2025"]
+date: "2024-09-09" 
+categories: ["GIS", "Data Visualization", "R Programming", "2024"]
 tags: [GIS, R, data visulation, ggplot2, Map work, tidyverse]
 image: "thumbnails/middle-earth.png"
 format:

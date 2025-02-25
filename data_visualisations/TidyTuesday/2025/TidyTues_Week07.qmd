@@ -2,6 +2,7 @@
 title: "TidyTuesday Week 7: FBI Crime Reporting"
 subtitle: "An analysis of US Law Enforcement Reporting to the National Crime Agency"
 author: "Peter Gray"
+date: "2025-02-19" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulisation, ggplot2, patchwork, tidyverse]
 image: "thumbnails/TidyTues_Week07a.png"
@@ -12,7 +13,6 @@ format:
     code-tools: false
     code-summary: "Display code"
     self-contained: true
-    theme: solar
 editor_options: 
   chunk_output_type: console
 execute: 

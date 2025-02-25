@@ -1,7 +1,8 @@
 ---
 title: "UK Population"
-subtitle: "My first foray into GIS work in R visualising the UK population"
+subtitle: "My first foray into GIS work in R visualising the UK population."
 author: "Peter Gray"
+date: "2024-12-15" 
 categories: ["GIS", "Data Visualization", "R Programming", "2024"]
 tags: [GIS, R, data visulation, ggplot2, Map work, tidyverse]
 image: "thumbnails/UK_population.png"
@@ -14,7 +15,6 @@ format:
     code-tools: false
     code-summary: "Show code"
     self-contained: true
-    theme: solar
 editor_options: 
   chunk_output_type: inline
 execute: 
@@ -28,7 +28,7 @@ execute:
 
 ![Thumbnail](thumbnails/UK_population.png)
 
-
+This stuff was inspired by this blog post from  Milos Popovic https://milospopovic.net/6-ways-to-map-population-with-r.r/
 ```{r}
 
 if(!require(tidyverse)){install.packages("tidyverse");library(tidyverse)}
@@ -630,13 +630,6 @@ cities_data <- data.frame(
 map2 <- make_point_map(coordinates= cities_data, labels = T) %>% 
   print()
 
-ggsave(
-  filename = paste0(country, "_population_polygon_point.png"),
-  width = 6, height = 8.5, dpi = 600, device = "png",
-  bg = "white", map2
-)
-
-
 # Cartogram ---------------------------------------------------------------
 
 
@@ -645,11 +638,6 @@ cart <- get_cartogram(df)
 map3a <- make_cartogram(cart, coordinates= cities_data, labels = T)
 
 
-ggsave(
-  filename = paste0(country, "_population_cartogram.png"),
-  width = 6, height = 8.5, dpi = 600,
-  device = "png", bg = "white", map3a
-)
 
 
 # Non-contiguous Area Cartogram -------------------------------------------
@@ -669,12 +657,6 @@ dorling_cart <- get_dorling_cartogram(data = df)
 map3c <- make_dorling_cartogram(dorling_cart = dorling_cart, theme = custom_theme)
 
 
-ggsave(
-  filename = paste0(country, "_population_dorling_cartogram.png"),
-  width = 7, height = 7.5, dpi = 600, device = "png",
-  bg = "white", map3c)
-
-
 # Dot Density -------------------------------------------------------------
 
 dots <- get_dot_density(data = df)
@@ -683,11 +665,6 @@ dots <- get_dot_density(data = df)
 map4 <- make_dot_density_map(dots = dots, nuts = nuts3, labels = T, coordinates = cities_data, theme = custom_theme)
 
 
-ggsave(
-  filename = paste0(country, "_population_dot_density.png"),
-  width = 6, height = 8.5, dpi = 600, device = "png",
-  bg = "white", map4
-)
 
 grid <- get_grid(country = country)
 
@@ -711,47 +688,5 @@ breaks <- c(vmin, brk)
 
 map5 <- make_grid_map(data = grid_final, coordinates = cities_data, labels = T, theme =custom_theme)
 
-ggsave(
-  filename = paste0(country, "_population_grid.png"),
-  width = 6, height = 8.5, dpi = 600, device = "png",
-  bg = "#f5f5f2", map5
-)
 
-pop_mat <- make_raster_matrix(data = grid_final)
-
-h <- 762
-w <- 916
-
-texture <- grDevices::colorRampPalette(cols, bias = 3)(21)                      
-
-
-pop_mat %>% 
-  rayshader::height_shade(texture = texture) %>% 
-  rayshader::plot_3d(
-    heightmap = pop_mat,
-    solid = F,
-    soliddepth = 0,
-    z = 20,
-    shadowdepth = 0,
-    shadow_darkness = .75,
-    windowsize = c(w, h),
-    phi = 65,
-    zoom = .6,
-    theta = -30,
-    background = "white"
-  )
-
-# rayshader::render_camera(phi = 35, zoom = .6, theta = -20)
-# 
-# rayshader::render_highquality(
-#   filename = "germany_population_3d.png",
-#   samples = 500,
-#   preview = T,
-#   light = T,
-#   lightdirection = 0,
-#   lightcolor = "white",
-#   lightintensity = 1000,
-#   interactive = F,
-#   width = w, height = h
-# )
 ```

@@ -6,6 +6,7 @@ website:
   description: "A Website showcasing my data analysis, visualisation, and general doodling"
   page-navigation: true
   back-to-top-navigation: true
+  favicon: _site/images/logo.png
   navbar:
     logo: _site/images/logo.png
     background: "#FFD700"

@@ -18,7 +18,7 @@ listing:
   date-format: "D MMM, YYYY"
   feed: true
   fields: [date, image, title]
-  sort-ui: [date, title]
+  sort-ui: [title]
   page-size: 10
 
 ---
