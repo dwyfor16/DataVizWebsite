@@ -1,0 +1,510 @@
+---
+title: "TidyTuesday Week 9: Long Beach Animal Shelter"
+subtitle: "This week we're exploring the Long Beach Animal Shelter Data! The dataset comes from the City of Long Beach Animal Care Services via the {animalshelter} R package. This dataset comprises of the intake and outcome record from Long Beach Animal Shelter."
+author: "Peter Gray"
+date: "2025-03-04"
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulisation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week09a.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+editor_options:
+  chunk_output_type: console
+execute:
+  freeze: true                                                 
+  cache: true                                                  
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+
+![Figure 1](thumbnails/TidyTues_Week09a.png)
+
+```{r}
+
+
+gc()
+
+rm(list = ls())
+
+graphics.off()
+
+cat('\014')
+
+
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+
+if(!require(ggbrick)){install.packages("ggbrick"); library(ggbrick)}
+
+if(!require(ggfortify)){install.packages("ggfortify"); library(ggfortify)}
+
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+
+if(!require(sysfonts)){install.packages("sysfonts"); library(sysfonts)}
+
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+
+if(!require(RColorBrewer)){install.packages("RColorBrewer"); library(RColorBrewer)}
+
+if(!require(maps)){install.packages("maps"); library(maps)}
+
+if(!require(rcrossref)){install.packages("rcrossref"); library(rcrossref)}
+
+if(!require(ggshadow)){install.packages("ggshadow"); library(ggshadow)}
+
+if(!require(ggridges)){install.packages("ggridges"); library(ggridges)}
+
+if(!require(ggpp)){install.packages("ggpp"); library(ggpp)}
+
+if(!require(gridExtra)){install.packages("gridExtra"); library(gridExtra)}
+
+if(!require(sf)){install.packages("sf"); library(sf)}
+
+if(!require(ggmap)){install.packages("ggmap"); library(ggmap)}
+if(!require(osmdata)){install.packages("osmdata"); library(osmdata)}
+
+wd <- getwd()
+
+
+
+
+
+font_add_google("Noto Sans Mono", "noto_mono")
+
+font <- "noto_mono"
+
+showtext_auto()
+
+
+
+# Color palette
+
+color <- palette.colors(palette = "Okabe-Ito")
+
+color <- append(color, "gold")
+
+color[1] <- "#D41159"
+
+
+
+
+
+Custom_Style <- function() {
+  
+  ggplot2::theme(
+    
+    plot.title = ggplot2::element_text(family=font,
+                                       
+                                       size=24,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          
+                                          size=18,
+                                          
+                                          color="#222222"),
+    
+    plot.caption = ggplot2::element_text(family=font,
+                                         
+                                         size=10,
+                                         
+                                         color="#222222"),
+    
+    
+    
+    legend.position = "bottom",
+    
+    legend.title = ggplot2::element_text(family=font,
+                                         
+                                         size=12,
+                                         
+                                         face="bold",
+                                         
+                                         color="#222222"),
+    
+    # legend.text.align = 0,
+    
+    legend.key = ggplot2::element_blank(),
+    
+    legend.text = ggplot2::element_text(family=font,
+                                        
+                                        size=9,
+                                        
+                                        color="#222222"),
+    
+    
+    
+    # Axis format
+    
+    axis.text = ggplot2::element_text(family = font,
+                                      
+                                      size=10,
+                                      
+                                      color="#222222"),
+    
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10), size =8),
+    
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    
+    axis.title = ggplot2::element_text(family=font,
+                                       
+                                       size=12,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    
+    
+    
+    
+    # Grid lines
+    
+    panel.grid.minor = ggplot2::element_blank(),
+    
+    panel.grid.major.y = ggplot2::element_blank(),
+    
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    
+    
+    
+    
+    # Very pale cream/yellow background
+    
+    panel.background = element_rect(fill = "#FFFBF0", 
+                                    
+                                    color = "#FFFBF0",
+                                    
+                                    linewidth = 0.5,
+                                    
+                                    linetype = "solid"),
+    
+    plot.background = element_rect(fill = "#FFFBF0", 
+                                   
+                                   color = "#FFFBF0",
+                                   
+                                   linewidth = 0.5,
+                                   
+                                   linetype = "solid"),
+    
+    legend.background = element_rect(fill = "#FFFBF0", 
+                                     
+                                     color = "#FFFBF0",
+                                     
+                                     linewidth = 0.5,
+                                     
+                                     linetype = "solid"),
+    
+    
+    
+    
+    
+  )
+  
+}
+
+
+
+
+
+longbeach <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-04/longbeach.csv')  
+
+
+
+
+
+# Dogs
+
+
+
+# simple function to merge colours
+
+
+
+simplify_color <- function(color) {
+  
+  color <- tolower(color)  # Convert to lowercase for consistency
+  
+  
+  
+  case_when(
+    
+    str_detect(color, "white|cream|silver") ~ "White/Silver",
+    
+    str_detect(color, "brown|chocolate|tan|fawn|liver") ~ "Brown/Tan",
+    
+    str_detect(color, "black|seal|black smoke") ~ "Black",
+    
+    str_detect(color, "gray|blue|blue brindle|blue merle|blue tick") ~ "Gray/Blue",
+    
+    str_detect(color, "red|ruddy|red merle|orange|apricot") ~ "Red/Orange",
+    
+    str_detect(color, "yellow|yellow brindle|gold|wheat|blondebuff") ~ "Golden",
+    
+    str_detect(color, "sable|dapple|brindle|tiger|tricolor") ~ "Patterned",
+    
+    TRUE ~ "Other"  # Default category for unexpected values
+    
+  )
+  
+}
+
+
+
+
+
+dogs <- longbeach %>%
+  
+  filter(animal_type == "dog") %>%
+  
+  filter(primary_color != "unknown" | primary_color != "pink") %>%
+  
+  mutate(year = floor(year(as.Date(intake_date))), .after = intake_date) %>%
+  
+  select(animal_type, primary_color, year) %>%
+  
+  mutate(color = simplify_color(primary_color)) %>%
+  
+  select(-c(primary_color))
+
+
+
+
+
+dog_colors <- c(
+  
+  "White/Silver" = "#dcdcdc",
+  
+  "Brown/Tan" = "#987456",
+  
+  "Gray/Blue" = "#7e99b4",
+  
+  "Golden" = "#f7c66b",
+  
+  "Black" = alpha("black",0.75),
+  
+  "Patterned" = "#ffb7c5",
+  
+  "Red/Orange" = "peru",
+  
+  "Other" = "#cc3333"
+  
+  
+  
+)
+
+
+
+subtitle <- "The colour of dogs admitted to the Long Beach Animal Shelter over the years"
+
+
+
+p1 <- dogs %>%
+  
+  count(animal_type, color, year) %>%
+  
+  mutate(n = n / 10) %>%
+  
+  ggplot() +
+  
+  geom_waffle0(aes(x = year, y = n, fill = color), gap = 0.015) +
+  
+  scale_x_continuous(breaks = unique(dogs$year)) +  # Ensure all years are displayed
+  
+  scale_fill_manual(values = dog_colors) +
+  
+  labs(x = "Year", y = "Count (x10)", fill = "Dog Colour", subtitle = subtitle) +
+  
+  Custom_Style() +
+  
+  theme(legend.position = "right")
+
+
+
+print(p1)
+
+
+
+#How long pets stay
+
+excl_animal <- c("rabbit", "bird", "amphibian", "wild", "other", "livestock")
+
+
+
+time <- longbeach %>%
+  
+  filter(!animal_type %in% excl_animal ) %>%
+  
+  select(animal_type, intake_date, outcome_date) %>%
+  
+  mutate(time_in_shelter = outcome_date - intake_date,
+         
+         animal_type = str_to_title(animal_type))
+
+
+
+
+
+
+
+max_stay <- time %>%
+  
+  group_by(animal_type) %>%
+  
+  summarise(max_time = max(time_in_shelter, na.rm = TRUE))
+
+
+
+subtitle <- "Average length of stay for animals in the Long Beach Animal Shelter"
+
+
+
+
+
+# Convert duration to numeric (in days)
+
+time <- time %>%
+  
+  mutate(time_in_shelter_numeric = as.numeric(time_in_shelter, units = "days"))
+
+
+
+# Compute max stay per animal type (in numeric form)
+
+max_stay <- time %>%
+  
+  group_by(animal_type) %>%
+  
+  summarise(Max_Stay = max(time_in_shelter_numeric, na.rm = TRUE)) %>%
+  
+  rename("Type of Animal" = animal_type,
+         
+         "Maximum Length of Stay (Days)" = Max_Stay)
+
+
+
+# Create the violin plot and annotate with table
+
+p2 <- ggplot(time, aes(x = time_in_shelter_numeric, y = animal_type, fill = animal_type)) +
+  
+  geom_violin(alpha = 0.8) +
+  
+  scale_x_continuous(limits = c(-10, 365),
+                     
+                     breaks = seq(0, 365, by = 90),
+                     
+                     expand = c(0,0)) +
+  
+  annotate(geom = "table", x = 365/2, y = length(max_stay$`Maximum Length of Stay (Days)` ) + 1, label = list(max_stay),
+           
+           vjust = 1, hjust = 0, family = "Permanent Marker", color = alpha("black", 0.5),
+           
+           table.theme = ttheme_minimal(title = "Highest and Lowest Rated Episodes",
+                                        
+                                        base_colour = "black", base_family = "noto_mono", color = "#FFFBF0",base_size = 14,
+                                        
+                                        core=list(bg_params = list(fill = "#FFFBF0")),
+                                        
+                                        colhead = list(bg_params = list(fill = "#FFFBF0")))) +
+  
+  labs(x = "Time Animal is in Shelter", y = "Animal Type", fill = "Animal Type", subtitle = subtitle) +
+  
+  Custom_Style()
+
+
+
+print(p2)
+
+
+# Geographcial location
+
+animal_pickup <- longbeach %>%
+  
+  filter(animal_type == "dog" | animal_type == "cat") %>% 
+  mutate(animal_type = str_to_title(animal_type)) %>% 
+  select(animal_type, longitude, latitude) 
+
+animal_sf <- st_as_sf(animal_pickup, coords = c("longitude", "latitude"), crs = 4326)
+
+
+# Define the long beach boundary (googled)
+long_beach_bbox <- c(-118.25, 33.75, -118.10, 33.80)
+
+#
+long_beach_boundary <- opq(bbox = long_beach_bbox) %>%
+  add_osm_feature(key = "boundary", value = "administrative") %>%
+  add_osm_feature(key = "name", value = "Long Beach") %>%
+  osmdata_sf() %>%
+  .$osm_multipolygons
+
+
+# Fetch major roads (primary, secondary, and tertiary)
+major_roads <- opq(bbox = long_beach_bbox) %>%
+  add_osm_feature(key = "highway", 
+                  value = c("motorway", "primary", "secondary", "tertiary")) %>%
+  osmdata_sf() %>%
+  .$osm_lines
+
+title <- "Cat and Dog Pickup Locations and Landmarks in Long Beach"
+
+
+p3 <-  ggplot() +
+  geom_sf(data = long_beach_boundary, fill = NA, color = "black", size = 1) +
+  geom_sf(data = major_roads, color = "grey50", size = 0.8, linetype = "solid") +
+  geom_sf(data = animal_sf, aes(color = animal_type), size = 1, alpha = 0.8) +
+  coord_sf(xlim = c(-118.25, -118.10), ylim = c(33.75, 33.80), expand = FALSE) +
+  Custom_Style() +
+  theme(
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()) +
+  labs(
+       x = "Longitude", y = "Latitude", subtitle = title, color = "Animal Type")
+
+combined_plot <- (p1 + p2) &
+  theme(legend.position = "bottom") &
+  plot_annotation(
+    title = str_wrap('Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US', 80),
+    subtitle = "TidyTuesday: Week 8, 2025",
+    theme = Custom_Style()
+  ) &
+  theme(
+    caption = element_text(hjust = 0.5),
+    plot.subtitle = element_text(size = 16)
+  )
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week09a.png", 
+  plot = combined_plot, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+ggsave(
+  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week09b.png", 
+  plot = p3, 
+  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1080 / 96,    # Converts 1080px to inches
+  dpi = 96,             # Set DPI to 96 to match pixel dimensions
+  units = "in",
+)
+
+```
+
