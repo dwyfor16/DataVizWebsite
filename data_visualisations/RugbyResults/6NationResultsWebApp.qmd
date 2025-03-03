@@ -24,6 +24,9 @@ execute:
 
 This was my first attempt at building a Shiny App based on my previous project. It is more flexible with some interactive text when you hover over the tiles.
 
-[Link to Web App](https://eh1prp-dwyfor16.shinyapps.io/rugbyresultsapp/)
+
+
+[Open Rugby Results App](https://eh1prp-dwyfor16.shinyapps.io/rugbyresultsapp/){target="_blank"}
+
 
 ![Figure 1](thumbnails/WalesversusIreland.png)

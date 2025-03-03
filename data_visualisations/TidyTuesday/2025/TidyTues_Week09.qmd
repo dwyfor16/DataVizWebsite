@@ -31,14 +31,14 @@ execute:
 ```{r}
 
 
-gc()
-
-rm(list = ls())
-
-graphics.off()
-
-cat('\014')
-
+# gc()
+# 
+# rm(list = ls())
+# 
+# graphics.off()
+# 
+# cat('\014')
+# 
 
 
 if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
@@ -328,27 +328,23 @@ p1 <- dogs %>%
   
   scale_fill_manual(values = dog_colors) +
   
-  labs(x = "Year", y = "Count (x10)", fill = "Dog Colour", subtitle = subtitle) +
-  
   Custom_Style() +
+  labs(x = "Year", y = "Count (x10)", fill = "Dog Colour", subtitle = str_wrap(subtitle, 60)) +
   
   theme(legend.position = "right")
-
-
-
-print(p1)
-
 
 
 #How long pets stay
 
 excl_animal <- c("rabbit", "bird", "amphibian", "wild", "other", "livestock")
-
+adpotion_reasons <- c("adoption", "return to owner", "foster to adopt")
 
 
 time <- longbeach %>%
   
   filter(!animal_type %in% excl_animal ) %>%
+  filter(outcome_type %in% adpotion_reasons ) %>%
+  
   
   select(animal_type, intake_date, outcome_date) %>%
   
@@ -370,7 +366,7 @@ max_stay <- time %>%
 
 
 
-subtitle <- "Average length of stay for animals in the Long Beach Animal Shelter"
+subtitle <- "Average length of stay for animals in the Long Beach Animal Shelter to being adopted"
 
 
 
@@ -422,13 +418,13 @@ p2 <- ggplot(time, aes(x = time_in_shelter_numeric, y = animal_type, fill = anim
                                         
                                         colhead = list(bg_params = list(fill = "#FFFBF0")))) +
   
-  labs(x = "Time Animal is in Shelter", y = "Animal Type", fill = "Animal Type", subtitle = subtitle) +
+  labs(x = "Time Animal is in Shelter (Days)", y = "Animal Type", fill = "Animal Type", subtitle = str_wrap(subtitle, 60)) +
   
   Custom_Style()
 
 
 
-print(p2)
+
 
 
 # Geographcial location
@@ -479,8 +475,8 @@ p3 <-  ggplot() +
 combined_plot <- (p1 + p2) &
   theme(legend.position = "bottom") &
   plot_annotation(
-    title = str_wrap('Academic Literature on Racial and Ethnic Disparities in Reproductive Medicine in the US', 80),
-    subtitle = "TidyTuesday: Week 8, 2025",
+    title = str_wrap('Admittance Data for Long Beach Animal Shelter', 80),
+    subtitle = "TidyTuesday: Week 9, 2025",
     theme = Custom_Style()
   ) &
   theme(
@@ -491,8 +487,8 @@ combined_plot <- (p1 + p2) &
 ggsave(
   filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week09a.png", 
   plot = combined_plot, 
-  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
-  width = 1080 / 96,    # Converts 1080px to inches
+  height = 1080 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1920 / 96,    # Converts 1080px to inches
   dpi = 96,             # Set DPI to 96 to match pixel dimensions
   units = "in",
 )
@@ -500,8 +496,8 @@ ggsave(
 ggsave(
   filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week09b.png", 
   plot = p3, 
-  height = 1240 / 96,  # Converts 1240px to inches (assuming 96 DPI)
-  width = 1080 / 96,    # Converts 1080px to inches
+  height = 400 / 96,  # Converts 1240px to inches (assuming 96 DPI)
+  width = 1920 / 96,    # Converts 1080px to inches
   dpi = 96,             # Set DPI to 96 to match pixel dimensions
   units = "in",
 )
