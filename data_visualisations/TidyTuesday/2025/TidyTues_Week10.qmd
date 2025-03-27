@@ -1,0 +1,252 @@
+---
+title: "TidyTuesday Week 10: Pixar Films Analysis"
+subtitle: "This week we're exploring Pixar films! The data this week comes from the {pixarfilms} R package by Eric Leung."
+author: "Peter Gray"
+date: "2025-03-17" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis]
+image: "thumbnails/TidyTues_Week10.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Thumbnail](thumbnails/TidyTues_Week10.png)
+
+#### 1. R code
+
+```{r}
+
+
+# Load the packages in ----------------------------------------------------
+
+if(!require(httr)){install.packages("httr"); library(httr)}
+if(!require(jsonlite)){install.packages("jsonlite"); library(jsonlite)}
+if(!require(withr)){install.packages("withr"); library(withr)}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(gridExtra)){install.packages("gridExtra"); library(gridExtra)}
+if(!require(grid)){install.packages("grid"); library(grid)}
+if(!require(cowplot)){install.packages("cowplot"); library(cowplot)}
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+if(!require(ggpmisc)){install.packages("ggpmisc"); library(ggpmisc)}
+if(!require(rlist)){install.packages("rlist"); library(rlist)}
+
+# get the wd
+wd <- getwd()
+
+
+pixar_films <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-11/pixar_films.csv')
+public_response <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-11/public_response.csv')
+
+
+
+
+font_add_google("Noto Sans Mono", "noto_mono")
+
+font <- "noto_mono"
+
+showtext_auto()
+
+
+
+# Color palette
+
+color <- palette.colors(palette = "Okabe-Ito")
+
+color <- append(color, "gold")
+
+color[1] <- "#D41159"
+
+
+
+
+
+Custom_Style <- function() {
+  
+  ggplot2::theme(
+    
+    plot.title = ggplot2::element_text(family=font,
+                                       
+                                       size=24,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          
+                                          size=18,
+                                          
+                                          color="#222222"),
+    
+    plot.caption = ggplot2::element_text(family=font,
+                                         
+                                         size=10,
+                                         
+                                         color="#222222"),
+    
+    
+    
+    legend.position = "bottom",
+    
+    legend.title = ggplot2::element_text(family=font,
+                                         
+                                         size=12,
+                                         
+                                         face="bold",
+                                         
+                                         color="#222222"),
+    
+    # legend.text.align = 0,
+    
+    legend.key = ggplot2::element_blank(),
+    
+    legend.text = ggplot2::element_text(family=font,
+                                        
+                                        size=9,
+                                        
+                                        color="#222222"),
+    
+    
+    
+    # Axis format
+    
+    axis.text = ggplot2::element_text(family = font,
+                                      
+                                      size=10,
+                                      
+                                      color="#222222"),
+    
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10), size =8),
+    
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    
+    axis.title = ggplot2::element_text(family=font,
+                                       
+                                       size=12,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    
+    
+    
+    
+    # Grid lines
+    
+    panel.grid.minor = ggplot2::element_blank(),
+    
+    panel.grid.major.y = ggplot2::element_blank(),
+    
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    
+    
+    
+    
+    # Very pale cream/yellow background
+    
+    panel.background = element_rect(fill = "#FFFBF0", 
+                                    
+                                    color = "#FFFBF0",
+                                    
+                                    linewidth = 0.5,
+                                    
+                                    linetype = "solid"),
+    
+    plot.background = element_rect(fill = "#FFFBF0", 
+                                   
+                                   color = "#FFFBF0",
+                                   
+                                   linewidth = 0.5,
+                                   
+                                   linetype = "solid"),
+    
+    legend.background = element_rect(fill = "#FFFBF0", 
+                                     
+                                     color = "#FFFBF0",
+                                     
+                                     linewidth = 0.5,
+                                     
+                                     linetype = "solid"),
+    
+    
+    
+    
+    
+  )
+  
+}
+
+
+# MAke a Big Dataframe
+
+Combined <- left_join(pixar_films, public_response, by = "film") %>% 
+  filter(!is.na(metacritic)) %>% 
+  mutate(decade = floor(year(as.Date(release_date)) / 10) * 10, .after = release_date) %>% 
+  group_by(decade) %>% 
+  arrange(release_date) %>% 
+  mutate(order_in_decade = row_number(),
+         decade = as.factor(decade)) %>% 
+  rename(`Rotten Tomatoes` = rotten_tomatoes,
+         `MetaCritic` = metacritic,
+         `Critics Choice` = critics_choice)
+
+
+rating_columns <- c("MetaCritic", "Rotten Tomatoes", "Critics Choice")
+
+
+list_of_plots <- list()
+
+for (rating in rating_columns) {
+  
+  heatmap_plot <- ggplot(Combined, aes(x = factor(decade), y = order_in_decade, fill = .data[[rating]])) +
+    geom_tile() +
+    scale_x_discrete(limits = sort(unique(Combined$decade))) +
+    geom_text(aes(label = paste0(str_wrap(film, 14), "\n", round(.data[[rating]], 1))),
+              color = alpha("Black", 1), size = 6, family = font) +
+    scale_fill_gradient(low = "yellow", high = "darkgreen") +
+    labs(
+      subtitle = paste("Heatmap of ", str_to_title(rating), "Ratings"),
+      x = "Decade",
+      y = "Order in Decade \n First film in each decade is at the bottom",
+      fill = paste(str_to_title(rating), "Rating")
+    ) +
+    Custom_Style() +
+    theme(legend.position = "right")
+
+  list_of_plots <- list.append(list_of_plots, heatmap_plot)
+}
+final_patchwork <- wrap_plots(list_of_plots) &
+  theme(legend.position = "bottom") &
+  plot_annotation(
+    title = str_wrap('Comparison of Public and Critic Rating Systems for different Pixar films', 80),
+    subtitle = "TidyTuesday: Week 10, 2025",
+    theme = Custom_Style()
+  ) &
+  theme(
+    plot.subtitle = element_text(size = 16)
+  )
+
+
+```

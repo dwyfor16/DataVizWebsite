@@ -1,0 +1,242 @@
+---
+title: "TidyTuesday Week 11: Palm Trees Analysis"
+subtitle: "Plant traits are critical to plant form and function —including growth, survival and reproduction— and therefore shape fundamental aspects of population and ecosystem dynamics as well as ecosystem services. Here, we present a global species-level compilation of key functional traits for palms (Arecaceae), a plant family with keystone importance in tropical and subtropical ecosystems."
+author: "Peter Gray"
+date: "2025-03-19" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis]
+image: "thumbnails/TidyTues_Week11.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Thumbnail](thumbnails/TidyTues_Week11.png)
+
+#### 1. R code
+
+```{r}
+
+
+# Load the packages in ----------------------------------------------------
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(showtext)){install.packages("showtext"); library(showtext)}
+if(!require(ggdendro)){install.packages("ggdendro"); library(ggdendro)}
+if(!require(ggbrick)){install.packages("ggbrick"); library(ggbrick)}
+if(!require(ggmosaic)){install.packages("ggmosaic"); library(ggmosaic)}
+if(!require(treemapify)){install.packages("treemapify"); library(treemapify)}
+
+# get the wd
+wd <- getwd()
+
+
+palmtrees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-18/palmtrees.csv')
+
+font_add_google("Noto Sans Mono", "noto_mono")
+
+font <- "noto_mono"
+
+showtext_auto()
+
+
+
+# Color palette
+
+color <- palette.colors(palette = "Okabe-Ito")
+
+color <- append(color, "gold")
+
+color[1] <- "#D41159"
+
+
+
+
+
+Custom_Style <- function() {
+  
+  ggplot2::theme(
+    
+    plot.title = ggplot2::element_text(family=font,
+                                       
+                                       size=24,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          
+                                          size=18,
+                                          
+                                          color="#222222"),
+    
+    plot.caption = ggplot2::element_text(family=font,
+                                         
+                                         size=10,
+                                         
+                                         color="#222222"),
+    
+    
+    
+    legend.position = "bottom",
+    
+    legend.title = ggplot2::element_text(family=font,
+                                         
+                                         size=22,
+                                         
+                                         face="bold",
+                                         
+                                         color="#222222"),
+    
+    # legend.text.align = 0,
+    
+    legend.key = ggplot2::element_blank(),
+    
+    legend.text = ggplot2::element_text(family=font,
+                                        
+                                        size=9,
+                                        
+                                        color="#222222"),
+    
+    
+    
+    # Axis format
+    
+    axis.text = ggplot2::element_text(family = font,
+                                      
+                                      size=10,
+                                      
+                                      color="#222222"),
+    
+    axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10), size =8),
+    
+    axis.line = ggplot2::element_line(colour = alpha('#222222', 0.5), size =0.5),
+    
+    axis.title = ggplot2::element_text(family=font,
+                                       
+                                       size=12,
+                                       
+                                       face="bold",
+                                       
+                                       color="#222222"),
+    
+    
+    
+    
+    
+    # Grid lines
+    
+    panel.grid.minor = ggplot2::element_blank(),
+    
+    panel.grid.major.y = ggplot2::element_blank(),
+    
+    panel.grid.major.x = ggplot2::element_blank(),
+    
+    
+    
+    
+    
+    
+    
+    # Very pale cream/yellow background
+    
+    panel.background = element_rect(fill = "#FFFBF0", 
+                                    
+                                    color = "#FFFBF0",
+                                    
+                                    linewidth = 0.5,
+                                    
+                                    linetype = "solid"),
+    
+    plot.background = element_rect(fill = "#FFFBF0", 
+                                   
+                                   color = "#FFFBF0",
+                                   
+                                   linewidth = 0.5,
+                                   
+                                   linetype = "solid"),
+    
+    legend.background = element_rect(fill = "#FFFBF0", 
+                                     
+                                     color = "#FFFBF0",
+                                     
+                                     linewidth = 0.5,
+                                     
+                                     linetype = "solid"),
+    
+    
+    
+    
+    
+  )
+  
+}
+palm_colours <- palmtrees %>%
+  filter(!is.na(main_fruit_colors)) %>% 
+  mutate(main_fruit_colors = str_extract(main_fruit_colors, "^[^;]+"),
+         main_fruit_colors = str_to_title(main_fruit_colors)) %>% 
+  count(palm_tribe, main_fruit_colors) 
+
+
+
+color_mapping <- c(
+  "Black" = alpha("black", 0.7), "Blue" = "blue", "Brown" = "brown", "Green" = "green", 
+  "Orange" = "orange", "Pink" = "pink", "Purple" = "purple", "Red" = "red", 
+  "White" = "white", "Yellow" = "yellow", "Cream" = "antiquewhite", 
+  "Grey" = "grey", "Ivory" = "ivory", "Straw-Coloured" = "wheat"
+)
+
+circular_bar <- palm_colours %>% 
+  group_by(palm_tribe) %>%
+  mutate(
+    percent = (n / sum(n)) * 100,
+     # Capitalize colors here
+  ) %>%
+  ggplot(aes(x = palm_tribe, y = percent, fill = main_fruit_colors)) +
+  geom_bar(stat = "identity", width = 0.8) +
+  coord_polar() +
+  
+  scale_fill_manual(values = color_mapping) +
+  labs(fill = "Primary Fruit Colour") +
+  Custom_Style() +
+  theme(
+    axis.text.x = element_text(size = 22),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.line = element_blank(),
+    legend.text = element_text(size = 22)
+  ) +
+  guides(fill = guide_legend(ncol = 3))
+
+p1 <- circular_bar +
+  theme(legend.position = "bottom") &
+  plot_annotation(
+    title = str_wrap("Percentage of Palm Tree Fruit Colors by Tribe", 60),
+    subtitle = "TidyTuesday: Week 11, 2025",
+    theme = Custom_Style()
+  ) &
+  theme(
+    caption = element_text(hjust = 0.5),
+    plot.subtitle = element_text(size = 32),
+    plot.title = element_text(size = 48)
+  )
+```
