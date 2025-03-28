@@ -4,7 +4,7 @@ subtitle: "Plant traits are critical to plant form and function —including gro
 author: "Peter Gray"
 date: "2025-03-19" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
-tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, risk-analysis]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
 image: "thumbnails/TidyTues_Week11.png"
 format:
   html:

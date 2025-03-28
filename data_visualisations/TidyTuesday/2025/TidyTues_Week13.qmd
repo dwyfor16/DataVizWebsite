@@ -1,11 +1,11 @@
 ---
-title: "TidyTuesday Week 12: Amazon's Annual Reports"
-subtitle: "This week we're exploring text data from Amazon's annual reports. The PDFs were read into R using the {pdftools} R package, and explored by TidyTuesday participant Gregory Vander Vinne in a post on his website. Note that stop words (e.g., 'and', 'the', 'a') have been removed from the data."
+title: "TidyTuesday Week 13: Pokemon"
+subtitle: "This week we are exploring Pokemon! This dataset is sourced from {pokemon} (CRAN | github), an R package which provides Pokemon information in both English and Brazilian Portuguese."
 author: "Peter Gray"
-date: "2025-03-28" 
+date: "2025-03-30" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
-image: "thumbnails/TidyTues_Week12.png"
+image: "thumbnails/TidyTues_Week13.png"
 format:
   html:
     toc: true
@@ -26,7 +26,7 @@ execute:
   eval: true
 ---
 
-![Thumbnail](thumbnails/TidyTues_Week12.png)
+![Thumbnail](thumbnails/TidyTues_Week13.png)
 
 #### 1. R code
 
@@ -46,8 +46,8 @@ if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); librar
 wd <- getwd()
 
 font <- "noto_mono"
-amazon <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-25/report_words_clean.csv')
 
+pokemon_df <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-01/pokemon_df.csv')
 
 data_clean <- amazon %>%
   filter(year >= 2013) %>%
