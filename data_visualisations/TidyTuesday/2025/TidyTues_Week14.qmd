@@ -1,0 +1,148 @@
+---
+title: "TidyTuesday Week 14: Timely and Effective Care by US State"
+subtitle: "This week we're exploring state-level results for medicare.gov 'timely and effective care' measurements. As of 2025-04-06, the data is available at the Centers for Medicare and Medicaid Services (CMS) website. Thanks to former TidyTuesday team member Tracy Teal (@tracykteal) for the dataset suggestion and the link to a visualization by Kayla Zhu and Christina Kostandi at the Visual Capitalist."
+author: "Peter Gray"
+date: "2025-04-08" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week14.jpg"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Thumbnail 1](thumbnails/TidyTues_Week14.jpg){#fig-singlechart}
+#### 1. Python code
+
+
+
+```{python}
+import pandas as pd
+import os
+import geopandas as gpd
+from plotnine import (
+    ggplot,
+    aes,
+    coord_fixed,
+    facet_wrap,
+    geom_map,
+    geom_polygon,
+    geom_text,
+    labs,
+    scale_fill_brewer,
+    scale_fill_continuous,
+    scale_x_continuous,
+    scale_y_continuous,
+    scale_size_continuous,
+    stage,
+    coord_cartesian,
+    element_line,
+    element_rect,
+    element_text,
+    theme_void,
+    theme,
+)
+from shapely.geometry import Polygon, MultiPolygon
+from plotnine import scale_fill_gradient
+
+
+pcare_state = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-08/care_state.csv')
+
+
+
+# Filter the data for Emergency Department and relevant states
+excluded_states = ["DC", "GU", "MH", "MP", "PR", "VI", "AS", "AL", "HI"]
+ed_data = pcare_state[
+    (pcare_state["condition"] == "Emergency Department") &
+    (~pcare_state["state"].isin(excluded_states)) &
+    (pcare_state["measure_id"] == "OP_22")
+]
+
+# Load state boundary shapefile
+state_data = gpd.read_file("~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/maps/ne_110m_admin_1_states_provinces.shp")
+excluded_states = ["HI", "AK"]  # Exclude Hawaii and Alaska
+state_data = state_data[~state_data['postal'].isin(excluded_states)]
+state_data = state_data[state_data['admin'] == 'United States of America']
+
+# Merge state boundaries with Emergency Department data
+state_data['postal'] = state_data['postal'].str.upper()
+merged_data = state_data.merge(ed_data, left_on="postal", right_on="state", how="left")
+
+# Calculate the centroid of each state for text placement
+merged_data['centroid'] = merged_data.geometry.centroid
+merged_data['centroid_x'] = merged_data['centroid'].apply(lambda x: x.x)
+merged_data['centroid_y'] = merged_data['centroid'].apply(lambda x: x.y)
+
+# Explode multi-part geometries into individual rows
+merged_data = merged_data.explode(index_parts=False)
+
+# Extract polygon coordinates
+def get_coords(row):
+    if isinstance(row.geometry, Polygon):
+        exterior = row.geometry.exterior.coords
+        return list(exterior)
+    elif isinstance(row.geometry, MultiPolygon):
+        # Take only the largest polygon (simplification)
+        largest_poly = max(row.geometry.geoms, key=lambda a: a.area)
+        return list(largest_poly.exterior.coords)
+    else:
+        return None
+
+merged_data["coords"] = merged_data.apply(get_coords, axis=1)
+merged_data = merged_data.explode("coords", ignore_index=True)
+
+# Create longitude and latitude columns
+merged_data["longitude"] = merged_data["coords"].apply(lambda x: x[0])
+merged_data["latitude"] = merged_data["coords"].apply(lambda x: x[1])
+
+merged_data["score_label"] = merged_data["score"].apply(
+    lambda x: f"{round(x)}%" if pd.notnull(x) else ""
+)
+
+
+
+# Now plot
+
+plot = (
+    ggplot(merged_data)
+    + geom_polygon(
+        aes(x="longitude", y="latitude", group="postal", fill="score"),
+        color="black"
+    )
+    + geom_text(
+        aes(x="centroid_x", y="centroid_y", label="score_label"),
+        size=7,
+        color="black"
+    )
+    + scale_fill_gradient(name="Percent", low="#f1eef6", high="#045a8d")
+    + labs(
+        title="Percentage of Patients Who Left the\nEmergency Department Before Being Seen"
+    )
+    + coord_fixed()
+    + theme_void()
+    + theme(
+        legend_position="bottom",
+        legend_title=element_text(size=10, weight="bold"),
+        legend_text=element_text(size=8),
+        plot_title=element_text(size=14, weight="bold")
+    )
+)
+
+
+```
+  

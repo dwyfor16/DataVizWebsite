@@ -85,14 +85,5 @@ p1 <- wordcloud +
     plot.title = element_text(size = 32)
   )
 
-ggsave(
-  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week12.png", 
-  plot = p1, 
-  height = 1080 / 96,  # Converts 1240px to inches (assuming 96 DPI)
-  width = 1080 / 96,    # Converts 1080px to inches
-  dpi = 96,             # Set DPI to 96 to match pixel dimensions
-  units = "in",
-)
-
 
 ```

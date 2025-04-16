@@ -1,11 +1,11 @@
 ---
 title: "TidyTuesday Week 13: Pokemon"
-subtitle: "This week we are exploring Pokemon! This dataset is sourced from {pokemon} (CRAN | github), an R package which provides Pokemon information in both English and Brazilian Portuguese."
+subtitle: "This week we are exploring Pokémon! This dataset is sourced from {pokemon} (CRAN | github), an R package which provides Pokémon information in both English and Brazilian Portuguese. \n I will only be looking at Gen 1 Pokémon."
 author: "Peter Gray"
 date: "2025-03-30" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
-image: "thumbnails/TidyTues_Week13.png"
+image: "thumbnails/TidyTues_Week13a.png"
 format:
   html:
     toc: true
@@ -26,7 +26,13 @@ execute:
   eval: true
 ---
 
-![Thumbnail](thumbnails/TidyTues_Week13.png)
+::: {#fig-charts layout-ncol="2"}
+![Thumbnail 1](thumbnails/TidyTues_Week13a.png){#fig-singlechart}
+
+![Thumbnail 2](thumbnails/TidyTues_Week13b.png){#fig-multiplecharts}
+
+Tidy Tuesday Week 13: Charts
+:::
 
 #### 1. R code
 
@@ -39,60 +45,109 @@ if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
 if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
 if(!require(ggplot2)){install.packages("ggplot2"); library(ggplot2)}
 if(!require(ggwordcloud)){install.packages("ggwordcloud"); library(ggwordcloud)}
+if(!require(ggpmisc)){install.packages("ggpmisc"); library(ggpmisc)}
+if(!require(ggimage)){install.packages("ggimage"); library(ggimage)}
+if(!require(ggtext)){install.packages("ggtext"); library(ggimage)}
+if(!require(rlist)){install.packages("rlist"); library(rlist)}
 # I stick all my styling into a CUsotm PAckage to tidy up my code and keep it consistent over the time
 if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
 
-# get the wd
+# get the wd - force of habit
 wd <- getwd()
+#pulling images off internet was taking a lot of time and casing a time out error
+options(timeout = 1000) 
+
+
 
 font <- "noto_mono"
 
 pokemon_df <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-01/pokemon_df.csv')
 
-data_clean <- amazon %>%
-  filter(year >= 2013) %>%
-  group_by(year, word) %>%
-  summarise(count = n(), .groups = "drop") %>%     
-  arrange(year, desc(count)) %>% # Sort within each year by count
-  group_by(year) %>%
-  slice(1:15) %>% # Select top 15 words per year
-  ungroup() %>%
-  filter(word != "aaa") %>% 
-  mutate(word = str_remove_all(word, "<.*?>"))
+# I only care about first gen - Older Millenial
 
+first_gen <- pokemon_df %>% 
+  filter(generation_id == 1) %>% 
+  #for later
+  rename("special attack" = special_attack)
 
+# going to loop through attack, defence, special attack, speed
 
+columns <- c("attack", "defense", "special attack", "speed")
+n = 3
 
-wordcloud  <- ggplot(data_clean, aes(label = word, size = count, color = count)) +
-  geom_text_wordcloud(area_corr = TRUE) +
-  facet_wrap(~ year) +
-  scale_size_area(max_size = 15) +
-  scale_color_gradient(low = "blue", high = "red") +
-  Custom_Style() +
+#empty list of plots
+list_of_plots <- list()
+
+for(n in 1: length(columns)) {
+  
+  data <- first_gen %>%
+    group_by(type_1) %>%
+    slice_max(order_by = .data[[columns[n]]], n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    arrange(.data[[columns[n]]])  # Correct dynamic column referencing
+  
+  #Make labels with a picture of the Pokemon and then the name of the pokemon underneath
+  # Generate labels after sorting
+  labels <- paste0(
+    "<img src='", data$url_image, "' width='45' height='35' /><br>",
+    "<span style='font-size:16px;'>", # Add font size styling here
+    sapply(strwrap(str_to_title(data$pokemon), width = 20, simplify = FALSE), 
+           function(x) paste(x, collapse = "<br>")),
+    "</span>"
+  )
+  
+  
+  
+  chart <- data %>%
+    ggplot(aes(x = reorder(pokemon, .data[[columns[n]]]), 
+               y = .data[[columns[n]]], 
+               fill = str_to_title(type_1))) +
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = .data[[columns[n]]]),  
+              hjust = -0.5,
+              position = position_dodge(width = 0.25),
+              size = 6,  
+              family = font) +
+    coord_flip() +
+    labs(x = "Pokémon", 
+         y = paste0(str_to_title(columns[n]), " Score"), 
+         subtitle = str_to_title(columns[n]),
+         fill = "Pokémon Type") +  
+    Custom_Style() +
+    theme(axis.text.y = element_markdown(), 
+          legend.text = element_text(size = 15),
+          axis.text = element_text(size = 12)) +
+    scale_x_discrete(labels = labels)  
+  
+  list_of_plots <- list.append(list_of_plots, chart)
+  
+}
+
+#single plot to look good for social media
+single_chart <- list_of_plots[[1]]
+
+single_chart <- single_chart +
+  labs(
+    title = 'Visualisation of various Pokémon stats by their Attack',
+    subtitle = "TidyTuesday: Week 13, 2025",
+    theme = Custom_Style()
+  ) +
   theme(
-    strip.background = element_rect(fill = "#FFFBF0", color = "#FFFBF0"), 
-    strip.text = element_text(size = 32, face = "bold", color = "black", family = font, hjust = 0) )
+    plot.subtitle = element_text(size = 16)
+  )
 
-p1 <- wordcloud +
+
+patchwork <- wrap_plots(list_of_plots) +
+  plot_layout(guides = "collect") +
   plot_annotation(
-    title = str_wrap("Word Cloud of Top 15 Most Commonly used words in Amazon's Annual Report (2013-2023)", 40),
-    subtitle = "TidyTuesday: Week 12, 2025",
+    title = str_wrap('Visualisation of various Pokémon stats by their type', 80),
+    subtitle = "TidyTuesday: Week 13, 2025",
     theme = Custom_Style()
   ) &
   theme(
-    caption = element_text(hjust = 0.5),
-    plot.subtitle = element_text(size = 20),
-    plot.title = element_text(size = 32)
+    plot.title = element_text(size = 24),
+    plot.subtitle = element_text(size = 16)
   )
 
-ggsave(
-  filename = "~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week12.png", 
-  plot = p1, 
-  height = 1080 / 96,  # Converts 1240px to inches (assuming 96 DPI)
-  width = 1080 / 96,    # Converts 1080px to inches
-  dpi = 96,             # Set DPI to 96 to match pixel dimensions
-  units = "in",
-)
-
-
 ```
+
