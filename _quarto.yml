@@ -11,7 +11,7 @@ website:
     logo: _site/images/logo.png
     background: "#FFD700"
     toggle-position: left
-    title: "Peter's Data Visualisation"
+    title: "Peter G's Data Visualisation"
     collapse-below: lg
     right:
       - text: "Data Visualisation"

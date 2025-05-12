@@ -1,11 +1,11 @@
 ---
-title: "TidyTuesday Week 14: Timely and Effective Care by US State"
-subtitle: "This week we're exploring state-level results for medicare.gov 'timely and effective care' measurements. As of 2025-04-06, the data is available at the Centers for Medicare and Medicaid Services (CMS) website. Thanks to former TidyTuesday team member Tracy Teal (@tracykteal) for the dataset suggestion and the link to a visualization by Kayla Zhu and Christina Kostandi at the Visual Capitalist."
+title: "TidyTuesday Week 15: Penguins"
+subtitle: "This week we're taking another look at penguins! The Palmer Penguins dataset first appeared in TidyTuesday back in July of 2020. We're using the dataset again because, as of R 4.5.0 (released this past Friday), the datasets are available in the base R datasets package!"
 author: "Peter Gray"
-date: "2025-04-08" 
-categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
-tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
-image: "thumbnails/TidyTues_Week14.jpg"
+date: "2025-04-16" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "Python", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse, python, seaborn]
+image: "thumbnails/TidyTues_Week15a.png"
 format:
   html:
     toc: true
@@ -26,123 +26,123 @@ execute:
   eval: true
 ---
 
-![Thumbnail 1](thumbnails/TidyTues_Week14.jpg){#fig-singlechart}
-#### 1. Python code
+::: {#fig-charts layout-ncol="2"}
+![Graph done in R](thumbnails/TidyTues_Week15a.png){#fig-singlechart}
+
+![Graph done in Python](thumbnails/TidyTues_Week15b.png){#fig-multiplecharts}
+
+Tidy Tuesday Week 13: Charts
+:::
+
+#### 1. R code
+
+```{r}
+
+
+# Load the packages in ----------------------------------------------------
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(ggplot2)){install.packages("ggplot2"); library(ggplot2)}
+if(!require(ggwordcloud)){install.packages("ggwordcloud"); library(ggwordcloud)}
+if(!require(ggpmisc)){install.packages("ggpmisc"); library(ggpmisc)}
+if(!require(ggimage)){install.packages("ggimage"); library(ggimage)}
+if(!require(ggtext)){install.packages("ggtext"); library(ggimage)}
+if(!require(rlist)){install.packages("rlist"); library(rlist)}
+if(!require(factoextra)){install.packages("factoextra"); library(factoextra)}
+if(!require(NbClust)){install.packages("NbClust"); library(NbClust)}
+# I stick all my styling into a CUsotm PAckage to tidy up my code and keep it consistent over the time
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+# get the wd - force of habit
+wd <- getwd()
+#pulling images off internet was taking a lot of time and casing a time out error
+options(timeout = 1000) 
 
 
 
-```{python}
-import pandas as pd
-import os
-import geopandas as gpd
-from plotnine import (
-    ggplot,
-    aes,
-    coord_fixed,
-    facet_wrap,
-    geom_map,
-    geom_polygon,
-    geom_text,
-    labs,
-    scale_fill_brewer,
-    scale_fill_continuous,
-    scale_x_continuous,
-    scale_y_continuous,
-    scale_size_continuous,
-    stage,
-    coord_cartesian,
-    element_line,
-    element_rect,
-    element_text,
-    theme_void,
-    theme,
-)
-from shapely.geometry import Polygon, MultiPolygon
-from plotnine import scale_fill_gradient
+font <- "noto_mono"
+
+penguins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-15/penguins.csv')
+
+penguins_clean <- penguins %>% 
+  select(sex, island, bill_len, bill_dep, flipper_len, body_mass) %>% 
+  na.omit() %>% 
+  mutate(
+    sex = as.numeric(factor(sex)),
+    island = as.numeric(factor(island))
+  )
+
+# Find the optimal number of clusters using elbow method
+# nb <- NbClust(penguins_clean, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans")
+k <- 2
 
 
-pcare_state = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-08/care_state.csv')
+clust_kmeans <- eclust(penguins_clean, k=k, FUNcluster="kmeans", hc_metric="euclidean", graph=FALSE)
+kmeans_silhouette <- fviz_silhouette(clust_kmeans, print.summary = FALSE)
+
+kmeans_graph_2_clusters <- fviz_cluster(clust_kmeans, data = penguins_clean) +
+  Custom_Style() 
 
 
 
-# Filter the data for Emergency Department and relevant states
-excluded_states = ["DC", "GU", "MH", "MP", "PR", "VI", "AS", "AL", "HI"]
-ed_data = pcare_state[
-    (pcare_state["condition"] == "Emergency Department") &
-    (~pcare_state["state"].isin(excluded_states)) &
-    (pcare_state["measure_id"] == "OP_22")
-]
+#Now lets try with 3 clusters
+k <- 3
+# clust_kmeans <- eclust(penguins_clean, k=k, FUNcluster="kmeans", hc_metric="euclidean", graph=FALSE)
+kmeans_silhouette <- fviz_silhouette(clust_kmeans, print.summary = FALSE)
 
-# Load state boundary shapefile
-state_data = gpd.read_file("~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/maps/ne_110m_admin_1_states_provinces.shp")
-excluded_states = ["HI", "AK"]  # Exclude Hawaii and Alaska
-state_data = state_data[~state_data['postal'].isin(excluded_states)]
-state_data = state_data[state_data['admin'] == 'United States of America']
-
-# Merge state boundaries with Emergency Department data
-state_data['postal'] = state_data['postal'].str.upper()
-merged_data = state_data.merge(ed_data, left_on="postal", right_on="state", how="left")
-
-# Calculate the centroid of each state for text placement
-merged_data['centroid'] = merged_data.geometry.centroid
-merged_data['centroid_x'] = merged_data['centroid'].apply(lambda x: x.x)
-merged_data['centroid_y'] = merged_data['centroid'].apply(lambda x: x.y)
-
-# Explode multi-part geometries into individual rows
-merged_data = merged_data.explode(index_parts=False)
-
-# Extract polygon coordinates
-def get_coords(row):
-    if isinstance(row.geometry, Polygon):
-        exterior = row.geometry.exterior.coords
-        return list(exterior)
-    elif isinstance(row.geometry, MultiPolygon):
-        # Take only the largest polygon (simplification)
-        largest_poly = max(row.geometry.geoms, key=lambda a: a.area)
-        return list(largest_poly.exterior.coords)
-    else:
-        return None
-
-merged_data["coords"] = merged_data.apply(get_coords, axis=1)
-merged_data = merged_data.explode("coords", ignore_index=True)
-
-# Create longitude and latitude columns
-merged_data["longitude"] = merged_data["coords"].apply(lambda x: x[0])
-merged_data["latitude"] = merged_data["coords"].apply(lambda x: x[1])
-
-merged_data["score_label"] = merged_data["score"].apply(
-    lambda x: f"{round(x)}%" if pd.notnull(x) else ""
-)
-
-
-
-# Now plot
-
-plot = (
-    ggplot(merged_data)
-    + geom_polygon(
-        aes(x="longitude", y="latitude", group="postal", fill="score"),
-        color="black"
-    )
-    + geom_text(
-        aes(x="centroid_x", y="centroid_y", label="score_label"),
-        size=7,
-        color="black"
-    )
-    + scale_fill_gradient(name="Percent", low="#f1eef6", high="#045a8d")
-    + labs(
-        title="Percentage of Patients Who Left the\nEmergency Department Before Being Seen"
-    )
-    + coord_fixed()
-    + theme_void()
-    + theme(
-        legend_position="bottom",
-        legend_title=element_text(size=10, weight="bold"),
-        legend_text=element_text(size=8),
-        plot_title=element_text(size=14, weight="bold")
-    )
-)
+kmeans_graph_3_clusters <- fviz_cluster(clust_kmeans, data = penguins_clean, labelsize = 0) +
+  Custom_Style() +
+  labs(title = "K-means Clustering of Penguins (PCA Projection) using R and ggplot2")
 
 
 ```
-  
+
+
+#### 2. Python code
+
+```{python}
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.decomposition import PCA
+from sklearn.metrics import pairwise_distances_argmin_min
+
+import requests
+
+
+penguins = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-15/penguins.csv')
+
+penguins_clean = penguins.replace("NaN", np.nan)  # Replace "NaN" text with actual NaN values
+penguins_clean = penguins_clean[["sex", "island", "bill_len", "bill_dep", "flipper_len", "body_mass"]].dropna()
+
+
+le = LabelEncoder()
+penguins_clean['sex'] = le.fit_transform(penguins_clean['sex']).astype(float)
+penguins_clean['island'] = le.fit_transform(penguins_clean['island']).astype(float)
+
+
+# Just gone straight for 3 now
+k = 3
+kmeans = KMeans(n_clusters = k, random_state = 42)
+penguins_clean['cluster'] = kmeans.fit_predict(penguins_clean)
+
+
+pca = PCA(n_components=2)
+pca_components = pca.fit_transform(penguins_clean.drop('cluster', axis=1))
+pca_df = pd.DataFrame(pca_components, columns=['PC1', 'PC2'])
+pca_df['cluster'] = penguins_clean['cluster'].astype(str)
+
+# Plot
+# plt.figure(figsize=(32, 24))
+# # sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue='cluster', palette='Set2', s=100)
+# 
+# plt.title('K-Means Clustering of Penguins (PCA Projection)')
+# plt.legend(title='Cluster', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+```

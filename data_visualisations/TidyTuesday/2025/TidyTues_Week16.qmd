@@ -1,0 +1,121 @@
+---
+title: "TidyTuesday Week 16: Fatal Car Crashes on DST days"
+subtitle: "Today we're exploring the (lack of) connection between fatal car crashes in the United States on Daylight Savings Time"
+author: "Peter Gray"
+date: "2025-04-21" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week16.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+::: {#fig-charts layout-ncol="2"}
+![Chart](thumbnails/TidyTues_Week16.png){#fig-singlechart}
+Chart of fatalities on Daylight Savings days versus the Average
+:::
+
+#### 1. R code
+
+```{r}
+
+
+# Load the packages in ----------------------------------------------------
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(ggplot2)){install.packages("ggplot2"); library(ggplot2)}
+if(!require(sugrrants)){install.packages("sugrrants"); library(sugrrants)}
+# I stick all my styling into a CUsotm PAckage to tidy up my code and keep it consistent over the time
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+# get the wd - force of habit
+wd <- getwd()
+#pulling images off internet was taking a lot of time and casing a time out error
+options(timeout = 1000) 
+
+
+
+font <- "roboto_bold"
+
+das <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-22/daily_accidents.csv')
+
+das <- das %>%
+  mutate(
+    year = lubridate::year(date),
+    date_time = as.POSIXct(date, tz = "UTC"), 
+    local_time = with_tz(date_time, tzone = "America/New_York"),
+    utc_offset = format(local_time, "%z")
+  )
+
+das <- das %>%
+  arrange(date) %>%
+  mutate(
+    prev_offset = lag(utc_offset),
+    dst_switch = utc_offset != prev_offset
+  )
+
+das <- das %>%
+  mutate(
+    dst_change = case_when(
+      is.na(prev_offset) ~ NA_character_,
+      utc_offset > prev_offset ~ "Forward",   # Spring: clocks jump ahead
+      utc_offset < prev_offset ~ "Backward",  # Fall: clocks go back
+      TRUE ~ NA_character_
+    )
+  )
+
+dst_vs_avg <- das %>%
+  filter(year >= 2010) %>%
+  group_by(year) %>%
+  mutate(avg_fatalities = mean(fatalities_count, na.rm = TRUE)) %>%
+  ungroup() %>%
+  filter(!is.na(dst_change)) %>%
+  group_by(year, dst_change, avg_fatalities) %>%
+  summarise(
+    dst_fatalities = mean(fatalities_count, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    pct_diff = 100 * (dst_fatalities - avg_fatalities) / avg_fatalities
+  )
+
+p1 <- ggplot(dst_vs_avg, aes(x = factor(year), y = pct_diff, fill = dst_change)) +
+  geom_col(position = "dodge") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  scale_fill_manual(values = c("Forward" = "steelblue", "Backward" = "tomato")) +
+   geom_text(
+    aes(
+      label = paste0(round(pct_diff, digits = 1), "%"),
+      #had to do this for dynamic position of the 
+      vjust = case_when(pct_diff >= 0 ~ -0.5, TRUE ~ 1.5)
+    ),
+    position = position_dodge(width = 0.9),
+    size = 3.5
+  ) +
+  labs(
+    title = str_wrap("Percent Difference in Fatalities on Daylight Savings Change Days (Clocks Forward vs Backward)", 60),
+    subtitle = "Compared to annual average fatalities",
+    x = "Year", y = "% Difference",
+    fill = "Clock Change"
+  ) +
+  Custom_Style() 
+
+
+```
