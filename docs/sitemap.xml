@@ -25,6 +25,10 @@
     <lastmod>2025-04-08T19:09:31.669Z</lastmod>
   </url>
   <url>
+    <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/pyzmq-26.4.0.dist-info/licenses/LICENSE.html</loc>
+    <lastmod>2025-04-09T18:20:43.153Z</lastmod>
+  </url>
+  <url>
     <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/cffi/recompiler.html</loc>
     <lastmod>2025-04-09T18:20:50.397Z</lastmod>
   </url>
@@ -37,20 +41,20 @@
     <lastmod>2025-03-28T18:04:04.122Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week18.html</loc>
-    <lastmod>2025-05-06T19:27:24.636Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html</loc>
+    <lastmod>2025-02-25T13:05:27.769Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week15.html</loc>
-    <lastmod>2025-04-16T15:27:39.163Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html</loc>
+    <lastmod>2025-02-25T13:04:59.029Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week12.html</loc>
-    <lastmod>2025-03-29T06:07:38.370Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week14.html</loc>
+    <lastmod>2025-04-09T18:25:07.416Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week07.html</loc>
-    <lastmod>2025-02-25T13:05:32.251Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week19.html</loc>
+    <lastmod>2025-05-12T17:24:33.095Z</lastmod>
   </url>
   <url>
     <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week11.html</loc>
@@ -85,16 +89,16 @@
     <lastmod>2025-03-29T13:41:30.726Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week14.html</loc>
-    <lastmod>2025-04-09T18:25:07.416Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week07.html</loc>
+    <lastmod>2025-02-25T13:05:32.251Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html</loc>
-    <lastmod>2025-02-25T13:04:59.029Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week12.html</loc>
+    <lastmod>2025-03-29T06:07:38.370Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html</loc>
-    <lastmod>2025-02-25T13:05:27.769Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week15.html</loc>
+    <lastmod>2025-04-16T15:27:39.163Z</lastmod>
   </url>
   <url>
     <loc>https://pgdatavizandstats.netlify.app/data_visualisations/TidyTuesday/2025/TidyTues_Week08.html</loc>
@@ -109,8 +113,12 @@
     <lastmod>2025-04-09T18:20:50.303Z</lastmod>
   </url>
   <url>
-    <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/pyzmq-26.4.0.dist-info/licenses/LICENSE.html</loc>
-    <lastmod>2025-04-09T18:20:43.153Z</lastmod>
+    <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/starlette-0.46.2.dist-info/licenses/LICENSE.html</loc>
+    <lastmod>2025-05-12T16:04:41.514Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/uvicorn-0.34.2.dist-info/licenses/LICENSE.html</loc>
+    <lastmod>2025-05-12T16:04:41.328Z</lastmod>
   </url>
   <url>
     <loc>https://pgdatavizandstats.netlify.app/ed_map_env/lib/python3.11/site-packages/idna-3.10.dist-info/LICENSE.html</loc>

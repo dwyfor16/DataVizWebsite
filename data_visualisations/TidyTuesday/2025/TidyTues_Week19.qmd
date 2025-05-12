@@ -1,0 +1,89 @@
+---
+title: "TidyTuesday Week 19: Seismic Events at Mount Vesuvius"
+subtitle: "The dataset this week explores seismic events detected at the famous Mount Vesuvius in Italy. It comes from the Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV)'s Data Portal and can be explored along with other seismic areas on the GOSSIP website. The raw data was saved as individual CSV files from the GOSSIP website and some values were translated from Italian to English."
+author: "Peter Gray"
+date: "2025-05-12" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, patchwork, tidyverse]
+image: "thumbnails/TidyTues_Week19.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import plotly.express as px
+
+vesuvius = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv')
+
+# Data Cleaning
+
+# remove revised
+vesuvius = vesuvius[vesuvius['review_level'] != "revised"]
+
+# Remove NAs from longitude and latitude
+
+vesuvius =  vesuvius.dropna(subset = ['latitude', 'longitude', 'duration_magnitude_md'])
+
+# Remove Negative values from magnitude because it was messing with stuff later on
+# Remove earthquakes 0.3 or less so I can further reduce the number and aren't within the margin of error
+
+vesuvius = vesuvius[vesuvius['duration_magnitude_md'] >0.3]
+
+
+# Fix the dates
+
+
+
+
+# split the time column so I can use the date 
+
+vesuvius['time'] = pd.to_datetime(vesuvius['time'])
+vesuvius['date'] = vesuvius['time'].dt.date
+
+# 6000 is a lot of earthquakes - lets only from the 2020S
+
+vesuvius = vesuvius[vesuvius['year'] >= 2020]
+min_mag = vesuvius['duration_magnitude_md'].min()
+max_mag = vesuvius['duration_magnitude_md'].max()
+
+# Create graph
+fig = px.scatter_mapbox(
+    vesuvius,
+    lat="latitude",
+    lon="longitude",
+    color="duration_magnitude_md",
+    size="duration_magnitude_md",
+    animation_frame="date", 
+    color_continuous_scale="Viridis",
+    range_color=[min_mag, max_mag],  # ← fix color scale
+    size_max=15,
+    zoom=10,
+    center={"lat": 40.821, "lon": 14.426},
+    mapbox_style="carto-positron",
+    title="Earthquake Occurrences in the Vicinity of Mount Vesuvius Over Time <br> (2020–2024)",
+    labels={"duration_magnitude_md": "Magnitude (Md)"}
+)
+
+fig.show()
+
+```
