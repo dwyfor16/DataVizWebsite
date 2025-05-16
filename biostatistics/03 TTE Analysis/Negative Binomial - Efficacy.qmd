@@ -1,0 +1,279 @@
+---
+title: "Time to Event Analysis: Efficacy Endpoints"
+format:
+  pdf:
+    geometry: a4paper, landscape
+    keep-tex: true
+    lof: true
+    lot: true
+    mainfont: "Times New Roman"
+    fontsize: 10pt
+project:
+  type: default
+  output-dir: "Outputs"
+editor_options: 
+  chunk_output_type: console
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{longtable}
+- \usepackage{array}
+- \usepackage{multirow}
+- \usepackage{wrapfig}
+- \usepackage{float}
+- \usepackage{colortbl}
+- \usepackage{pdflscape}
+- \usepackage{tabu}
+- \usepackage{threeparttable}
+- \usepackage{threeparttablex}
+- \usepackage[normalem]{ulem}
+- \usepackage{makecell}
+- \usepackage{xcolor}
+---
+\newpage
+
+
+```{r, load the stuff in}
+#| echo: false
+#| message: false
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(epitools)){install.packages("epitools"); library(epitools)}
+if(!require(epiR)){install.packages("epiR"); library(epiR)}
+if(!require(survminer)){install.packages("survminer"); library(survminer)}
+if(!require(kableExtra)){install.packages("kableExtra"); library(kableExtra)}
+if(!require(knitr)){install.packages("knitr"); library(knitr)}
+if(!require(gt)){install.packages("gt"); library(gt)}
+if(!require(MASS)){install.packages("MASS"); library(MASS)}
+if(!require(emmeans)){install.packages("emmeans"); library(emmeans)}
+
+source("~/Experiments/R/Pharmaverse/Scripts/00 Functions/Functions.R")
+
+
+load("~/Experiments/R/Pharmaverse/Data/Data_Processed.RDS")
+
+rm(list=setdiff(ls(), c("adtte", "clean_up", "build_formula")))
+
+
+```
+
+```{r, do the analysis}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 9
+#| fig-height: 6
+#| fig-dpi: 300
+#| results: asis
+
+
+
+adtte <- adtte %>% 
+  filter(ITTFL == "Y") %>% 
+  mutate(Evt = case_when(
+    CNSR == 0 ~ 1, 
+    CNSR == 1 ~ 0,
+    TRUE ~ NA
+  )) %>% 
+  relocate(Evt, .before = CNSR) %>% 
+  mutate(STDURY = EOSDY/365.25, .after = EOSDY)
+
+
+endpts <- unique(adtte$PARAM)
+
+e=1 
+
+for (e in 1:length(endpts)){
+  
+  dat <- adtte %>% 
+    filter(PARAM == endpts[e]) 
+  
+  
+  
+  # Because we have three arms we need to go through and analysis each Treatment arm versus placebo
+  
+  trts <- unique(dat$TRT01P[dat$TRT01P != "Placebo"])
+  
+  t = 1
+  
+  for (t in 1:length(trts)){
+    
+    dat_trts <- dat %>% 
+      filter(TRT01P == trts[t] | TRT01P == "Placebo") %>% 
+      mutate(Treatment = relevel(as.factor(TRT01P), ref = "Placebo"))
+    
+    #Need for Later
+    
+    master = dat_trts %>%
+      filter(ITTFL == "Y") %>% 
+      group_by(Treatment) %>%  
+      summarise(Treatment = first(TRT01P), N.Pop = n())
+    
+    
+    treatment_duration <- dat_trts %>% 
+      filter(ITTFL == 'Y') %>% 
+      group_by(Treatment) %>% 
+      summarise(n = n(),
+                `Mean (SD)` = paste0(round(mean(STDURY, na.rm = T),3), ' (', round(sqrt(var(STDURY, na.rm = T)),3), ')'),
+                `Median` = round(median(STDURY, na.rm = T),3),
+                `Q1/Q3` = paste0(round(quantile(STDURY, probs = 0.25, na.rm = T),2),'/', round(quantile(STDURY, probs = 0.75, na.rm = T),2)),
+                `Min/Max` = paste0(round(min(STDURY, na.rm = T),2), '/', round(max(STDURY, na.rm = T),2))) %>% 
+      pivot_longer(cols = c(n,`Mean (SD)`,`Median`, `Q1/Q3`, `Min/Max`), names_to = 'Statistics', values_transform = as.character)    %>% 
+      pivot_wider(names_from = Treatment, values_from = value) %>% 
+      mutate(PARAM = 'Duration of treatment (years)') %>% 
+    relocate(PARAM) %>% 
+     mutate(PARAM = if_else(row_number() == 1, PARAM, ""))
+      
+    
+    x <- dat_trts %>% 
+      filter(ITTFL == 'Y') %>% 
+      # mutate(dur = (TRTEDT - RANDDT + 1)/365.25) %>% 
+      group_by(Treatment) %>% 
+      summarise(n = n(),
+                m = mean(STDURY, na.rm = T),
+                cumul_trt = round(n*m, 2)) %>% 
+      dplyr::select(-c(m,n)) %>% 
+      pivot_wider(names_from = Treatment, values_from = cumul_trt) %>% 
+      mutate(PARAM = 'Cumulative treatment time (subject years)') %>% 
+      relocate(PARAM)
+    
+    # Number of confirmed endpoints
+    
+    n_irap <- dat_trts %>% 
+      group_by(Treatment, PARAM) %>% 
+      summarise(n = n(),
+                `Mean (SD)` = paste0(round(mean(AVAL, na.rm = T),3), ' (', round(sqrt(var(AVAL, na.rm = T)),3), ')'),
+                `Median` = round(median(AVAL, na.rm = T),3),
+                `Q1/Q3` = paste0(round(quantile(AVAL, probs = 0.25, na.rm = T),2),'/', round(quantile(AVAL, probs = 0.75, na.rm = T),2)),
+                `Min/Max` = paste0(round(min(AVAL, na.rm = T),2), '/', round(max(AVAL, na.rm = T),2))) %>% 
+      pivot_longer(cols = c(n,`Mean (SD)`,`Median`, `Q1/Q3`, `Min/Max`), names_to = 'Statistics', values_transform = as.character) %>% 
+      pivot_wider(names_from = Treatment, values_from = value) %>% 
+      mutate(PARAM = if_else(row_number() == 1, endpts[e], ""))
+    
+    
+    y <- dat_trts %>% 
+      filter(ITTFL == 'Y') %>% 
+      # mutate(dur = (TRTEDT - RANDDT + 1)/365.25) %>% 
+      group_by(TRT01P) %>% 
+      summarise(n = n(),
+                m = mean(AVAL, na.rm = T),
+                cumul_trt = round(n*m, 2)) %>% 
+      dplyr::select(-c(m,n)) %>% 
+      pivot_wider(names_from = TRT01P, values_from = cumul_trt) %>% 
+      mutate(PARAM = 'x') %>% relocate(PARAM)
+    
+    
+    feature <- paste0('Cumulative number of ', endpts[e])
+    
+    
+    z <- bind_rows(x,y) %>% 
+      pivot_longer(cols = 2:3, names_to = 'Treatment') %>% 
+      pivot_wider(names_from = PARAM, values_from = value) %>% 
+      mutate(`Raw Annualized Relapse Rate` = round(x/ `Cumulative treatment time (subject years)`,2)) %>% 
+      add_row(Treatment = 'Comparison') %>% 
+      mutate(`Rate Ratio` = NA, Difference = NA) %>% 
+      mutate(`Rate Ratio` = ifelse(Treatment == 'Comparison', round(`Raw Annualized Relapse Rate`[2] / `Raw Annualized Relapse Rate`[1], 3), NA),
+             Difference = ifelse(Treatment == 'Comparison',`Raw Annualized Relapse Rate`[2] - `Raw Annualized Relapse Rate`[1], NA)) %>% 
+      pivot_longer(cols = 2:6, names_to = 'PARAM') %>% 
+      pivot_wider(names_from = Treatment, values_from = value) %>% 
+      mutate(PARAM = ifelse(PARAM == 'x', feature, PARAM))
+    
+    
+    model_data <- dat_trts %>% 
+      dplyr::select(USUBJID, ITTFL, Treatment, PARAMCD, PARAM, AVAL, TRTSDTM, TRTEDTM, RANDDT, STDURY, TRT01P, HIGHBP, OVER80KG, AGEGRP1, RACE_BLACK)
+    
+    
+    # So I have a problem where some PARAMs, some sub groups don't have the necessary levels for inclusion. I have found a solution - that is quite messy but I have built a function for it
+    
+    vars <- c("HIGHBP", "OVER80KG", "AGEGRP1", "RACE_BLACK")
+    
+    
+    formula <- build_formula(vars, model_data)
+    
+    
+    #run the model
+    
+    m1 <- glm.nb(formula, data = model_data, link = log)
+    
+    summary(m1)
+    
+    EM <- emmeans(m1, 'Treatment', offset = log(1), type = 'response')
+    CT <- summary(contrast(EM, method = 'revpairwise')) 
+    names(CT) <- c('Treatment', 'IRR', 'IRR_SE', 'df','null', 'z.ratio', 'p.value') 
+    CT$Treat <- ifelse(CT$Treat == CT$Treat[1], 1, 0)
+    CT$Treat = as.numeric(CT$Treat)
+    
+    EM_ls <-  emmeans (m1, specs = ~ Treatment, offset = log(1), type = 'response') 
+    EM_ls <- contrast(regrid(EM_ls), method = 'revpairwise') %>% 
+      as.data.frame () %>%
+      mutate (lcl = round(estimate + qnorm (0.025) * SE,3), 
+              ucl = round(estimate + qnorm (0.975) * SE,3),
+              est = paste0(round(estimate, 3), '(', lcl, ', ', ucl, ')'))
+    
+    EM_ratio <- emmeans (m1, specs = ~ Treatment, offset = log(1), type = 'response') %>% 
+      contrast (method = 'revpairwise') %>% 
+      as.data.frame () %>% 
+      mutate (lcl = round(ratio + qnorm (0.025) * SE, 3),
+              ucl = round(ratio + qnorm (0.975) * SE, 3),
+              est = paste0(round(ratio, 3), '(', lcl, ', ', ucl, ')'))
+    
+    EMeans = as_tibble(summary(EM)) %>% 
+      dplyr::select(-c(df, SE)) %>%
+      mutate(`Least square means (95% CI)` = paste0(round(response,3), '(', round(asymp.LCL,3),', ', round(asymp.UCL, 3), ')')) %>% 
+      add_row(Treatment = c('Comparison', 'P-Value')) %>% 
+      mutate(Difference = ifelse(Treatment == 'Comparison', EM_ls$est, NA),
+             `Rate Ratio` = ifelse(Treatment == 'Comparison', EM_ratio$est, 
+                                   ifelse(Treatment == 'P-Value', round(EM_ratio$p.value, 4), NA))) %>% 
+      dplyr::select(1, 5:7) %>% 
+      pivot_longer(cols = 2:4, 
+                   names_to = 'PARAM', 
+                   values_transform = as.character) %>% 
+      pivot_wider(names_from = Treatment, 
+                  values_from = value )
+    
+    
+    out <- bind_rows(
+      treatment_duration %>% 
+        mutate_all(as.character) %>% add_row(),
+      n_irap %>% 
+        mutate_all(as.character) %>% add_row(), 
+      z %>% 
+        mutate_all(as.character) %>% add_row(),
+      EMeans %>%
+        mutate_all(as.character)) %>% 
+       mutate(across(everything(), ~ ifelse(is.na(.), "", .))) %>%
+      relocate(4, .before = 3) %>% 
+      rename('Parameter' = PARAM)
+    
+    title <- paste0('Annualized Relapse Rate: Parameter = ', endpts[[e]], ' (mITT Population)')
+    
+    print(kable(out, booktabs = TRUE, caption = paste0(title)))
+    
+    cat('\n\n<!-- -->\n\n')
+    cat('\n\\newpage\n')
+    
+    # Some Pretty Plotsof the Least Square Means
+    
+    PlotData <- summary(EM)
+    
+    pd <- position_dodge(0.1)
+    
+    boo = ggplot(PlotData, aes(x = Treatment, y = response, colour=Treatment)) +
+      geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.0, linewidth = 1, position=pd) +
+      geom_point(size=2.5, shape=21, fill="white", position=pd) + 
+      labs(title = str_wrap(paste0(endpts[e], ' Least Square means (95% CI)')), 
+           subtitle = paste0('(mITT Set)')) +
+      expand_limits(y=0) +  
+      theme_minimal() +
+      theme(legend.position = 'top') +
+      xlab("Treatment") +
+      ylab("LS mean + SE") +
+      scale_color_manual(values=c('red', 'blue'))
+    
+    print(boo)
+    
+    cat('\n\\newpage\n')
+    
+  }
+}  
+
+```
