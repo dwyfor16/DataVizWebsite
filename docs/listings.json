@@ -2,23 +2,13 @@
   {
     "listing": "/biostatistics.html",
     "items": [
-      "/biostatistics/02 Baseline Characteristics/Baseline_Characteristics.pdf",
-      "/biostatistics/01 Data Processing/Data_Production.html",
-      "/biostatistics/03 TTE Analysis/Negative Binomial - Efficacy.pdf",
-      "/biostatistics/03 TTE Analysis/TTE Analysis - Efficacy.pdf",
       "/biostatistics/MastersThesis.html"
-    ]
-  },
-  {
-    "listing": "/maps.html",
-    "items": [
-      "/maps/uk_maps.html",
-      "/maps/middle_earth.html"
     ]
   },
   {
     "listing": "/datavis.html",
     "items": [
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week20.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week19.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week16.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week15.html",
@@ -33,6 +23,13 @@
       "/data_visualisations/RugbyResults/6NationResultsWebApp.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html"
+    ]
+  },
+  {
+    "listing": "/maps.html",
+    "items": [
+      "/maps/uk_maps.html",
+      "/maps/middle_earth.html"
     ]
   }
 ]

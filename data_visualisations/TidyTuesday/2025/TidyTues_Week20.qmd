@@ -1,0 +1,168 @@
+---
+title: "TidyTuesday Week 20: Water Quality at Sydney Beaches"
+subtitle: "This week we're exploring the water quality of Sydney's iconic beaches. The data is available at the New South Wales State Government Beachwatch website. Beachwatch and our partners monitor water quality at swim sites to ensure that recreational water environments are managed as safely as possible so that as many people as possible can benefit from using the water."
+author: "Peter Gray"
+date: "2025-05-20" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week20.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week20.png){#fig-singlechart}
+Water Quality
+:::
+
+#### 1. R code
+
+```{r}
+
+# Load the packages in ----------------------------------------------------
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(ggplot2)){install.packages("ggplot2"); library(ggplot2)}
+if(!require(scales)){install.packages("scales"); library(scales)}
+if(!require(RColorBrewer)){install.packages("RColorBrewer"); library(RColorBrewer)}
+# I stick all my styling into a CUsotm PAckage to tidy up my code and keep it consistent over the time
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+
+
+water_quality <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-20/water_quality.csv')
+weather <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-20/weather.csv') %>% 
+  select(-c(longitude, latitude))
+water_quality$date <- as.Date(water_quality$date)
+weather$date <- as.Date(weather$date)
+
+# Remove specific years
+
+combined <- left_join(water_quality, weather, by = "date") %>% 
+  mutate(Year = year(date),
+         Month = month(date, label = T),
+         Day = day(date)) %>% 
+  filter(Year >= 2000,
+         Year != 2025)
+
+
+# Average temperature by Year and Month
+stripes_data <- combined %>%
+  group_by(Year, Month) %>%
+  summarise(avg_temp = mean(max_temp_C, na.rm = TRUE),
+            average_bacteria = mean(enterococci_cfu_100ml, na.rm = T), 
+            average_rain = mean(precipitation_mm, na.rm = T),.groups = "drop")
+
+
+# Fix error in mean calculation
+maxmin <- range(stripes_data$avg_temp, na.rm = TRUE)
+md <- mean(stripes_data$avg_temp, na.rm = TRUE)  # Fixed: was incorrectly referring to `stripes_data$stripes_data`
+
+# Color palette
+col_strip <- brewer.pal(11, "RdBu")
+col_strip <- adjustcolor(col_strip, alpha.f = 0.5)
+
+# Create a date column for plotting (necessary for proper x-axis handling)
+# Ensure Month is a factor for correct month ordering
+
+
+stripes_data$Month_num <- as.numeric(stripes_data$Month)
+# Compute the original ranges for correct inverse transformation
+# Compute the original ranges for correct inverse transformation
+# Compute the original ranges for correct inverse transformation
+rain_range <- range(stripes_data$average_rain, na.rm = TRUE)
+bac_range  <- range(stripes_data$average_bacteria, na.rm = TRUE)
+
+p1 <- ggplot(stripes_data, aes(x = Month, y = 1, fill = avg_temp)) +
+  geom_tile(height = 0.4) +  # Explicit tile height kept for visibility
+  
+  scale_fill_gradientn(
+    colors = rev(col_strip),
+    values = rescale(c(maxmin[1], md, maxmin[2])),
+    na.value = "gray80"
+  ) +
+  
+  # Overlay bacteria as points – now with a mapping that creates a legend entry:
+  geom_point(
+    aes(
+      x = Month_num, 
+      y = scales::rescale(average_bacteria, to = c(0.8, 1.2)),
+      color = "Average Enterococci per 100ml"  # This will create a legend key labeled "Bacteria"
+    ),
+    size = 0.5,
+    group = 1
+  ) +
+  geom_segment(aes(x = Month_num, xend = Month_num, y = 0.8, yend = scales::rescale(average_bacteria, to = c(0.8, 1.2))),
+               color = "black", size = 0.5) +
+  
+  # Overlay rainfall as a line – now with a mapping that creates a legend entry:
+  geom_line(
+    aes(
+      x = Month_num, 
+      y = scales::rescale(average_rain, to = c(0.8, 1.2)),
+      color = "Average Monthly Rainfall (mm)"  # This will create a legend key labeled "Rainfall"
+    ),
+    size = 0.5,
+    group = 1
+  ) +
+  
+  labs(
+    title = str_wrap("Relationship between Average Enterococci per 100ml, Average Temperature, and Average Rainfall", 70),
+    caption = "Tidy Tuesday 2025 Week 20",
+    x = "Month",
+    y = NULL,
+    fill = "Avg Temp (°C)"
+  ) +
+  
+  Custom_Style() +  # Use your pre-defined theme_strip, if available
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    # Make facet label strips transparent:
+    strip.background = element_rect(fill = "transparent", color = NA)
+  ) +
+  
+  # Dual y-axis: left for rainfall, right for bacteria
+  scale_y_continuous(
+    name = "Average Monthly Rainfall (mm)",
+    limits = c(0.8, 1.2),
+    breaks = seq(0.8, 1.2, length.out = 5),
+    labels = function(x) {
+      # Inverse transformation for rainfall:
+      round((x - 0.8) / 0.4 * diff(rain_range) + rain_range[1], digits = 1)
+    },
+    sec.axis = sec_axis(
+      trans = ~ (. - 0.8) / 0.4 * diff(bac_range) + bac_range[1],
+      name = "Average Enterococci per 100ml"
+    )
+  ) +
+  scale_color_manual(
+    name = "",
+    values = c("Average Enterococci per 100ml" = "black", "Average Monthly Rainfall (mm)" = "blue"),
+    guide = guide_legend(
+      override.aes = list(
+        linetype = c(0, 1),  
+        shape = c(16, NA)     
+      )
+    )
+  ) +
+  
+  facet_wrap(~ Year)
+
+```

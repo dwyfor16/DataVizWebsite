@@ -1,0 +1,15 @@
+{
+  "hash": "7bca306fe46e961e1e48b6a7fdb8a20c",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Data_Production\"\nformat: html\neditor_options: \n  chunk_output_type: console\n---\n\n::: {.cell}\n\n```{.r .cell-code}\nsource(\"~/Documents/Coding/Website/biostatistics/00 Functions/Functions.R\")\n\nclean_up()\n```\n\n\f\n\n```{.r .cell-code}\nif(!require(pharmaverse)){install.packages(\"pharmaverse\"); library(pharmaverse)}\nif(!require(tidyverse)){install.packages(\"tidyverse\"); library(tidyverse)}\nif(!require(pharmaverse)){install.packages(\"pharmaverse\"); library(pharmaverse)}\nif(!require(pharmaverseadam)){install.packages(\"pharmaverseadam\"); library(pharmaverseadam)}\nif(!require(gtsummary)){install.packages(\"gtsummary\"); library(gtsummary)}\nif(!require(gt)){install.packages(\"gt\"); library(gt)}  # also contains OfficeR\nif(!require(remotes)){install.packages(\"remotes\"); library(remotes)}\nif (!require(cardinal)) {remotes::install_github(\"pharmaverse/cardinal\"); library(cardinal)}\nif(!require(random.cdisc.data)){install.packages(\"random.cdisc.data\"); library(random.cdisc.data)}\nif(!require(kableExtra)){install.packages(\"kableExtra\"); library(kableExtra)}\n\n\nwd = \"~/Documents/Coding/Website/biostatistics/Data\"\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nadsl <- random.cdisc.data::cadsl\nadvs <- random.cdisc.data::cadvs\nadtte <- random.cdisc.data::cadtte\nadae <- random.cdisc.data::cadae\n\n\n#Save Original Data just in case\nsave.image(paste0(wd, \"/Data.RDS\"))\n```\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nadae <- adae %>%\n  mutate(TRT01P = case_when(\n    TRT01P == \"A: Drug X\" ~ \"Fakemethaline 50 mg\",\n    TRT01P == \"C: Combination\" ~ \"Fakemethaline 150 mg\",\n    TRT01P == \"B: Placebo\" ~ \"Placebo\"),\n    TRT01A = case_when(\n      TRT01A == \"A: Drug X\" ~ \"Fakemethaline 50 mg\",\n      TRT01A == \"C: Combination\" ~ \"Fakemethaline 150 mg\",\n      TRT01A == \"B: Placebo\" ~ \"Placebo\")) %>% \n  left_join(Patients , adtte, by = c(\"SUBJID\", \"TRT01P\", \"TRT01A\")) %>% \n  mutate(AGEGRP1  = as.factor(case_when(\n      AGE >= 17 & AGE < 65 ~ \"≥17 to <65\",\n      AGE >= 65 ~ \"≥65\",\n      AGE >= 65 & AGE < 75 ~ \"≥65 to &lt;75\",\n      AGE >= 75 ~ \"≥75\")),\n    SEX = as.factor(case_when(\n      SEX == \"F\" ~ \"Female\",\n      SEX == \"M\" ~ \"Male\")),\n    RACE_BLACK = as.factor(case_when(\n      RACE == \"BLACK OR AFRICAN AMERICAN\" ~ \"Yes\",\n      TRUE ~ \"No\"\n    )),\n    RACE = str_to_title(RACE),\n    ETHNIC = str_to_title(ETHNIC))\n\n\nsave.image(paste0(wd, \"/Data_Processed.RDS\"))\n```\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
