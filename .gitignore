@@ -5,4 +5,6 @@
 .httr-oauth
 .DS_Store
 .quarto
+ed_map_env/
+**/.jupyter_cache/
 /_site/
