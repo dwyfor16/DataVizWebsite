@@ -1,0 +1,80 @@
+---
+title: "TidyTuesday Week 21: Dungeons and Dragons Monsters (2024)"
+subtitle: "This week we're exploring monsters from the Dungeons & Dragons System Reference Document! After the popularity of our Dungeons and Dragons Spells (2024), we thought it might be fun to explore the freely available monsters from the 2024 update."
+author: "Peter Gray"
+date: "2025-05-27" 
+categories: ["TidyTuesday", "Data Visualization", "Python", "Polars", "Numpy", "2025"]
+tags: [tidytuesday, Python, data visulation, polars, numpy]
+image: "thumbnails/TidyTues_Week21.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import plotly.express as px
+import numpy as np
+import pyarrow as pa
+
+# Load dataset
+monsters = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-27/monsters.csv')
+
+monsters["Intelligence"] = monsters["int"] + monsters["cha"] + monsters["wis"]
+
+# Convert to Pandas DataFrame for Plotly
+top10 = monsters.sort_values(by="Intelligence", ascending=False).head(10)
+top10 = top10[["name", "category", "str", "int", "hp_number", "Intelligence"]]
+
+top10["label"] = top10["name"]
+
+# Create bar chart with dark theme
+fig = px.bar(
+    top10,
+    x="Intelligence",
+    y="category",
+    color="category",
+    orientation="h",
+    text="Intelligence",
+    title="Top D&D Monsters by Intelligence Score",
+    subtitle="Intelligence Score is a summation of Charisma, Intelligence, and Wisdom",  # Note the comma at the end
+    labels={"Intelligence": "Intelligence Score", "label": "Monster (Type)"},
+    template="plotly_dark"
+)
+
+# Remove legend and update trace details
+fig.update_layout(
+    showlegend=False,
+    font=dict(
+        family="Noto Mono",
+        size=14,
+        color="black"  # switched to black to contrast with a light background
+    ),
+    paper_bgcolor="#FFFBF0",  # overall page background
+    plot_bgcolor="#FFFBF0"    # plotting area background
+)
+fig.update_traces(textposition="outside", textfont_size=14)
+fig.update_xaxes(showgrid=False)
+fig.update_yaxes(showgrid=False)
+
+fig.show()
+
+
+```
