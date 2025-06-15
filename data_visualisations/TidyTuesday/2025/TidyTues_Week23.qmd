@@ -1,0 +1,170 @@
+---
+title: "TidyTuesday Week 23: US Judges"
+subtitle: "This week we're exploring U. S. judge data from the {historydata} R package! This dataset contains information about the appointments and careers of all federal judges in United States history since 1789."
+author: "Peter Gray"
+date: "2025-05-27" 
+categories: ["TidyTuesday", "Data Visualization", "Python", "Pandas", "Polars", "Numpy", "2025"]
+tags: [tidytuesday, Python, data visulation, pandas, polars, numpy]
+image: "thumbnails/TidyTues_Week23.png"
+format:
+  html:
+    toc: true 
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+<a href="https://dwyfor16.quarto.pub/us-judges-dashboard/" target="_blank">
+  <img src="thumbnails/TidyTues_Week23.png" alt="Chart" style="max-width: 100%;" />
+</a>
+
+
+#### 1. Python code
+
+```{python}
+#| label: setup
+#| output: false
+
+# ! pip install polars
+# ! pip install pandas
+# ! pip install numpy
+# ! pip install folium
+# ! pip install geopy
+import polars as pl
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.io as pio
+import matplotlib.pyplot as plt
+
+pio.templates.default = 'plotly_white'
+
+
+judges_appointments = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-10/judges_appointments.csv')
+judges_people = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-06-10/judges_people.csv')
+
+merged_df = pd.merge(judges_appointments, judges_people, on = 'judge_id', how = 'left')
+merged_df["commission_date"] = pd.to_datetime(merged_df["commission_date"], format="%m/%d/%Y")
+merged_df = merged_df.assign(Non_white = np.where(merged_df["race"] != "White", "Non-White", "White"))
+
+# Top 100  judges per apppointment
+
+top10 = pd.DataFrame(merged_df.groupby(['president_name']).president_name.value_counts().nlargest(10)).reset_index()
+top10.columns = ['president_name', 'count']
+pio.templates.default = 'plotly_white'
+
+# NUmber of judges per party
+parties = ["Democratic", "Republican"]
+
+party = merged_df[merged_df["president_party"].isin(parties)]
+parties = pd.DataFrame(party.groupby("president_party").size()).reset_index()
+parties.columns = ['president_party', 'count']
+
+fig, ax = plt.subplots(figsize=(10, 6)); 
+bars = ax.bar(x=top10['president_name'], height=top10['count'], color='skyblue')
+ax.set_xlabel('President Name')
+ax.set_ylabel('Number of Appointments per President')
+ax.set_title('Top 10 Presidents by Number of Appointments')
+ax.tick_params(axis='x', rotation=45)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+for bar in bars:
+    height = bar.get_height()
+    ax.annotate(
+        f'{int(height)}',
+        xy=(bar.get_x() + bar.get_width() / 2, height),
+        xytext=(0, 3),  # Offset above bar
+        textcoords='offset points',
+        ha='center',
+        va='bottom',
+        fontsize=9,
+        color='black'
+    )
+    
+    
+plt.tight_layout()
+
+# By Politcial PArty
+party_colors = {
+    "Democratic": "blue",
+    "Republican": "red"
+}
+
+colors = parties['president_party'].map(party_colors)
+
+# Create plot
+fig1, ax = plt.subplots(figsize=(10, 6));
+bars = ax.bar(x=parties['president_party'], height=parties['count'], color=colors)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_xlabel('Political Party')
+ax.set_ylabel('Number of Appointments per Party')
+ax.set_title('Number of Appointments by Political Party')
+ax.tick_params(axis='x', rotation=0)
+
+# Add count labels on top of bars
+for bar in bars:
+    height = bar.get_height()
+    ax.annotate(
+        f'{int(height)}',
+        xy=(bar.get_x() + bar.get_width() / 2, height),
+        xytext=(0, 3),
+        textcoords='offset points',
+        ha='center',
+        va='bottom',
+        fontsize=9,
+        color='black'
+    )
+    
+plt.tight_layout()
+
+
+female_judge_percent = merged_df.groupby("gender").size()
+percent_df = female_judge_percent.div(female_judge_percent.sum()).mul(100)
+
+dict(
+  value = f"{round(percent_df.get('F', 0), 1)}%"
+)
+
+
+
+cut_off = pd.to_datetime("1969-01-01")
+
+pre_1968 = merged_df[merged_df["commission_date"] <= cut_off]
+
+
+non_white_number = pre_1968.groupby("Non_white").size()
+non_White_percent = non_white_number.div(non_white_number.sum()).mul(100)
+
+dict(
+  value = f"{round(non_White_percent.get('Non-White', 0), 1)}%"
+);
+
+
+
+
+repub = merged_df[merged_df["president_party"].isin(["Republican", "Democratic"])]
+repub_number = repub.groupby("president_party").size()
+repub_percent = repub_number.div(repub_number.sum()).mul(100)
+
+dict(
+  value = f"{round(repub_percent.get('Republican', 0), 1)}%"
+);
+
+
+
+
+```
+
