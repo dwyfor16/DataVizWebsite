@@ -1,0 +1,68 @@
+---
+title: "TidyTuesday Week 25: Measles cases across the world"
+subtitle: "This week we are exploring measles and rubella cases across the world. This data was downloaded from the World Health Organisation Provisional monthly measles and rubella data on 2025-06-12."
+author: "Peter Gray"
+date: "2025-06-24" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming" , "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week25.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import plotly.express as px
+import geopandas as gpd
+
+cases_year = pd.read_csv("~/Documents/Coding/Website/data_visualisations/TidyTuesday/2025/Data/cases_year.csv")
+
+
+europe = cases_year[cases_year["region"] == "EURO"]
+# print(europe["country"].unique())
+#I don;t agree that the stans are part of Europe so I will remove thme
+stans = ["Azerbaijan", "Kazakhstan", "Kyrgyzstan", "Russian Federation", "Tajikistan", "Turkmenistan", "Uzbekistan"]
+europe = europe[~europe['country'].isin(stans)]
+
+
+min_inc = europe['measles_incidence_rate_per_1000000_total_population'].min()
+max_inc = europe['measles_incidence_rate_per_1000000_total_population'].max()
+
+fig = px.choropleth(
+  europe,
+  locations="country",     # column with country names
+  locationmode="country names",
+  color="measles_incidence_rate_per_1000000_total_population",       # column with measles incidence
+  animation_frame="year",
+  range_color=[min_inc, max_inc],
+  color_continuous_scale="Reds",
+  title="Measles Incidence in Europe over Time",
+  scope="europe",
+  hover_name="country",
+    hover_data={"measles_incidence_rate_per_1000000_total_population": True},
+    labels={"measles_incidence_rate_per_1000000_total_population": "Measles Incidence (per 1,000,000)"}
+)
+
+
+fig.show()
+
+```

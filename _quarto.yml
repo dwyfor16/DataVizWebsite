@@ -19,10 +19,13 @@ website:
         aria-label: datavis.page
       - text: "Maps/GIS"
         href: maps.qmd
-        aria-label: maps page
+        aria-label: maps.page
       - text: "Biostatistics"
         href: biostatistics.qmd
-        aria-label: maps page
+        aria-label: biostatistics.page
+      - text: "Coding"
+        href: coding.qmd
+        aria-label: coding.page
 
   page-footer:
     border: TRUE

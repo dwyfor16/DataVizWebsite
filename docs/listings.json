@@ -2,12 +2,15 @@
   {
     "listing": "/biostatistics.html",
     "items": [
+      "/biostatistics/Breast_Cancer_KM_plots.html",
       "/biostatistics/MastersThesis.html"
     ]
   },
   {
     "listing": "/datavis.html",
     "items": [
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week25.html",
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week23.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week21.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week20.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week19.html",

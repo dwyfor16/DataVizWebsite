@@ -1,0 +1,119 @@
+---
+title: "Kaplan Meir Plots in Python"
+subtitle: "An Experiment to see if I can produce Kaplan Meir plots using Python"
+author: "Peter Gray"
+date: "2025-05-30" 
+categories: ["Biostatistics", "Python", "2025", "Data Analysis"]
+tags: [Biostatistics, Python, "2025", Data Analysis]
+image: "/biostatistics/Thumbnails/KMPlot.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+#### 1. Python code
+
+```{python}
+
+# pip install pandas
+# pip install numpy
+# pip install lifelines
+# pip install matplotlib
+
+from lifelines import KaplanMeierFitter
+import pandas as pd 
+import numpy as np
+from matplotlib import pyplot as plt
+
+
+gbsg2 = pd.read_csv("/home/pgr16/Documents/Data_Analysis/German Breast Cancer/GBSG2.csv")
+
+
+# Create Age Group
+
+bins = [0, 40, 81]
+labels = ["0-40", "40 and older"]
+
+
+gbsg2['Age Group'] = pd.cut(gbsg2['age'], bins = bins, labels= labels, right = False)
+kmf = KaplanMeierFitter()
+
+T = gbsg2["time"]
+E = gbsg2["cens"]
+
+kmf.fit(T, event_observed=E)
+
+plt.clf() # clear plot
+kmf.plot_survival_function()
+plt.title("Time to Recurrence of German Breast Cancer Patients")
+
+
+print(kmf.median_survival_time_)
+
+import matplotlib.pyplot as plt
+from lifelines import KaplanMeierFitter
+
+age = (gbsg2["Age Group"] == "40 and older")
+plt.clf()
+ax = plt.subplot(111)
+kmf = KaplanMeierFitter()
+kmf.fit(T[age], event_observed=E[age], label="Over 40 years old")
+kmf.plot_survival_function(ax=ax)
+kmf.fit(T[~age], event_observed=E[~age], label="40 years or younger")
+kmf.plot_survival_function(ax=ax)
+plt.title("Kaplan-Meier Survival Curves by Age Group")
+plt.xlabel("Time (days)")
+plt.ylabel("Survival Probability")
+plt.legend()
+
+
+
+grade1 = gbsg2["tgrade"] == "I"
+grade2 = gbsg2["tgrade"] == "II"
+grade3 = gbsg2["tgrade"] == "III"
+
+plt.clf()
+
+ax = plt.subplot(111)
+
+kmf = KaplanMeierFitter()
+
+# Grade 1
+kmf.fit(T[grade1], event_observed=E[grade1], label=" Tumor Grade 1")
+kmf.plot_survival_function(ax=ax, at_risk_counts=True)
+
+
+# Grade 2
+kmf.fit(T[grade2], event_observed=E[grade2], label="Tumor Grade 2")
+kmf.plot_survival_function(ax=ax, at_risk_counts=True)
+
+
+#Grade 3
+kmf.fit(T[grade3], event_observed=E[grade3], label="Tumor Grade 3")
+kmf.plot_survival_function(ax=ax, at_risk_counts=True)
+
+
+plt.title("Time to Recurrence by Tumor Grade")
+plt.xlabel("Time (days)")
+plt.ylabel("Survival Probability")
+plt.legend()
+
+
+```
+
+
+

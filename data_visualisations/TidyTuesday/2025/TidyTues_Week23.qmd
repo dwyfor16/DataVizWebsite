@@ -2,8 +2,8 @@
 title: "TidyTuesday Week 23: US Judges"
 subtitle: "This week we're exploring U. S. judge data from the {historydata} R package! This dataset contains information about the appointments and careers of all federal judges in United States history since 1789."
 author: "Peter Gray"
-date: "2025-05-27" 
-categories: ["TidyTuesday", "Data Visualization", "Python", "Pandas", "Polars", "Numpy", "2025"]
+date: "2025-06-15" 
+categories: ["TidyTuesday", "Data Visualization", "Python", "Pandas", "Dashboards", "Numpy", "2025"]
 tags: [tidytuesday, Python, data visulation, pandas, polars, numpy]
 image: "thumbnails/TidyTues_Week23.png"
 format:

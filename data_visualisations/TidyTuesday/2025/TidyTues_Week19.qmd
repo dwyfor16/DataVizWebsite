@@ -50,10 +50,6 @@ vesuvius =  vesuvius.dropna(subset = ['latitude', 'longitude', 'duration_magnitu
 vesuvius = vesuvius[vesuvius['duration_magnitude_md'] >0.3]
 
 
-# Fix the dates
-
-
-
 
 # split the time column so I can use the date 
 
@@ -81,7 +77,8 @@ fig = px.scatter_mapbox(
     center={"lat": 40.821, "lon": 14.426},
     mapbox_style="carto-positron",
     title="Earthquake Occurrences in the Vicinity of Mount Vesuvius Over Time <br> (2020–2024)",
-    labels={"duration_magnitude_md": "Magnitude (Md)"}
+    labels={"duration_magnitude_md": "Magnitude (Md)",
+    "year": "Year"}
 )
 
 fig.show()

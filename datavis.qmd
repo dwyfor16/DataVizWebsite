@@ -1,5 +1,5 @@
 ---
-title: "Data Visualizations"
+title: "Data Viz"
 description: "A webpage showcasing my data visualisation projects"
 date-modified: now
 categories: [ggplot, Data Visualisation, R, Python, quarto]
