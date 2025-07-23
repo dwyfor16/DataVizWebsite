@@ -1,0 +1,100 @@
+---
+title: "TidyTuesday Week 27: US Petrol Prices"
+subtitle: "In 2010, the xkcd Color Survey asked hundreds of thousands of people to name colors they saw, revealing the different ways in which people perceive and label colors."
+author: "Peter Gray"
+date: "2025-07-08" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming" , "2025"]
+tags: [tidytuesday, R, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week27.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the data
+answers = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-08/answers.csv')
+color_ranks = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-08/color_ranks.csv')
+users = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-08/users.csv')
+
+master = pd.merge(answers, users, on = "user_id", how = "left")
+
+
+master = master[master["spam_prob"] <= 0.5]
+
+
+top_20_hex_per_monitor = (
+    master.groupby(["monitor", "hex"])["rank"]
+            .mean()
+            .reset_index()
+            .sort_values(["monitor", "rank"])
+            .groupby("monitor")
+            .head(20)
+)
+
+filtered_top = master.merge(
+    top_20_hex_per_monitor[["monitor", "hex"]],
+    on=["monitor", "hex"]
+)
+
+
+counts = (
+    filtered_top.groupby(["monitor", "hex"])
+               .size()
+               .unstack(fill_value=0)
+)
+
+
+percentages = counts.div(counts.sum(axis=1), axis=0) * 100
+
+ax = percentages.plot(
+    kind="bar",
+    stacked=True,
+    figsize=(12, 6),
+    colormap="tab20",
+    width=0.8
+)
+
+# Add percentage labels
+for i, monitor in enumerate(percentages.index):
+    cumulative = 0
+    for hex_code in percentages.columns:
+        value = percentages.loc[monitor, hex_code]
+        if value >= 5:
+            ax.text(
+                i, cumulative + value / 2,
+                f"{value:.0f}%",
+                ha="center", va="center", fontsize=8, color="black", rotation=90
+            )
+        cumulative += value
+
+# Formatting
+ax.set_ylabel("Percentage of Top Colours")
+ax.set_title("Top 20 Colours per Monitor (by Frequency)")
+ax.legend(title="Hex Colour", bbox_to_anchor=(1.05, 1), loc="upper left")
+
+plt.show()
+
+```

@@ -1,0 +1,100 @@
+---
+title: "TidyTuesday Week 28: British Library Funding"
+subtitle: "This week we're looking into British Library funding!"
+author: "Peter Gray"
+date: "2025-07-15" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming" , "2025"]
+tags: [tidytuesday, R, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week28.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week28.png){#fig-singlechart}
+British Library Funding
+
+:::
+#### 1. R code
+
+```{r}
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(scales)){install.packages("scales"); library(scales)}
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+
+bl_funding <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-15/bl_funding.csv')
+
+
+gap <-  bl_funding |> 
+  select(year,  gia_y2000_gbp_millions, voluntary_y2000_gbp_millions, investment_y2000_gbp_millions, services_y2000_gbp_millions)
+
+
+gap_long <- gap |> 
+  pivot_longer(
+    cols = -starts_with("year"),
+    names_to = "funding_source",
+    values_to = "funding"
+  )    |> 
+  mutate(funding_source = case_when(
+    funding_source == "gia_y2000_gbp_millions" ~ "Government",
+    funding_source == "voluntary_y2000_gbp_millions" ~ "Voluntary",
+    funding_source == "investment_y2000_gbp_millions" ~ "Investment",
+    funding_source == "services_y2000_gbp_millions" ~ "Services",
+    TRUE ~ funding_source
+  ))
+
+
+events <- data.frame(
+  year = c(2010),
+  event = c("Tories voted in")
+)
+
+gap_plot <- ggplot(gap_long, aes(x = year, y = funding, fill = funding_source)) +
+  geom_area(color = "black", size = 0.2, alpha = 0.8) +
+  scale_y_continuous(labels = label_dollar(prefix = "£")) +
+  labs(
+    title = "Proportion of British Library Funding by Source)",
+    x = "Year",
+    y = "Percentage of Total Funding (£ millions)",
+    fill = "Funding Source"
+  ) +
+  geom_text(
+    data = events,
+    aes(x = year, y = 105, label = event),
+    angle = 90,
+    vjust = -0.5,
+    hjust = 0,
+    size = 3,
+    inherit.aes = FALSE
+  ) +
+  Custom_Style()  +
+  theme(
+  legend.position = "right",
+  text = element_text(size = 10),  
+  axis.title = element_text(size = 10),
+  axis.text = element_text(size = 10),
+  legend.title = element_text(size = 10),
+  legend.text = element_text(size = 10),
+  axis.title.y = element_text(size = 10, margin = margin(r = 10)),
+  plot.title = element_text(size = 10)) +  
+  geom_vline(data = events, aes(xintercept = year), linetype = "dashed", color = "black") 
+
+
+```

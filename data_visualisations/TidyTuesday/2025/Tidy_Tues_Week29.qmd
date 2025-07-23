@@ -1,0 +1,87 @@
+---
+title: "TidyTuesday Week 29: British Library Funding"
+subtitle: "This week we're looking into British Library funding!"
+author: "Peter Gray"
+date: "2025-07-15" 
+categories: ["TidyTuesday", "Data Visualization", "Python" , "2025"]
+tags: [tidytuesday, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week29.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+:::
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import folium
+
+mta_art = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-22/mta_art.csv')
+station_lines = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-22/station_lines.csv')
+
+# Extra to get the Long and LAt of NY MTA
+
+station_locations = pd.read_csv("https://data.ny.gov/resource/39hk-dx4f.csv?$query=SELECT%20gtfs_stop_id%2C%20station_id%2C%20complex_id%2C%20division%2C%20line%2C%20stop_name%2C%20borough%2C%20cbd%2C%20daytime_routes%2C%20structure%2C%20gtfs_latitude%2C%20gtfs_longitude%2C%20north_direction_label%2C%20south_direction_label%2C%20ada%2C%20ada_northbound%2C%20ada_southbound%2C%20ada_notes%2C%20georeference")
+
+
+station_locations = station_locations[["stop_name", "gtfs_longitude", "gtfs_latitude"]]
+station_locations = station_locations.rename(columns={"stop_name": "station_name", "gtfs_longitude": "longitude", "gtfs_latitude": "latitude"})
+
+master = mta_art.merge(station_locations, on="station_name", how="left")
+
+
+center_lat = master['latitude'].mean()
+center_lon = master['longitude'].mean()
+
+
+m = folium.Map(location=[center_lat, center_lon], zoom_start=12)
+
+for _, row in master.iterrows():
+    lat = row['latitude']
+    lon = row['longitude']
+    station = row['station_name']
+    artwork = row.get('art_title', 'No artwork info')
+    art_link = row.get('art_image_link', None)
+
+    if pd.notnull(lat) and pd.notnull(lon):
+        if pd.notnull(art_link):
+            link_html = f'<a href="{art_link}" target="_blank">View Artwork</a>'
+        else:
+            link_html = "No image link available"
+
+        popup_html = folium.Popup(
+            f"""
+            <b>Station:</b> {station}<br>
+            <b>Artwork:</b> {artwork}<br>
+            <b>Link:</b> {link_html}
+            """,
+            max_width=300
+        )
+
+        folium.Marker(
+            location=[lat, lon],
+            tooltip=f"Station: {station}\nArtwork: {artwork}",  # simpler tooltip for hover
+            popup=popup_html,
+            icon=folium.Icon(color='blue', icon='info-sign')
+        ).add_to(m)
+
+m
+```

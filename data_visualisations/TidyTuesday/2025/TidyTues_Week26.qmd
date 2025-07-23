@@ -1,0 +1,148 @@
+---
+title: "TidyTuesday Week 26: US Petrol Prices"
+subtitle: "This week we're exploring weekly US gas prices! The data comes from the U.S. Energy Information Administration (EIA), which publishes average retail gasoline and diesel prices each Monday. "
+author: "Peter Gray"
+date: "2025-07-01" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming" , "Machine Learning", "2025"]
+tags: [tidytuesday, R, data visulation, Python Programming, Pandas, Machine Learning]
+image: "thumbnails/TidyTues_Week26.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import datetime as dt
+from sklearn.preprocessing import MinMaxScaler
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+import matplotlib.pyplot as plt
+
+# Load the data
+weekly_gas_prices = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-07-01/weekly_gas_prices.csv')
+
+# Filter and sort data for regular gasoline
+petrol = weekly_gas_prices[weekly_gas_prices["fuel"] == "gasoline"]
+petrol = petrol[petrol["grade"] == "regular"]
+petrol = petrol[petrol["formulation"] == "all"]
+petrol['date'] = pd.to_datetime(petrol['date'])
+petrol = petrol.sort_values(by="date")
+
+# --- Change for Monthly Aggregation ---
+# Create a 'month_year' column for aggregation
+petrol['month_year'] = petrol['date'].dt.to_period('M')
+
+
+monthly_petrol = petrol.groupby('month_year')['price'].mean().reset_index()
+monthly_petrol['month_year'] = monthly_petrol['month_year'].dt.to_timestamp() 
+
+
+monthly_petrol.rename(columns={'month_year': 'date'}, inplace=True)
+
+monthly_petrol = monthly_petrol.sort_values(by='date')
+
+
+prices = monthly_petrol[['price']].values
+
+scaler = MinMaxScaler()
+scaled_prices = scaler.fit_transform(prices)
+
+def create_sequences(data, seq_length):
+    X, y = [], []
+    for i in range(seq_length, len(data)):
+        X.append(data[i-seq_length:i])
+        y.append(data[i])
+    return np.array(X), np.array(y)
+
+
+sequence_length = 36  
+X, y = create_sequences(scaled_prices, sequence_length)
+
+split = int(0.8 * len(X))
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = y[:split], y[split:]
+
+model = Sequential()
+model.add(LSTM(50, return_sequences=False, input_shape=(X_train.shape[1], 1)))
+model.add(Dropout(0.5))
+model.add(Dense(1))
+
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+
+history = model.fit(X_train, y_train, epochs=100, batch_size=4, validation_data=(X_test, y_test), verbose=0) 
+
+predicted = model.predict(X_test)
+predicted_prices = scaler.inverse_transform(predicted)
+actual_prices = scaler.inverse_transform(y_test)
+
+# plt.figure(figsize=(12, 7))
+# test_dates = monthly_petrol['date'].iloc[split + sequence_length:].reset_index(drop=True)
+# 
+# 
+# # plt.plot(test_dates, actual_prices, label='Actual Monthly Price')
+# # plt.plot(test_dates, predicted_prices, label='Predicted Monthly Price')
+# # plt.title("LSTM Monthly Petrol Price Prediction")
+# # plt.xlabel("Date")
+# # plt.ylabel("Price")
+# # plt.legend()
+# # plt.grid(True)
+# # plt.show()
+
+# Forecasting
+n_future_months = 24
+last_sequence = X[-1]  
+
+predicted_sequence = []
+current_seq = last_sequence.copy()
+
+for _ in range(n_future_months):
+    pred = model.predict(current_seq[np.newaxis, :, :], verbose=0)[0, 0]
+    predicted_sequence.append(pred)
+
+  
+    current_seq = np.append(current_seq[1:], [[pred]], axis=0)
+
+predicted_future_prices = scaler.inverse_transform(np.array(predicted_sequence).reshape(-1, 1))
+
+last_actual_date = monthly_petrol['date'].max()
+
+future_dates = pd.date_range(start=last_actual_date + pd.DateOffset(months=1), periods=n_future_months, freq='MS') # 'MS' for Month Start
+
+plt.figure(figsize=(12, 7))
+
+
+actual_recent_months = monthly_petrol.tail(36)
+plt.plot(actual_recent_months['date'], actual_recent_months['price'], label="Actual Monthly Price (Last 24 Months)")
+
+
+plt.plot(future_dates, predicted_future_prices, label=f"Forecast (Next {n_future_months} Months)", color='red', linestyle='--')
+
+plt.title(f"Monthly Regular Petrol Price Forecast for Next {n_future_months} Months")
+plt.xlabel("Date")
+plt.ylabel("Price")
+plt.legend()
+plt.grid(False)
+plt.show()
+```

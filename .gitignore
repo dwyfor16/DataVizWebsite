@@ -8,3 +8,6 @@
 ed_map_env/
 **/.jupyter_cache/
 /_site/
+my-venv/
+venv/
+docs/my-venv/
