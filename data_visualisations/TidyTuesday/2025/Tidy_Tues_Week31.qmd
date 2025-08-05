@@ -1,0 +1,72 @@
+---
+title: "TidyTuesday Week 31: British Library Funding"
+subtitle: "This week we're exploring Income Inequality Before and After Taxes, as processed and visualized by Joe Hasell at Our World in Data"
+author: "Peter Gray"
+date: "2025-08-05" 
+categories: ["TidyTuesday", "Data Visualization", "Python" , "2025"]
+tags: [tidytuesday, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week31.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+:::
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+income_inequality_processed = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv')
+income_inequality_raw = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_raw.csv')
+
+countries = ["United States", "Germany", "France", "Italy", "Spain", "UK"]
+
+df = income_inequality_processed[income_inequality_processed["Entity"].isin(countries)]
+
+# Only that after 20008
+
+df = df[df["Year"] >= 2008]
+
+heatmap_data_b4_tax = df.pivot(index="Entity", columns="Year", values="gini_mi_eq")
+heatmap_data_aft_tax = df.pivot(index="Entity", columns="Year", values="gini_dhi_eq")
+
+
+fig, axes = plt.subplots(1, 2, figsize=(18, 8), sharey=True)
+
+sns.heatmap(heatmap_data_b4_tax, 
+            cmap="YlOrRd", 
+            ax=axes[0])
+axes[0].set_title("Before-Tax Income Inequality")
+axes[0].set_xlabel("Year")
+axes[0].set_ylabel("Country")
+
+sns.heatmap(heatmap_data_aft_tax, 
+            cmap="YlOrRd", 
+            ax=axes[1])
+axes[1].set_title("After-Tax Income Inequality")
+axes[1].set_xlabel("Year")
+axes[1].set_ylabel("")
+plt.show()
+
+
+```

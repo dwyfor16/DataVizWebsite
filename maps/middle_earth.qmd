@@ -30,82 +30,202 @@ execute:
 #### 1. R code
 ```{r}
 
-if(!require(yaml)){install.packages("yaml"); library(yaml)}
-if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
-if(!require(ggplot2)){install.packages("ggplot2"); library(ggplot2)}
-# if needed and on Linux apt-get -y update && apt-get install -y  libudunits2-dev libgdal-dev libgeos-dev libproj-dev
-if(!require(sf)){install.packages("sf"); library(sf)}
-if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
-if(!require(rnaturalearthdata)){install.packages("rnaturalearthdata"); library(rnaturalearthdata)}
-if(!require(rnaturalearth)){install.packages("rnaturalearth"); library(rnaturalearth)}
-if(!require(ggspatial)){install.packages("ggspatial"); library(ggspatial)}
-if(!require(scales)){install.packages("scales"); library(scales)}
-if(!require(leaflet)){install.packages("leaflet"); library(leaflet)}
-if(!require(glue)){install.packages("glue"); library(glue)}
-if(!require(showtext)){install.packages("showtext"); library(showtext)}
-if(!require(knitr)){install.packages("knitr"); library(knitr)}
-if(!require(ggrepel)){install.packages("ggrepel"); library(ggrepel)}
+if (!require(yaml)) {
+  install.packages("yaml")
+  library(yaml)
+}
+if (!require(tidyverse)) {
+  install.packages("tidyverse")
+  library(tidyverse)
+}
+if (!require(ggplot2)) {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+if (!require(sf)) {
+  install.packages("sf")
+  library(sf)
+}
+if (!require(patchwork)) {
+  install.packages("patchwork")
+  library(patchwork)
+}
+if (!require(rnaturalearthdata)) {
+  install.packages("rnaturalearthdata")
+  library(rnaturalearthdata)
+}
+if (!require(rnaturalearth)) {
+  install.packages("rnaturalearth")
+  library(rnaturalearth)
+}
+if (!require(ggspatial)) {
+  install.packages("ggspatial")
+  library(ggspatial)
+}
+if (!require(scales)) {
+  install.packages("scales")
+  library(scales)
+}
+if (!require(leaflet)) {
+  install.packages("leaflet")
+  library(leaflet)
+}
+if (!require(glue)) {
+  install.packages("glue")
+  library(glue)
+}
+if (!require(showtext)) {
+  install.packages("showtext")
+  library(showtext)
+}
+if (!require(knitr)) {
+  install.packages("knitr")
+  library(knitr)
+}
+if (!require(ggrepel)) {
+  install.packages("ggrepel")
+  library(ggrepel)
+}
 
 # Colour Scheme
 custom_colors <- c(
-  "#004225", "#00007d", "#D4A5A5", "#1B998B", "#F2E86D", "#F25F5C", "#247BA0",  
+  "#004225",
+  "#00007d",
+  "#D4A5A5",
+  "#1B998B",
+  "#F2E86D",
+  "#F25F5C",
+  "#247BA0",
   "#662E9B"
 )
 
 # Custom Theme
 custom_theme <- function() {
   ggplot2::theme(
-    plot.title.position   = "plot",
+    plot.title.position = "plot",
     plot.caption.position = "plot",
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5, color = "#000036"),
+    plot.title = element_text(
+      face = "bold",
+      size = 16,
+      hjust = 0.5,
+      color = "#000036"
+    ),
     axis.title.x = element_text(face = "bold", size = 10),
     axis.title.y = element_text(face = "bold", size = 10),
     panel.border = element_blank(),
     panel.background = element_blank(),
-    axis.line = element_line(linewidth  = 0.5, colour = "darkgrey"),
+    axis.line = element_line(linewidth = 0.5, colour = "darkgrey"),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10)
-    
   )
 }
 
-# Custom Fonts 
+# Custom Fonts
 
-font_add(family = "Aniron", regular = "/home/pgr16/Documents/Coding/Middle Earth/Fonts/anirm___.ttf")
+font_add(
+  family = "Aniron",
+  regular = "/home/pgr16/Documents/Coding/Middle Earth/Fonts/anirm___.ttf"
+)
 showtext_auto()
 
-font_add(family = "Celtic", regular = "/home/pgr16/Documents/Coding/Middle Earth/Fonts/UncialAntiqua-Regular.ttf")
+font_add(
+  family = "Celtic",
+  regular = "/home/pgr16/Documents/Coding/Middle Earth/Fonts/UncialAntiqua-Regular.ttf"
+)
 showtext_auto()
 
-world_map <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/World Countries/ne_50m_admin_0_countries.shp")
+world_map <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/World Countries/ne_50m_admin_0_countries.shp"
+)
 
-coastline <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Coastline2.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+coastline <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Coastline2.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-contours <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Contours_18.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+contours <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Contours_18.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-rivers <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Rivers.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+rivers <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Rivers.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-roads <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Roads.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+roads <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Roads.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-lakes <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Lakes.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+lakes <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Lakes.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-regions <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Regions_Anno.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+regions <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Regions_Anno.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-forests <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Forests.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+forests <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Forests.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-mountains <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Mountains_Anno.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+mountains <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Mountains_Anno.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-placenames <- read_sf("/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Combined_Placenames.shp") |> 
-  mutate(across(where(is.character), ~iconv(., from = "ISO-8859-1", to = "UTF-8")))
+placenames <- read_sf(
+  "/home/pgr16/Documents/Coding/Middle Earth/Middle Earth/Combined_Placenames.shp"
+) |>
+  mutate(across(
+    where(is.character),
+    ~ iconv(., from = "ISO-8859-1", to = "UTF-8")
+  ))
 
-list <- c("Hobbiton", "Rivendell", "Edoras", "Minas Tirith", "Bay of Bafalas", "Bay of Umbar", "Fangorn", "Grey Havens", "Helm's Deep", "Isengard", "Lórien", "Mirkwood", "Mt Doom", "Sea of Rhun", "Mt Doom")
+list <- c(
+  "Hobbiton",
+  "Rivendell",
+  "Edoras",
+  "Minas Tirith",
+  "Bay of Bafalas",
+  "Bay of Umbar",
+  "Fangorn",
+  "Grey Havens",
+  "Helm's Deep",
+  "Isengard",
+  "Lórien",
+  "Mirkwood",
+  "Mt Doom",
+  "Sea of Rhun",
+  "Mt Doom"
+)
 
 miles_to_meters <- function(x) {
   x * 1609.344
@@ -119,101 +239,139 @@ clr_green <- "#035711"
 clr_blue <- "#0776e0"
 clr_yellow <- "#fffce3"
 
-hobbiton <- placenames |> 
-  filter(NAME == "Hobbiton") |> 
-  mutate(geometry_x =  map_dbl(geometry, ~as.numeric(.)[1]),
-  geometry_y = map_dbl(geometry, ~as.numeric(.)[2])) |> 
-    select(LAYER, NAME, geometry_x, geometry_y)
+hobbiton <- placenames |>
+  filter(NAME == "Hobbiton") |>
+  mutate(
+    geometry_x = map_dbl(geometry, ~ as.numeric(.)[1]),
+    geometry_y = map_dbl(geometry, ~ as.numeric(.)[2])
+  ) |>
+  select(LAYER, NAME, geometry_x, geometry_y)
 
 # Format numeric coordinates with degree symbols and cardinal directions
 format_coords <- function(coords) {
   ns <- ifelse(coords[[1]][2] > 0, "N", "S")
   ew <- ifelse(coords[[1]][1] > 0, "E", "W")
-  
-  glue("{latitude}°{ns} {longitude}°{ew}",
-       latitude = sprintf("%.6f", coords[[1]][2]),
-       longitude = sprintf("%.6f", coords[[1]][1]))
+
+  glue(
+    "{latitude}°{ns} {longitude}°{ew}",
+    latitude = sprintf("%.6f", coords[[1]][2]),
+    longitude = sprintf("%.6f", coords[[1]][1])
+  )
 }
 
 
-
 europe_window <- st_sfc(
-  st_point(c(-12.4, 29.31)),  # left (west), bottom (south)
-  st_point(c(44.74, 64.62)),  # right (east), top (north)
-  crs = st_crs("EPSG:4326")   # WGS 84
-) %>% 
-  st_transform(crs = st_crs("EPSG:5633")) %>%  # LAEA Europe, centered in Portugal
+  st_point(c(-12.4, 29.31)), # left (west), bottom (south)
+  st_point(c(44.74, 64.62)), # right (east), top (north)
+  crs = st_crs("EPSG:4326") # WGS 84
+) %>%
+  st_transform(crs = st_crs("EPSG:5633")) %>% # LAEA Europe, centered in Portugal
   st_coordinates()
 
 europe_plot <- ggplot() +
   geom_sf(data = world_map, fill = "#004225", alpha = 0.5) +
-    coord_sf(crs = st_crs("EPSG:5633"),
-           xlim = europe_window[, "X"],
-           ylim = europe_window[, "Y"],
-           expand = FALSE) +
-            custom_theme() +
-            labs("Map of Europe")
+  coord_sf(
+    crs = st_crs("EPSG:5633"),
+    xlim = europe_window[, "X"],
+    ylim = europe_window[, "Y"],
+    expand = FALSE
+  ) +
+  custom_theme() +
+  labs("Map of Europe")
 
 
 cardiff <- tribble(
-  ~place, ~lat, ~long,
-  "Cardiff", 51.481583,  -3.179090
-) %>% 
-  st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326")) 
+  ~place,
+  ~lat,
+  ~long,
+  "Cardiff",
+  51.481583,
+  -3.179090
+) %>%
+  st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
 
 # Convert the Tolkien home coordinates to European coordinates
-cardiff <- cardiff %>% 
+cardiff <- cardiff %>%
   st_transform(crs = st_crs("EPSG:5633"))
 
 # Convert the Hobbiton coordinates to European coordinates
 
-hobbiton_in_europe <- hobbiton %>% 
+hobbiton_in_europe <- hobbiton %>%
   st_transform(st_crs("EPSG:5633"))
 
 # Find the offset between Tolkien's home and Hobbiton
 me_to_europe <- st_coordinates(cardiff) - st_coordinates(hobbiton_in_europe)
 
-me_places_in_europe <- placenames %>% 
+me_places_in_europe <- placenames %>%
   # Make the Middle Earth data match the Europe projection
   st_transform(st_crs("EPSG:5633")) %>%
   # Just look at a handful of places
-  filter(NAME %in% c("Hobbiton", "Rivendell", "Edoras", "Minas Tirith", "Mt Doom")) %>% 
+  filter(
+    NAME %in% c("Hobbiton", "Rivendell", "Edoras", "Minas Tirith", "Mt Doom")
+  ) %>%
   # Double the distances
-  st_set_geometry((st_geometry(.) - st_geometry(hobbiton_in_europe)) * 2 + st_geometry(hobbiton_in_europe)) %>% 
+  st_set_geometry(
+    (st_geometry(.) - st_geometry(hobbiton_in_europe)) *
+      2 +
+      st_geometry(hobbiton_in_europe)
+  ) %>%
   # Shift everything around so that Hobbiton is in Oxford
-  st_set_geometry(st_geometry(.) + me_to_europe) %>% 
+  st_set_geometry(st_geometry(.) + me_to_europe) %>%
   # All the geometry math made us lose the projection metadata; set it again
   st_set_crs(st_crs("EPSG:5633"))
 
-coastline_in_europe <- coastline %>% 
+coastline_in_europe <- coastline %>%
   st_transform(st_crs("EPSG:5633")) %>%
-  st_set_geometry((st_geometry(.) - st_geometry(hobbiton_in_europe)) * 2 + st_geometry(hobbiton_in_europe)) %>% 
-  st_set_geometry(st_geometry(.) + me_to_europe) %>% 
+  st_set_geometry(
+    (st_geometry(.) - st_geometry(hobbiton_in_europe)) *
+      2 +
+      st_geometry(hobbiton_in_europe)
+  ) %>%
+  st_set_geometry(st_geometry(.) + me_to_europe) %>%
   st_set_crs(st_crs("EPSG:5633"))
 
 
-europe_me_plot <- ggplot() + 
-  geom_sf(data = world_map, fill = "#004225", alpha = 0.5, color = "white", linewidth = 0.25) +
+europe_me_plot <- ggplot() +
+  geom_sf(
+    data = world_map,
+    fill = "#004225",
+    alpha = 0.5,
+    color = "white",
+    linewidth = 0.25
+  ) +
   geom_sf(data = coastline_in_europe, linewidth = 0.25, fill = "#39CCCC") +
   geom_sf(data = me_places_in_europe, fill = "#39CCCC", alpha = 0.5) +
-  geom_text_repel(data = filter(me_places_in_europe, NAME %in% list), 
-                  aes(label = NAME, geometry = geometry), 
-                  stat = "sf_coordinates",
-                  nudge_x = -70000, hjust = 1, 
-                  family = "Aniron", fontface = "plain", size = rel(10),
-                  box.padding = 0.5, # Space around labels
-                  point.padding = 0.5, # Space around labeled points
-                  max.overlaps = 10) + # Adjust to control label repulsion
-  coord_sf(crs = st_crs("EPSG:5633"),
-           xlim = europe_window[, "X"],
-           ylim = europe_window[, "Y"],
-           expand = FALSE) +
+  geom_text_repel(
+    data = filter(me_places_in_europe, NAME %in% list),
+    aes(label = NAME, geometry = geometry),
+    stat = "sf_coordinates",
+    nudge_x = -70000,
+    hjust = 1,
+    family = "Aniron",
+    fontface = "plain",
+    size = rel(10),
+    box.padding = 0.5, # Space around labels
+    point.padding = 0.5, # Space around labeled points
+    max.overlaps = 10
+  ) + # Adjust to control label repulsion
+  coord_sf(
+    crs = st_crs("EPSG:5633"),
+    xlim = europe_window[, "X"],
+    ylim = europe_window[, "Y"],
+    expand = FALSE
+  ) +
   theme_void() +
-  labs(title = str_wrap("Plot of Middle Earth Superimposed over the map of Europe", 40), 
-       subtitle = "Hobbiton is centred on the great city of Cardiff") +
-  theme(plot.background = element_rect(fill = clr_yellow),
-        plot.title = element_text(family = "Aniron", size = rel(4), hjust = 0.02),
-        plot.subtitle = element_text(family = "Aniron", size = rel(2), hjust = 0.02))
-
+  labs(
+    title = str_wrap(
+      "Plot of Middle Earth Superimposed over the map of Europe",
+      40
+    ),
+    subtitle = "Hobbiton is centred on the great city of Cardiff"
+  ) +
+  theme(
+    plot.background = element_rect(fill = clr_yellow),
+    plot.title = element_text(family = "Aniron", size = rel(4), hjust = 0.02),
+    plot.subtitle = element_text(family = "Aniron", size = rel(2), hjust = 0.02)
+  )
 
 ```
