@@ -1,5 +1,5 @@
 ---
-title: "TidyTuesday Week 31: British Library Funding"
+title: "TidyTuesday Week 31: Income Inequality before and after taxes"
 subtitle: "This week we're exploring Income Inequality Before and After Taxes, as processed and visualized by Joe Hasell at Our World in Data"
 author: "Peter Gray"
 date: "2025-08-05" 
