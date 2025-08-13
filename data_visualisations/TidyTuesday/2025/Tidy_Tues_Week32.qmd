@@ -1,0 +1,98 @@
+---
+title: "TidyTuesday Week 32: Extreme Weather Attribution Studies"
+subtitle: "This week we're exploring extreme weather attribution studies. The dataset comes from Carbon Brief's article Mapped: How climate change affects extreme weather around the world"
+author: "Peter Gray"
+date: "2025-08-05" 
+categories: ["TidyTuesday", "Data Visualization", "Python" , "2025"]
+tags: [tidytuesday, data visulation, Python Programming, Pandas]
+image: "thumbnails/TidyTues_Week32.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+:::
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import folium
+import base64
+from io import BytesIO
+
+
+attribution_studies = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-12/attribution_studies.csv')
+attribution_studies_raw = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-12/attribution_studies_raw.csv')
+
+
+classification_colors = {
+    "More severe or more likely to occur": "#e41a1c",
+    "Decrease, less severe or less likely to occur": "#377eb8",
+    "No discernible human influence": "#4daf4a",
+}
+
+df = attribution_studies_raw[attribution_studies_raw["iso_country_code"].notnull()]
+df = df[df["classification"] != "Insufficient data/inconclusive"]
+df = df[df["cb_region"].str.contains("Heisphere")==False]
+
+
+df["classification"]
+
+
+df = df.explode("iso_country_code")
+
+
+df["iso_country_code"] = df["iso_country_code"].str.strip()
+
+counts = df.groupby(['cb_region', 'classification']).size().reset_index(name='count')
+
+pivot_counts = counts.pivot(index='cb_region',
+                             columns='classification',
+                             values='count').fillna(0)
+
+
+pivot_percent = pivot_counts.div(pivot_counts.sum(axis=1), axis=0) * 100
+
+
+ax = pivot_percent.plot(
+    kind='bar',
+    stacked=True,
+    figsize=(8, 5),
+    color=[classification_colors.get(col, "#cccccc") for col in pivot_percent.columns]
+)
+
+
+for container in ax.containers:
+    labels = [f"{v.get_height():.1f}%" if v.get_height() > 0 else "" for v in container]
+    ax.bar_label(container, labels=labels, label_type='center', fontsize=8, color="white")
+
+plt.ylabel('Percentage')
+plt.xlabel("Region")
+plt.title('Percentage by Region and Classification')
+plt.legend(
+    title='Classification',
+    loc='lower right',
+    bbox_to_anchor=(1.5, -1)
+)
+
+plt.show()
+
+```
