@@ -1,5 +1,5 @@
 ---
-title: "TidyTuesday Week 33: Scott"
+title: "TidyTuesday Week 33: Scottish Munros"
 subtitle: "A Munro is a Scottish mountain with an elevation of over 3,000 feet, whereas a Munro Top is a subsidiary summit of a Munro that also exceeds 3,000 feet in height but is not considered a distinct mountain in its own right. The most famous Munro is Ben Nevis."
 author: "Peter Gray"
 date: "2025-08-19" 
@@ -68,7 +68,7 @@ if (!require(CustomGGPlot2Theme)) {
 
 
 scottish_munros <- readr::read_csv(
-  'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-19/scottish_munros.csv'
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-19/scottish_munros.csv"
 )
 
 
@@ -100,7 +100,7 @@ numbers <- munros_clean |>
   group_by(Year) |>
   mutate(pct = n / sum(n) * 100, y = 60 / 2)
 
-title = "Alluvial Plot of Scottish Munro classifications that have changed over the years"
+title <- "Alluvial Plot of Scottish Munro classifications that have changed over the years"
 
 p1 <- ggplot(
   munros_clean,
