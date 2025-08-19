@@ -27,7 +27,9 @@ execute:
 
 My attempt at taking data from a Time to Event Dataset in the form of a CDISC data set, removing random data points then using Multiple Imputation Chained Equations to impute the missing data. COmparative Analyses are then done to show the differences.
 
-This analysis makes little sense in the "real world" but it is more to show that I can do it
+This analysis makes little sense in the "real world" but it is more to show that I can do it.
+
+To do this I used QUarto and produced a PDF report with the code.
 
 
 ![Document](Data/TTE_Analysis_Imputation.pdf){width=640px height=480px}
