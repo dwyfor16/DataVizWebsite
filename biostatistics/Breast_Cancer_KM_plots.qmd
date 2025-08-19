@@ -1,6 +1,6 @@
 ---
-title: "Kaplan Meir Plots in Python"
-subtitle: "An Experiment to see if I can produce Kaplan Meir plots using Python"
+title: "Kaplan Meier Plots in Python"
+subtitle: "An Experiment to see if I can produce Kaplan Meier plots using Python"
 author: "Peter Gray"
 date: "2025-05-30" 
 categories: ["Biostatistics", "Python", "2025", "Data Analysis"]
