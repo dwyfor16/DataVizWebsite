@@ -1,0 +1,150 @@
+---
+title: "TidyTuesday Week 34: Billboard Hot 100 Number Ones"
+subtitle: "This week we are exploring the Billboard Hot 100 Number Ones Database. This workbook contains substantial data about every song to ever top the Billboard Hot 100 between August 4, 1958 and January 11, 2025."
+author: "Peter Gray"
+date: "2025-08-19" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2025"]
+tags: [tidytuesday, Python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week34.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week34.png){#fig-singlechart}
+Graphs of the Billboard 100
+:::
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+from plotnine import *
+import patchworklib as pl
+
+billboard = pd.read_csv(
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-26/billboard.csv"
+)
+topics = pd.read_csv(
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-26/topics.csv"
+)
+
+rock = billboard[billboard["cdr_genre"] == "Rock"].copy()
+
+rock["rounded_rating"] = np.rint(rock["overall_rating"])
+rock["date"] = pd.to_datetime(rock["date"])
+rock["decade"] = (rock["date"].dt.year // 10) * 10
+rock["decade"] = rock["decade"].astype("category")
+
+# Histogram of Ratings
+hist = pl.load_ggplot(
+    ggplot(data=rock)
+    + geom_histogram(
+        aes(x="rounded_rating"), color="darkblue", fill="lightblue", bins=13
+    )
+    + theme_bw()
+    + theme(panel_grid=element_blank(), plot_title=element_text(margin={"b": 5}))
+    + scale_x_continuous(breaks=range(0, 11))
+    + labs(
+        title="Distribuiton of Ratings for Rock Songs that Reached Number One",
+        x="Rating \\n (rounded to nearest integer)",
+        y="Count",
+    )
+)
+
+
+# Box Plot
+box = pl.load_ggplot(
+    ggplot(rock)
+    + geom_boxplot(aes(x="decade", y="rounded_rating", fill="decade"))
+    + theme_bw()
+    + theme(
+        panel_grid=element_blank(),
+        legend_position="bottom",
+        legend_box_margin=0,
+        plot_title=element_text(margin={"b": 5}),
+    )
+    + labs(
+        title="Box plot of Rating of Rock Songs that Reached Number One",
+        x="Decade",
+        y="Rating \n (rounded to nearest integer)",
+        fill="Decade",
+    )
+)
+
+
+# Top 10 bands with multiple Number ones
+artist_counts = rock["artist"].value_counts()
+top10 = artist_counts.head(10)
+top10_df = top10.reset_index()
+top10_df.columns = ["artist", "count"]
+top10_df = top10_df.sort_values(by="count", ascending=True)
+top10_df["artist"] = pd.Categorical(
+    top10_df["artist"], categories=top10_df["artist"], ordered=True
+)
+top10_chart = pl.load_ggplot(
+    ggplot(top10_df)
+    + geom_bar(aes(x="artist", y="count"), stat="identity", fill="steelblue")
+    + geom_text(
+        aes(x="artist", y="count + 0.5", label="count"),
+        va="center",
+        format_string="{:.0f}",
+        position=position_dodge(width=0.9),
+    )
+    + coord_flip()
+    + theme_bw()
+    + theme(panel_grid=element_blank())
+    + labs(
+        title="Top 10 Rock Artists by Number of Number 1 Songs",
+        x="Artist",
+        y="Number of Number 1 Hits",
+    )
+)
+
+
+# Proportion of Cow Bell Used in Songs
+instruments = rock[["cdr_genre", "cowbell", "accordion", "banjo", "clarinet"]].copy()
+
+instruments_long = instruments.melt(
+    id_vars="cdr_genre", var_name="instrument", value_name="present"
+)
+
+
+cowbell_plot = pl.load_ggplot(
+    ggplot(
+        instruments_long.query("present == 1"), aes(x="cdr_genre", fill="instrument")
+    )
+    + geom_bar(position="fill", width=0.5)
+    + scale_y_continuous(labels=lambda l: ["{:.0f}%".format(v * 100) for v in l])
+    + labs(
+        title="Proportion of Instruments Used in Songs by Genre",
+        x="Genre",
+        y="Proportion of Songs",
+        fill="Instrument",
+    )
+    + theme_bw()
+    + theme(panel_grid=element_blank(), axis_text_x=element_text(rotation=45, hjust=1))
+)
+
+
+combined = (hist | box) / (cowbell_plot | top10_chart)
+
+
+
+```
