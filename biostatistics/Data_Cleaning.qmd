@@ -1,0 +1,31 @@
+---
+title: "Python: Data Cleaning Exercise"
+subtitle: "A project to demonstrate/practice my data-cleaning skills using Python, Pandas etc."
+author: "Peter Gray"
+date: "2023-09" 
+categories: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning"]
+tags: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning"]
+image: "Images/Thumbnails/Thesis.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+
+![Document](Data/Data_Cleaning.pdf){width=640px height=480px}
+
+I conducted a health data analysis project using publicly available dietary and demographic survey data. The project involved cleaning and integrating multiple datasets, creating standardized variables, and transforming raw codes into meaningful categories. I explored patterns in nutrition, calorie intake, and lifestyle factors across different age groups, genders, and ethnic backgrounds using visualizations and statistical techniques. Weighted analyses were applied to ensure population-level insights, and results were presented through clear, reproducible Python workflows. This project demonstrates my ability to manage complex datasets, perform exploratory and statistical analysis, and communicate findings in an accessible way
