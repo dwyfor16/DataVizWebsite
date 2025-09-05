@@ -4,15 +4,9 @@
     "items": [
       "/biostatistics/Imputation_TIme_to_Event_Analysis.html",
       "/biostatistics/Breast_Cancer_KM_plots.html",
+      "/biostatistics/Obesity_Prediction.html",
       "/biostatistics/Data_Cleaning.html",
       "/biostatistics/MastersThesis.html"
-    ]
-  },
-  {
-    "listing": "/maps.html",
-    "items": [
-      "/maps/uk_maps.html",
-      "/maps/middle_earth.html"
     ]
   },
   {
@@ -44,6 +38,13 @@
       "/data_visualisations/RugbyResults/6NationResultsWebApp.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html"
+    ]
+  },
+  {
+    "listing": "/maps.html",
+    "items": [
+      "/maps/uk_maps.html",
+      "/maps/middle_earth.html"
     ]
   }
 ]

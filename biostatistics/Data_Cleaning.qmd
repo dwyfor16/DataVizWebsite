@@ -2,7 +2,7 @@
 title: "Python: Data Cleaning Exercise"
 subtitle: "A project to demonstrate/practice my data-cleaning skills using Python, Pandas etc."
 author: "Peter Gray"
-date: "2023-09" 
+date: "2025-09" 
 categories: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning"]
 tags: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning"]
 image: "Images/Thumbnails/Thesis.png"

@@ -1,0 +1,36 @@
+---
+title: "Obesity Prediction Project"
+subtitle: "A project to demonstrate/practice my data-cleaning and Mdelling skills using Python, Pandas etc."
+author: "Peter Gray"
+date: "2025-09" 
+categories: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning", "Machine Learning", "Regression Analysis"]
+tags: ["Data Science", "Python",  "2025", "Data Analysis", "Data Cleaning", "Machine Learning", "Regression Analysis"]
+image: "Images/Thumbnails/Obesity.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+
+![Document](Data/Obesity_Data_Analysis.pdf){width=640px height=480px}
+
+
+![Document](Data/Obesiity_Predictive_Model.pdf){width=640px height=480px}
+
+This project explores obesity prediction using logistic regression, LASSO regression, and random forest models. It demonstrates data wrangling, model fitting, evaluation, and visualization using Python (and statsmodels for odds ratios with confidence intervals).
+
+The document is produced using Quarto + Python, with outputs styled for PDF reports (LaTeX support for tables, title pages, and formatting).
