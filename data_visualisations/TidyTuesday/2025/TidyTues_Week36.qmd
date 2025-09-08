@@ -1,0 +1,178 @@
+---
+title: "TidyTuesday Week 36: Henley Passport Index Data"
+subtitle: "This week we are exploring data from the Henley Passport Index API. The Henley Passport Index is produced by Henley & Partners and captures the number of countries to which travelers in possession of each passport in the world may enter visa free."
+author: "Peter Gray"
+date: "2025-09-08" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2025", "streamlit", "dashboard"]
+tags: [tidytuesday, Python, data visulation, ggplot2, tidyverse, streamlit, dashboard]
+image: "thumbnails/TidyTues_Week36a.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week36a.png){#fig-singlechart}
+Graphs of my passport app
+:::
+
+#### 1. Python code
+
+```{python}
+iimport pandas as pd
+import streamlit as st
+import plotly.express as px
+import pycountry
+import ast
+
+country_lists = pd.read_csv(
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-09-09/country_lists.csv"
+)
+rank_by_year = pd.read_csv(
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-09-09/rank_by_year.csv"
+)
+
+
+visa_columns = [
+    "visa_required",
+    "visa_online",
+    "visa_on_arrival",
+    "visa_free_access",
+    "electronic_travel_authorisation",
+]
+
+visa_columns_map = {
+    "Visa Required": "visa_required",
+    "eVisa (Online Application)": "visa_online",
+    "Visa on Arrival": "visa_on_arrival",
+    "Visa Free Access": "visa_free_access",
+    "Electronic Travel Authorisation (ETA)": "electronic_travel_authorisation",
+}
+
+for col in visa_columns:
+    country_lists[col] = country_lists[col].apply(
+        lambda x: ast.literal_eval(x) if pd.notnull(x) else []
+    )
+
+
+tab1, tab2 = st.tabs(
+    ["📊 Change in Visa Ranking Graph", "🌍 Interactive Visa Requirements Map"]
+)
+
+with tab1:
+    st.subheader("Change in Country Visa Ranking over time")
+    default = ["France", "Germany", "Italy", "Spain", "United Kingdom", "United States"]
+    countries = sorted(rank_by_year["country"].unique())
+
+    # set up the containers
+    with st.container(border=True):
+        country = st.multiselect("Countries", countries, default=default)
+
+    data = (
+        rank_by_year[rank_by_year["country"].isin(country)]
+        .pivot(index="year", columns="country", values="rank")
+        .sort_index()
+    )
+
+    plotly_data = data.reset_index().melt(
+        id_vars="year", var_name="country", value_name="rank"
+    )
+
+    rank_fig = px.line(
+        plotly_data,
+        x="year",
+        y="rank",
+        color="country",
+        labels={
+            "year": "Year",
+            "rank": "Visa Free Access Rank",
+            "country": "Country",
+        },
+        title="Country Visa Free Access Rank Over Time",
+    )
+    rank_fig.update_yaxes(autorange="reversed")
+
+    # ✅ display inside tab1
+    st.plotly_chart(rank_fig, use_container_width=True)
+
+with tab2:
+    st.subheader("Interactive Visa Map")
+
+    # Sort the Data
+    country_lists["country"] = sorted(country_lists["country"])
+
+    # Dropdown for selecting home country
+    home_country = st.selectbox(
+        "Select your country of citizenship:", country_lists["country"]
+    )
+
+    visa_label = st.selectbox(
+        "Select the Visa Requirement of Interest:", list(visa_columns_map.keys())
+    )
+    visa_type = visa_columns_map[visa_label]
+
+    # Extract destinations for selected visa type
+    destinations_raw = country_lists.loc[
+        country_lists["country"] == home_country, visa_type
+    ].values[0]
+
+    # Flatten nested [[{...}]] → [{...}]
+    if (
+        isinstance(destinations_raw, list)
+        and len(destinations_raw) == 1
+        and isinstance(destinations_raw[0], list)
+    ):
+        destinations_raw = destinations_raw[0]
+
+    if isinstance(destinations_raw, list) and len(destinations_raw) > 0:
+        df_map = pd.DataFrame(destinations_raw)
+
+        # Convert alpha-2 → alpha-3
+        def alpha2_to_alpha3(alpha2):
+            try:
+                return pycountry.countries.get(alpha_2=alpha2).alpha_3
+            except:
+                return None
+
+        df_map["iso_alpha3"] = df_map["code"].apply(alpha2_to_alpha3)
+        df_map = df_map.dropna(subset=["iso_alpha3"])
+
+        if not df_map.empty:
+            fig = px.choropleth(
+                df_map,
+                locations="iso_alpha3",
+                hover_name="name",
+                color_discrete_sequence=["#0083B8"],
+                title=f"{visa_type.replace('_',' ').title()} Destinations for {home_country}",
+            )
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning(f"No {visa_type} destinations found for {home_country}.")
+    else:
+        st.warning(f"No {visa_type} data available for {home_country}.")
+
+    st.write(
+        f"**Countries with {visa_type.replace('_',' ').title()} for {home_country}:**"
+    )
+    df_map = df_map[["name", "code"]].rename(
+        columns={"name": "Name", "code": "2 Digit Country Code"}
+    )
+    st.dataframe(df_map[["Name", "2 Digit Country Code"]])
+
+
+
+```
