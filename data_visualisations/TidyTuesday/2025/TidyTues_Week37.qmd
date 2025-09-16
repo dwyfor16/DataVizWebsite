@@ -1,0 +1,205 @@
+---
+title: "TidyTuesday Week 37: Allrecipes Data"
+subtitle: "This week we're exploring a curated collection of recipes collected from Allrecipes.com! The data this week comes from the tastyR package (a dataset assembled from Allrecipes.com) and was prepared for analysis in R."
+author: "Peter Gray"
+date: "2025-09-15" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week36a.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week37.png){#fig-singlechart}
+NutrientPLots
+
+These boxplots compare calories, fat, carbs, and protein across world cuisines.North American and European/Oceanian recipes tend to be higher in calories and fat, while Asian and Latin American/Caribbean cuisines are more carb-heavy. Protein levels are fairly consistent across regions but appear to higher in the North American Region.
+
+:::
+
+#### 1. R code
+
+```{r}
+if (!require(tidyverse)) {
+  install.packages("tidyverse")
+  library(tidyverse)
+}
+if (!require(patchwork)) {
+  install.packages("patchwork")
+  library(patchwork)
+}
+if (!require(ggplot2)) {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+if (!require(CustomGGPlot2Theme)) {
+  devtools::install("CustomGGPlot2Theme")
+  library(CustomGGPlot2Theme)
+}
+
+all_recipes <- readr::read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-09-16/all_recipes.csv"
+)
+cuisines <- readr::read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-09-16/cuisines.csv"
+)
+
+# creater broader food groups
+cuisines <- cuisines |>
+  mutate(country = as.factor(country)) |>
+  mutate(
+    region = fct_collapse(
+      country,
+
+      # --- Europe ---
+      Europe_Oceania = c(
+        "Greek",
+        "Jewish",
+        "Australian and New Zealander",
+        "Danish",
+        "Spanish",
+        "Italian",
+        "Portuguese",
+        "Scandinavian",
+        "Norwegian",
+        "Swedish",
+        "Finnish",
+        "Russian",
+        "French",
+        "German",
+        "Polish",
+        "Dutch",
+        "Austrian",
+        "Belgian",
+        "Swiss"
+      ),
+
+      # --- Middle Eastern / Persian ---
+      Middle_Eastern_Persian = c("Turkish", "Lebanese", "Israeli", "Persian"),
+
+      # --- Asia ---
+      Asia = c(
+        "Chinese",
+        "Japanese",
+        "Korean",
+        "Thai",
+        "Vietnamese",
+        "Malaysian",
+        "Indonesian",
+        "Filipino",
+        "Bangladeshi",
+        "Indian",
+        "Pakistani"
+      ),
+
+      # --- Africa  ---
+      African = c("South African"),
+
+      # --- North America ---
+      North_America = c(
+        "Canadian",
+        "Southern Recipes",
+        "Cajun and Creole",
+        "Tex-Mex",
+        "Amish and Mennonite",
+        "Soul Food"
+      ),
+
+      # --- Latin America & Caribbean ---
+      Latin_America_Caribbean = c(
+        "Cuban",
+        "Puerto Rican",
+        "Brazilian",
+        "Argentinian",
+        "Peruvian",
+        "Chilean",
+        "Colombian",
+        "Jamaican"
+      )
+    )
+  ) |>
+  mutate(region = str_replace_all(region, "_", " "))
+
+columns <- c("calories", "fat", "carbs", "protein")
+regions <- unique(cuisines$region)
+plot_list <- list()
+
+i <- 1
+for (i in 1:length(columns)) {
+  goo <- cuisines |>
+    select(region, columns[i])
+
+  plot <- ggplot(goo, aes(x = region, y = !!sym(columns[i]), fill = region)) +
+    geom_boxplot() +
+    Custom_Style() +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(size = 12),
+      legend.title = element_text(size = 12),
+      legend.position = "none",
+      axis.title.x = element_blank()
+    ) +
+    labs(
+      title = paste0(str_to_title(columns[i])),
+      y = str_to_title(columns[i]),
+      fill = "Region"
+    ) +
+    scale_x_discrete(labels = ~ str_wrap(., width = 12))
+
+  plot_list[[i]] <- plot
+}
+
+
+# Fuction to Wrap Plots
+plot_a_list <- function(plot_list, rows, cols, title = NA) {
+  patchwork::wrap_plots(
+    plot_list,
+    nrow = rows,
+    ncol = cols,
+    guides = "collect"
+  ) +
+    plot_annotation(
+      title = title,
+      theme = theme(
+        plot.title = element_text(,
+          family = "Roboto Mono",
+          size = 14,
+          face = "bold",
+          hjust = 0.5
+        )
+      )
+    ) &
+    theme(
+      legend.position = "right",
+      legend.title.position = "top",
+      legend.text = element_text(size = 8),
+      legend.key.size = unit(0.4, "cm"),
+      legend.spacing.y = unit(3, "cm")
+    ) &
+    guides(
+      fill = guide_legend(ncol = 1, byrow = TRUE)
+    ) &
+    scale_fill_discrete(labels = ~ stringr::str_wrap(., width = 12))
+}
+
+title <- "Boxplots of various nutritional components of regional cuisines"
+plots <- plot_a_list(plot_list, 2, 2, title = str_to_title(title))
+
+```

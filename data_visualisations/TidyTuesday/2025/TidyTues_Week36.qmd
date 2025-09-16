@@ -27,13 +27,13 @@ execute:
 ---
 
 ![Chart](thumbnails/TidyTues_Week36a.png){#fig-singlechart}
-Graphs of my passport app
+FIgure of my passport app
 :::
 
 #### 1. Python code
 
 ```{python}
-iimport pandas as pd
+import pandas as pd
 import streamlit as st
 import plotly.express as px
 import pycountry
