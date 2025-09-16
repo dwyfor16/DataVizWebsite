@@ -5,7 +5,7 @@ author: "Peter Gray"
 date: "2025-09-15" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
-image: "thumbnails/TidyTues_Week36a.png"
+image: "thumbnails/TidyTues_Week37.png"
 format:
   html:
     toc: true
