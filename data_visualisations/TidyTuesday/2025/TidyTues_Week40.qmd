@@ -1,0 +1,117 @@
+---
+title: "TidyTuesday Week 40: EuroLeague Basketball"
+subtitle: "This week we’re exploring EuroLeague Basketball, the premier men’s club basketball competition in Europe. The dataset contains information on EuroLeague teams, including their country, home city, arena, seating capacity, and historical performance (Final Four appearances and titles won)."
+author: "Peter Gray"
+date: "2025-10-14" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week40.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+
+:::
+
+#### 1. R code
+
+```{r}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+if(!require(reactable)){install.packages("reactable"); library(reactable)}
+if(!require(reactablefmtr)){install.packages("reactablefmtr"); library(reactablefmtr)}
+if(!require(countrycode)){install.packages("countrycode"); library(countrycode)}
+if(!require(htmltools)){install.packages("htmltools"); library(htmltools)}
+
+
+euroleague_basketball <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-10-07/euroleague_basketball.csv')
+
+
+master <- euroleague_basketball %>% 
+  select(Team, Country, Years_of_FinalFour_Appearances, Years_of_Titles_Won) %>% 
+  mutate(
+    Final_Four_Count = str_count(Years_of_FinalFour_Appearances, ",") + 1,
+    Title_Won_Count = case_when(
+      Years_of_Titles_Won %in% c("None", "0", NA_character_) ~ 0,
+      TRUE ~ str_count(Years_of_Titles_Won, ",") + 1
+    ),
+    Final_Four_Count = replace_na(Final_Four_Count, 0),
+    Win_Percent = if_else(Final_Four_Count == 0, 0, round((Title_Won_Count / Final_Four_Count) * 100, 2)),
+    Flag_URL = paste0("https://flagcdn.com/16x12/", tolower(countrycode::countrycode(Country, "country.name", "iso2c")), ".png")
+  ) %>% 
+  arrange(desc(Win_Percent))
+
+table <- master %>%
+  select(Country, Team, Final_Four_Count, Title_Won_Count, Win_Percent) %>%
+  reactable(
+    filterable = TRUE,
+    theme = reactableTheme(
+      style = list(fontFamily = "-system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif")), 
+    columns = list(
+      Country = colDef(
+        cell = function(value) {
+          iso2 <- tolower(countrycode(value, "country.name", "iso2c"))
+          img_src <- sprintf("https://flagcdn.com/32x24/%s.png", iso2)
+          image <- img(src = img_src, style = "height: 24px;", alt = value)
+          tagList(
+            div(style = "display: inline-block; width: 50px", image),
+            value
+          )
+        },
+        headerStyle = list(textAlign = "center"), 
+        style = list(textAlign = "left"),
+        vAlign = "center"
+      ),
+      Team = colDef(
+        headerStyle = list(textAlign = "center"),
+        style = list(textAlign = "left"),
+        vAlign = "center"
+      ),
+      Final_Four_Count = colDef(
+        name =  "Appearences in Final Four",
+        headerStyle = list(textAlign = "center"),
+        style = list(textAlign = "right") ,
+        vAlign = "center"
+      ),
+      Title_Won_Count = colDef(
+        name =  "Titles Won",
+        headerStyle = list(textAlign = "center"),
+        style = list(textAlign = "right"),
+        vAlign = "center"
+      ),
+      Win_Percent = colDef(
+        name = "Win Ratio",
+        cell = data_bars(.,
+                         fill_color = "darkgreen",
+                         number_fmt = scales::percent_format(scale = 1),
+                         max_value = 100),
+        vAlign = "center"
+      )
+    ),
+    defaultPageSize = 10,
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE
+  )
+
+
+
+table
+
+```
