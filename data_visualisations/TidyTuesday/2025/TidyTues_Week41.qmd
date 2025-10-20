@@ -1,0 +1,118 @@
+---
+title: "TidyTuesday Week 41: Food/Water Security"
+subtitle: "This Thursday (2025-10-16) is World Food Day, which celebrates the foundation of The Food and Agriculture Organization of the United Nations (FAO), which turns 80 this week! To mark this occasion, this week we're looking at the FAO's Suite of Food Security Indicators."
+author: "Peter Gray"
+date: "2025-10-20" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week41.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week41.png){#fig-singlechart}
+Graph of Water Access 
+
+
+
+#### 1. R code
+
+```{r}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(scales)){install.packages("scales"); library(scales)}
+if(!require(ggrepel)){install.packages("ggrepel"); library(ggrepel)}
+
+food_security <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-10-14/food_security.csv')
+
+
+regions <- c(
+  "Africa",
+  "Sub-Saharan Africa",
+  "Northern America",
+  "Europe",
+  "Caribbean",
+  "South America",
+  "Asia",
+  "Central Asia",
+  "South-eastern Asia",
+  "Polynesia",
+  "World"
+)
+
+
+
+water_safety_regions <- 
+  food_security |> 
+  filter(Item == "Percentage of population using safely managed drinking water services (percent)")  |> 
+  filter(Area %in% regions)
+
+
+label_data <- water_safety_regions |>
+  group_by(Area) |>
+  filter(Year_End == max(Year_End)) |>
+  ungroup() |> 
+  mutate(Area  = case_when(Area == "World" ~ "World Average", TRUE  ~ Area)) |> 
+  mutate(Label = paste0(Area, " \n(", Value,"%)"))
+
+
+
+plot <- water_safety_regions |>
+  ggplot(aes(x = Year_End, y = Value, color = Area)) +
+  geom_line(linewidth = 1.5, alpha = 0.9) +
+  geom_label_repel(
+    data = label_data,
+    aes(label = Label),
+    fill = alpha("white", 0.7),
+    color = "#004E89",
+    fontface = "bold",
+    size = 3.8,
+    box.padding = 0.5,
+    nudge_x = 2,
+    segment.color = "deepskyblue4"
+  ) +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  labs(
+    title = "💧 Access to Safely Managed Drinking Water Services by Region 🌍",
+    subtitle = "Share of population using safely managed drinking water (percent)",
+    x = "Year",
+    y = "Population (%)",
+    caption = "Source: FAO / WHO Joint Monitoring Programme (JMP)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.background = element_rect(fill = "#e0f7fa", color = NA),
+    panel.background = element_rect(fill = alpha("#b2ebf2", 0.4), color = NA),
+    panel.grid = element_blank(),
+    axis.title = element_text(face = "bold", color = "#004e89"),
+    axis.text = element_text(color = "#0077b6"),
+    plot.title = element_text(
+      face = "bold",
+      size = 18,
+      color = "#023e8a",
+      margin = margin(b = 10)
+    ),
+    plot.subtitle = element_text(size = 12, color = "#0077b6"),
+    legend.position = "none",
+    plot.caption = element_text(color = "#0077b6", face = "italic"),
+    axis.line = element_line(linewidth = 0.5, color = "#0077b6")
+  ) +
+  geom_smooth(aes(group = 1), method = "loess", se = FALSE,
+              color = "#00b4d8", linewidth = 1, alpha = 0.3)
+
+```

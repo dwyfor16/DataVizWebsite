@@ -11,3 +11,4 @@ ed_map_env/
 my-venv/
 venv/
 docs/my-venv/
+**/*.quarto_ipynb
