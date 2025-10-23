@@ -26,9 +26,11 @@ execute:
   eval: true
 ---
 
-![Chart](thumbnails/TidyTues_Week42.png){#fig-singlechart}
-Graph of  
+![Chart](thumbnails/TidyTues_Week42a.png){#fig-singlechart}
+Graph of  Average Rainfall and Sunshine
 
+![Chart](thumbnails/TidyTues_Week42b.png){#fig-singlechart}
+Graph of  Average Min and Max Temp
 
 
 #### 1. R code
@@ -155,8 +157,81 @@ rain <- ggplot(mean_rain, aes(x = month, y = mean_rain, fill = mean_rain)) +
 
 
 
+######## = Average Max Temperature
+
+maxtemp <- ggplot(
+  mean_max_temp,
+  aes(x = month, y = mean_max_temp, fill = mean_max_temp)
+) +
+  geom_bar(stat = "identity", width = 1, color = "lightgrey") +
+  geom_label_repel(
+    aes(
+      label = paste0(round(mean_max_temp, 1), " °C"),
+      y = mean_max_temp + 5
+    ),
+    size = 5,
+    color = "black"
+  ) +
+  coord_polar(start = 0) + # makes it circular
+  # annotate("point", x = 0, y = 0, size = 15, color = "#2E5984") +  # sun core
+  scale_fill_gradient(low = "#c4d7ff", high = "#ff3800") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "bottom",
+    axis.text.x = element_text(size = 12, face = "bold"),
+    title = element_text(size = 12, face = "bold")
+  ) +
+  labs(
+    fill = "Average Maximum Temperature (°C)",
+    title = "Average Maximum Monthly Temperature in Wales in 2024"
+  )
+
+
+
+######## = Average min Temperature
+
+mintemp <- ggplot(
+  mean_min_temp,
+  aes(x = month, y = mean_min_temp, fill = mean_min_temp)
+) +
+  geom_bar(stat = "identity", width = 1, color = "lightgrey") +
+  geom_label_repel(
+    aes(
+      label = paste0(round(mean_min_temp, 1), " °C"),
+      y = mean_min_temp + 5
+    ),
+    size = 5,
+    color = "black"
+  ) +
+  coord_polar(start = 0) + # makes it circular
+  # annotate("point", x = 0, y = 0, size = 15, color = "#2E5984") +  # sun core
+  scale_fill_gradient(low = "#c4d7ff", high = "#eeea04ff") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "bottom",
+    axis.text.x = element_text(size = 12, face = "bold"),
+    title = element_text(size = 12, face = "bold")
+  ) +
+  labs(
+    fill = "Average Minimum Temperature (°C)",
+    title = "Average Minimum Monthly Temperature in Wales in 2024"
+  )
+
+
 
 plots <- (sunshine + rain) 
+
+
+
+plots2 <- (mintemp + maxtemp) 
 
 
 ```
