@@ -1,8 +1,8 @@
 ---
-title: "TidyTuesday Week 42: UK Historical "
+title: "TidyTuesday Week 42: UK Historical Weather"
 subtitle: "The UK Met Office is the United Kingdom’s national weather and climate service, providing forecasts, severe weather warnings, and climate science expertise. It helps people, businesses, and governments make informed decisions to stay safe and plan for the future. It was first established in 1854, making it one of the oldest weather services in the world."
 author: "Peter Gray"
-date: "2025-10-20" 
+date: "2025-10-23" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
 tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
 image: "thumbnails/TidyTues_Week42.png"

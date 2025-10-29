@@ -1,0 +1,149 @@
+---
+title: "TidyTuesday Week 43: Selected British Literary Prizes (1990-2022)"
+subtitle: "This week we are exploring data related to the Selected British Literary Prizes (1990-2022) dataset which comes from the Post45 Data Collective. This dataset contains primary categories of information on individual authors comprising gender, sexuality, UK residency, ethnicity, geography and details of educational background, including institutions where the authors acquired their degrees and their fields of study."
+author: "Peter Gray"
+date: "2025-10-29" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week43.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week43.png){#fig-singlechart}
+Brick plot of Oxbridge Education of Prize authors
+
+
+
+#### 1. R code
+
+```{r}
+
+if (!require(tidyverse)) {
+  install.packages("tidyverse")
+  library(tidyverse)
+}
+if (!require(scales)) {
+  install.packages("scales")
+  library(scales)
+}
+if (!require(ggbrick)) {
+  install.packages("ggbrick")
+  library(ggbrick)
+}
+
+prizes <- readr::read_csv(
+  'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-10-28/prizes.csv'
+)
+
+schools <- unique(prizes$degree_institution)
+
+oxbridge_schools <- c("University of Oxford", "University of Cambridge")
+
+prizes <- prizes %>%
+  mutate(
+    oxbridge = case_when(
+      degree_institution %in% oxbridge_schools ~ "Yes",
+      TRUE ~ "No"
+    ),
+    decade = paste0(floor(prize_year / 10) * 10, "'s"),
+    person_role = (person_role)
+  )
+
+waffle_data <- prizes %>%
+  select(prize_alias, oxbridge, decade)
+
+order <- c("Yes", "No")
+
+
+waffle_plot <- waffle_data %>%
+  count(prize_alias, oxbridge) %>%
+  ggplot() +
+  geom_waffle0(aes(x = prize_alias, y = n, fill = oxbridge), gap = 0.005) +
+  scale_fill_discrete(breaks = order, type = c("#be8f3c", "#8da683")) +
+  scale_x_discrete(labels = wrap_format(10)) +
+  annotate(
+    "segment",
+    x = rep(seq(0.5, 15.5, by = 5), each = 5),
+    y = 0,
+    yend = 200,
+    linewidth = 1.5,
+    color = alpha("#954535", 1),
+    lineend = "square"
+  ) +
+  annotate(
+    "segment",
+    x = 0.5,
+    y = 200,
+    xend = 15.5,
+    linewidth = 1.5,
+    color = alpha("#954535", 1.5),
+    lineend = "square"
+  ) +
+  annotate(
+    "segment",
+    x = 0.5,
+    y = 150,
+    xend = 15.5,
+    linewidth = 1.5,
+    color = alpha("#954535", 0.5),
+    lineend = "square"
+  ) +
+  annotate(
+    "segment",
+    x = 0.5,
+    y = 110,
+    xend = 15.5,
+    linewidth = 1.5,
+    color = alpha("#954535", 0.5),
+    lineend = "square"
+  ) +
+  annotate(
+    "segment",
+    x = 0.5,
+    y = 80,
+    xend = 15.5,
+    linewidth = 1.5,
+    color = alpha("#954535", 0.5),
+    lineend = "square"
+  ) +
+  annotate(
+    "segment",
+    x = 0.5,
+    y = 35,
+    xend = 15.5,
+    linewidth = 1.5,
+    color = alpha("#954535", 0.5),
+    lineend = "square"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.line = element_line(linewidth = 0.1, colour = "darkgrey"),
+    panel.grid = element_blank(),
+    axis.text.x = element_text(size = 6)
+  ) +
+  labs(
+    title = "Waffle chart of the prizes awarded to authors who were Oxbridge Educated",
+    y = "Number of Prize Winners",
+    x = "Decade",
+    fill = "Oxbridge Educated \n (Yes/No)"
+  )
+
+
+```
