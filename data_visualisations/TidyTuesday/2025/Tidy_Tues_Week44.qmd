@@ -1,0 +1,97 @@
+---
+title: "TidyTuesday Week 44: Lead Levels in the Drinking Water of Flint Michigan"
+subtitle: "This week we are exploring lead levels in water samples collected in Flint, Michigan in 2015. The data comes from a paper by Loux and Gibson (2018) who advocate for using this data as a teaching example in introductory statistics courses."
+author: "Peter Gray"
+date: "2025-11-06" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2025"]
+tags: [tidytuesday, R, data visulation, Python Programming"]
+image: "thumbnails/TidyTues_Week44.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week44.png){#fig-singlechart}
+Violin Plots of lead concentration in FLint Mchigan
+
+
+
+#### 1. Python code
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Beide Datensätze laden
+flint_mdeq = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_mdeq.csv')
+
+
+flint_vt = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_vt.csv')
+
+# MDEQ Daten bereinigen
+flint_mdeq = flint_mdeq[flint_mdeq["notes"].isna()]
+flint_mdeq["average"] = flint_mdeq[['lead', 'lead2']].mean(axis=1)
+flint_mdeq = flint_mdeq.dropna(subset=["average"])
+
+# VT Daten bereinigen (nur 'lead' Spalte verwenden)
+flint_vt = flint_vt.dropna(subset=["lead"])
+
+
+
+# Daten für Violin Plot vorbereiten
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 6))
+
+# MDEQ Violin Plot
+violin1 = ax1.violinplot([flint_mdeq["average"]], positions=[1], 
+                        showmeans=True, showmedians=True, showextrema=True)
+for pc in violin1['bodies']:
+    pc.set_facecolor('#87CEEB')
+    pc.set_alpha(0.7)
+
+ax1.boxplot([flint_mdeq["average"]], positions=[1], widths=0.1, 
+           patch_artist=True, boxprops=dict(facecolor='white', alpha=0.8))
+ax1.axhline(y=15, color='red', linestyle='--', alpha=0.7, label='EPA Action Level (15 ppb)')
+ax1.set_title('MDEQ Dataset\n(Mean Lead Concentration)', fontweight='bold', fontsize =10)
+ax1.set_ylabel('Lead Concentration (ppb)')
+ax1.grid(False)
+ax1.set_xticks([1])
+ax1.set_xticklabels(['MDEQ Dataset'])
+ax1.legend(loc='lower left', bbox_to_anchor=(-0.1, -0.25))
+
+# VT Violin Plot
+violin2 = ax2.violinplot([flint_vt["lead"]], positions=[1], 
+                        showmeans=True, showmedians=True, showextrema=True)
+for pc in violin2['bodies']:
+    pc.set_facecolor('#98FB98')
+    pc.set_alpha(0.7)
+
+ax2.boxplot([flint_vt["lead"]], positions=[1], widths=0.1, 
+           patch_artist=True, boxprops=dict(facecolor='white', alpha=0.8))
+ax2.axhline(y=15, color='red', linestyle='--', alpha=0.7, label='EPA Action Level (15 ppb)')
+ax2.set_title('Viginia Tech \n Dataset', fontweight='bold', fontsize = 10)
+ax2.set_ylabel('Lead Concentration (ppb)')
+ax2.set_xticks([1])
+ax2.set_xticklabels(['VT'])
+ax2.grid(False)  # Removes grid lines
+ax2.legend().remove()
+plt.subplots_adjust(wspace = 0.4)
+plt.tight_layout()
+
+```
