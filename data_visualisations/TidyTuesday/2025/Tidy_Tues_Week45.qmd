@@ -1,0 +1,126 @@
+---
+title: "TidyTuesday Week 45: WHO TB Burden Data: Incidence, Mortality, and Population"
+subtitle: "This week, we explore global tuberculosis (TB) burden estimates from the World Health Organization, using data curated via the getTBinR R package by Sam Abbott. The dataset includes country-level indicators such as TB incidence, mortality, case detection rates, and population estimates across multiple years. These metrics help researchers, public health professionals, and learners understand the scale and distribution of TB worldwide."
+author: "Peter Gray"
+date: "2025-11-11" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2025"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week45.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week45.png){#fig-singlechart}
+Area plot of TB numbers over the years
+
+
+
+#### 1. Python code
+
+```{python}
+#| echo: true
+#| eval: false
+#| fig-show: none
+#| warning: false
+#| message: false
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+
+# Load data
+who_tb_data = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-11/who_tb_data.csv')
+
+# Select and summarize
+df = who_tb_data[["country", "year", "g_whoregion", "c_cdr", "e_mort_num", "e_inc_num", "e_mort_exc_tbhiv_num", "e_mort_tbhiv_num"]]
+
+mort_summary = (
+    df.groupby(["g_whoregion", "year"], as_index=False)
+      .agg({"e_mort_exc_tbhiv_num": "sum", "e_mort_tbhiv_num": "sum"})
+      .rename(columns={
+          "e_mort_exc_tbhiv_num": "mort_nonhiv",
+          "e_mort_tbhiv_num": "mort_hiv"
+      })
+)
+
+# Reshape long
+mort_summary = mort_summary.melt(
+    id_vars=["g_whoregion", "year"],
+    value_vars=["mort_nonhiv", "mort_hiv"],
+    var_name="mort_type",
+    value_name="deaths"
+)
+
+# Rename and order mortality types
+mort_summary['mort_type'] = mort_summary['mort_type'].map({
+    'mort_hiv': 'HIV related Tuberculosis Death',
+    'mort_nonhiv': 'Non-HIV related Tuberculosis Death'
+})
+
+mort_summary['mort_type'] = pd.Categorical(
+    mort_summary['mort_type'],
+    categories=[
+        'Non-HIV related Tuberculosis Death',
+        'HIV related Tuberculosis Death'
+    ],
+    ordered=True
+)
+
+# Determine plot structure
+mort_types = mort_summary['mort_type'].unique()
+fig, axes = plt.subplots(1, len(mort_types), figsize=(14, 6), sharey=True)
+
+if len(mort_types) == 1:
+    axes = [axes]
+
+for ax, mtype in zip(axes, mort_types):
+    subset = mort_summary[mort_summary['mort_type'] == mtype]
+    pivot_df = subset.pivot_table(
+        index='year', columns='g_whoregion', values='deaths', aggfunc='sum'
+    ).fillna(0)
+
+    ax.stackplot(
+        pivot_df.index,
+        pivot_df.T.values,
+        labels=pivot_df.columns
+    )
+
+    ax.set_title(mtype)
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Deaths")
+    ax.grid(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_color("darkgrey")
+    ax.spines['bottom'].set_color("darkgrey")
+    ax.yaxis.set_major_formatter(mticker.StrMethodFormatter('{x:,.0f}'))
+
+fig.legend(
+    pivot_df.columns,
+    bbox_to_anchor=(0.5, -0.08),
+    title="WHO-Defined Region",
+    loc="lower center",
+    ncol=3,
+    frameon=False
+)
+fig.suptitle("Non-HIV and HIV-related Tuberculosis deaths per WHO-Region", fontsize=14)
+plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+
+```
