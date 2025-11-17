@@ -1,5 +1,5 @@
 ---
-title: "TidyTuesday Week 46: Shirlock Holmes"
+title: "TidyTuesday Week 46: Sherlock Holmes"
 subtitle: "This week we're exploring the complete line-by-line text of the Sherlock Holmes stories and novels, made available through the {sherlock} R package by Emil Hvitfeldt. The dataset includes the full collection of Holmes texts, organized by book and line number, and is ideal for stylometry, sentiment analysis, and literary exploration."
 author: "Peter Gray"
 date: "2025-11-18" 
@@ -69,7 +69,7 @@ wordcloud = WordCloud(width=800, height=400, background_color="white").generate(
 plt.figure(figsize=(10, 5))
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
-plt.title("IMDB Movie Reviews Word Cloud")
+plt.title("The Complete Shirlock Holmes Word Cloud")
 
 
 ```
