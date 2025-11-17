@@ -1,0 +1,75 @@
+---
+title: "TidyTuesday Week 46: Shirlock Holmes"
+subtitle: "This week we're exploring the complete line-by-line text of the Sherlock Holmes stories and novels, made available through the {sherlock} R package by Emil Hvitfeldt. The dataset includes the full collection of Holmes texts, organized by book and line number, and is ideal for stylometry, sentiment analysis, and literary exploration."
+author: "Peter Gray"
+date: "2025-11-18" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2025"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week46.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week46.png){#fig-singlechart}
+Word Cloud of Sherlock Holmes words
+
+
+
+#### 1. Python code
+
+```{python}
+# | echo: true
+# | eval: false
+# | fig-show: none
+# | warning: false
+# | message: false
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import re
+from wordcloud import STOPWORDS
+from wordcloud import WordCloud
+
+# Load data
+holmes = pd.read_csv(
+    "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-18/holmes.csv"
+)
+
+holmes = holmes[(holmes["text"].notna()) & (holmes["text"] != "NaN")]
+
+text = " ".join(holmes["text"].astype(str).tolist())
+
+text = re.sub(r"[^A-Za-z\s]", "", text)
+
+text = text.lower()
+
+stopwords = set(STOPWORDS)
+text = " ".join(word for word in text.split() if word not in stopwords)
+
+
+wordcloud = WordCloud(width=800, height=400, background_color="white").generate(text)
+
+plt.figure(figsize=(10, 5))
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.title("IMDB Movie Reviews Word Cloud")
+
+
+```
