@@ -1,0 +1,143 @@
+---
+title: "TidyTuesday Week 49: Qars-tar"
+subtitle: "This week we are exploring data about cars in Qatar! One of the most common example datasets in R is mtcars, which contains data on a bunch of cars from 1974 (!). Some of the car companies in there don't even exist anymore, like Datsun. The mpg dataset that comes with {ggplot2} was designed to be an improvement on mtcars and includes vehicles from 1999 and 2008. However, both mpg and mtcars are highly US-centric---most people in the world don't think in gallons and miles and feet and inches---and neither dataset includes details about electric cars, which are increasingly common today."
+author: "Peter Gray"
+date: "2025-12-09" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2025"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week49.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week49.png){#fig-singlechart}
+Box Plots of Car prices in Qatar
+
+
+
+#### 1. R code
+
+```{r}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(scales)){install.packages("scales"); library(scales)}
+if(!require(patchwork)){install.packages("patchwork"); library(patchwork)}
+
+options(scipen=999)
+
+qatarcars <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-12-09/qatarcars.csv')
+
+
+df <- qatarcars |> 
+  select(origin, price) |> 
+# Convert price to USD 
+mutate(price_usd = price * 0.27) |> 
+  mutate(origin = case_when(
+    origin == "PR China" ~ "China", TRUE ~ origin
+  ))
+
+plot_list <- list()
+
+countries <- c("Italy", "RoW")
+
+i = 1
+
+for(i in 1:length(countries)) {
+  
+    if(countries[i] == "Italy") {
+      
+      df_i <- df |> 
+        filter(origin  == "Italy" | origin == "UK")
+      
+      plot <- ggplot(df_i, aes(x = origin, y = price, fill = origin)) +
+        geom_boxplot(width=.30) +
+      theme(
+      panel.grid.major = element_blank(),
+      panel.background = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(size = 12),
+      legend.title = element_text(size = 12),
+      axis.title.x = element_blank(), 
+       axis.line = element_line(linewidth = 0.2)
+    ) +
+    labs(
+      title = paste0("Italy and UK"),
+      y = "Price",
+      fill = "Country of Origin"
+    ) +
+    scale_x_discrete(labels = ~ str_wrap(., width = 12)) +
+  scale_y_continuous(labels = label_dollar(prefix = "QR"))
+      
+      plot_list[[i]] <- plot
+      
+    }
+  
+  else{
+  
+      
+      df_i <- df |> 
+        filter(origin  != "Italy" & origin != "UK")
+  
+    plot <- ggplot(df_i, aes(x = origin, y = price, fill = origin)) +
+    geom_boxplot() +
+      theme(
+      panel.grid.major = element_blank(),
+      panel.background = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.title = element_text(size = 12),
+      legend.title = element_text(size = 12),
+      axis.title.x = element_blank(),
+      axis.line = element_line(linewidth = 0.2)
+    ) +
+    labs(
+      title = paste(unique(df$origin[df$origin != "Italy" & df$origin != "UK"]), collapse = ", "),
+      y = "Price",
+      fill = "Country of Origin"
+    ) +
+    scale_x_discrete(labels = ~ str_wrap(., width = 12)) +
+  scale_y_continuous(labels = label_dollar(prefix = "QR"))
+      
+      plot_list[[i]] <- plot
+      
+    }
+
+}
+
+plots <- plot_list[[2]] + plot_list[[1]]
+
+
+plots <- plots +
+  plot_annotation(
+    title = "Prices of cars in Qatar",
+    caption = "Italy and UK split out due to significant differences in Pricing",
+    theme = theme(
+      plot.title = element_text(
+        face = "bold",
+        size = 14,     # optional
+        hjust = 0.5    # optional centering
+      )
+    )
+  )
+
+
+```
