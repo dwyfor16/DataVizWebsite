@@ -1,0 +1,12 @@
+{
+  "hash": "005621d3155722f38308e4b10c26f31a",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"TidyTuesday Week 46: Sherlock Holmes\"\nsubtitle: \"This week we're exploring the complete line-by-line text of the Sherlock Holmes stories and novels, made available through the {sherlock} R package by Emil Hvitfeldt. The dataset includes the full collection of Holmes texts, organized by book and line number, and is ideal for stylometry, sentiment analysis, and literary exploration.\"\nauthor: \"Peter Gray\"\ndate: \"2025-11-18\" \ncategories: [\"TidyTuesday\", \"Data Visualization\", \"Python Programming\", \"2025\"]\ntags: [tidytuesday, python, data visulation, ggplot2, tidyverse]\nimage: \"thumbnails/TidyTues_Week46.png\"\nformat:\n  html:\n    toc: true\n    toc-depth: 5\n    code-link: true\n    code-fold: true\n    code-tools: false\n    code-summary: \"Show code\"\n    self-contained: true\neditor_options: \n  chunk_output_type: console\nexecute: \n  freeze: true                                                  \n  cache: true                                                   \n  error: false\n  message: false\n  warning: false\n  eval: true\n---\n\n![Chart](thumbnails/TidyTues_Week46.png){#fig-singlechart}\nWord Cloud of Sherlock Holmes words\n\n\n\n#### 1. Python code\n\n::: {#eae8b072 .cell fig-show='none' message='false' execution_count=2}\n``` {.python .cell-code}\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport matplotlib.ticker as mticker\nimport re\nfrom wordcloud import STOPWORDS\nfrom wordcloud import WordCloud\n\n# Load data\nholmes = pd.read_csv(\n    \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-18/holmes.csv\"\n)\n\nholmes = holmes[(holmes[\"text\"].notna()) & (holmes[\"text\"] != \"NaN\")]\n\ntext = \" \".join(holmes[\"text\"].astype(str).tolist())\n\ntext = re.sub(r\"[^A-Za-z\\s]\", \"\", text)\n\ntext = text.lower()\n\nstopwords = set(STOPWORDS)\ntext = \" \".join(word for word in text.split() if word not in stopwords)\n\n\nwordcloud = WordCloud(width=800, height=400, background_color=\"white\").generate(text)\n\nplt.figure(figsize=(10, 5))\nplt.imshow(wordcloud, interpolation=\"bilinear\")\nplt.axis(\"off\")\nplt.title(\"The Complete Shirlock Holmes Word Cloud\")\n\n```\n:::\n\n\n",
+    "supporting": [
+      "Tidy_Tues_Week46_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

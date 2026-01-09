@@ -133,8 +133,8 @@ plots <- plots +
     theme = theme(
       plot.title = element_text(
         face = "bold",
-        size = 14,     # optional
-        hjust = 0.5    # optional centering
+        size = 14,     
+        hjust = 0.5   
       )
     )
   )

@@ -1,15 +1,5 @@
 [
   {
-    "listing": "/biostatistics.html",
-    "items": [
-      "/biostatistics/Obesity_Prediction.html",
-      "/biostatistics/Data_Cleaning.html",
-      "/biostatistics/Imputation_TIme_to_Event_Analysis.html",
-      "/biostatistics/Breast_Cancer_KM_plots.html",
-      "/biostatistics/MastersThesis.html"
-    ]
-  },
-  {
     "listing": "/maps.html",
     "items": [
       "/maps/uk_maps.html",
@@ -19,16 +9,21 @@
   {
     "listing": "/datavis.html",
     "items": [
+      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week49.html",
+      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week46.html",
+      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week45.html",
+      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week44.html",
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week43.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week42.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week41.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week40.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week38.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week37.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week36.html",
-      "/data_visualisations/TidyTuesday/2025/TidyTues_Week34.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week33.html",
-      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week32.html",
+      "/data_visualisations/TidyTuesday/2025/TidyTues_Week34.html",
       "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week31.html",
+      "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week32.html",
       "/data_visualisations/TidyTuesday/2025/Tidy_Tues_Week29.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week28.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week27.html",
@@ -51,6 +46,16 @@
       "/data_visualisations/RugbyResults/6NationResultsWebApp.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week06.html",
       "/data_visualisations/TidyTuesday/2025/TidyTues_Week05.html"
+    ]
+  },
+  {
+    "listing": "/biostatistics.html",
+    "items": [
+      "/biostatistics/Data_Cleaning.html",
+      "/biostatistics/Obesity_Prediction.html",
+      "/biostatistics/Imputation_TIme_to_Event_Analysis.html",
+      "/biostatistics/Breast_Cancer_KM_plots.html",
+      "/biostatistics/MastersThesis.html"
     ]
   }
 ]
