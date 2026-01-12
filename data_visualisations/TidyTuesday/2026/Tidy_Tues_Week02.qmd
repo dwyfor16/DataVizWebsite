@@ -1,0 +1,98 @@
+---
+title: "TidyTuesday (2026) Week 1: African Languages"
+subtitle: "This week we're exploring data about popular languages spoken on the African continent. The dataset this week comes from the Languages of Africa page on Wikipedia."
+author: "Peter Gray"
+date: "2026-01-012" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2026"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week02.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week02.png){#fig-singlechart}
+Tree Plot of African Lnaguages
+
+
+
+#### 1. R code
+
+```{r}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)}
+if(!require(scales)){install.packages("scales"); library(scales)}
+if(!require(treemapify)){install.packages("treemapify"); library(treemapify)}
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+options(scipen=999)
+
+africa <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-01-13/africa.csv')
+
+africa_tree <- africa %>%
+  group_by(family, language) %>%
+  summarise(
+    native_speakers = max(native_speakers, na.rm = TRUE),
+    .groups = "drop"
+  ) %>% 
+  filter(native_speakers >= 500000) %>%
+  group_by(family) %>%
+  mutate(
+    language_label = paste0(
+      language, 
+      "\n", 
+      scales::label_number(accuracy = 0.1, scale_cut = cut_short_scale())(native_speakers)
+    )
+  )
+
+
+plot1 <- ggplot(
+  africa_tree,
+  aes(
+    area = native_speakers,
+    fill = family,
+    label = language_label, 
+    subgroup = family 
+  )
+) +
+  geom_treemap() +
+  geom_treemap_subgroup_border() +
+  geom_treemap_subgroup_text(
+    place = "centre",
+    grow = TRUE,
+    alpha = 0.7,
+    min.size = 0 
+  ) +
+  geom_treemap_text(
+    colour = "white",
+    place = "centre",
+    reflow = TRUE,
+    size = 8
+  ) +
+  labs(
+    title = "African Languages by Family",
+    subtitle = "Showing langauge families with at least 500k speakers",
+    fill = "Language Family"
+  ) +
+  theme(legend.position = "bottom")
+
+```
