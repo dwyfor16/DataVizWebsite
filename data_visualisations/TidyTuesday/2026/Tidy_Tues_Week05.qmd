@@ -1,0 +1,89 @@
+---
+title: "TidyTuesday (2026) Week 5: Edible Plants"
+subtitle: "This week we're exploring edible plants! The Edible Plant Database (EPD) is an outcome of the GROW Observatory, a European Citizen Science project on growing food, soil moisture sensing and land monitoring. It contains information on 146 edible plant species, including their ideal growing conditions and time to harvest and germination."
+author: "Peter Gray"
+date: "2026-02-02" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2026"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week05.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart](thumbnails/TidyTues_Week05.png){#fig-singlechart}
+Tree Plot of African Lnaguages
+
+
+
+#### 1. Python code
+
+```{python}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+
+import pandas as pd
+import numpy as np
+import plotly.express as px
+
+# Load data
+edible_plants = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-02-03/edible_plants.csv')
+df_clean = edible_plants[['cultivation', 'sunlight', 'water']].copy()
+
+df_clean = df_clean[df_clean['cultivation'] != "Miscellaneous"]
+df_clean['sunlight'] = df_clean['sunlight'].str.strip().str.title()
+df_clean['water'] = df_clean['water'].str.title()
+
+
+df_counts = df_clean.value_counts().reset_index(name='count')
+
+
+df_counts['cultivation_labeled'] = '<b>Cultivation:</b> ' + df_counts['cultivation'] + '<br>(n=' + df_counts['count'].astype(str) + ')'
+df_counts['sunlight_labeled'] = '<b>Sunlight:</b> ' + df_counts['sunlight'] + '<br>(n=' + df_counts['count'].astype(str) + ')'
+df_counts['water_labeled'] = '<b>Water:</b> ' + df_counts['water'] + '<br>(n=' + df_counts['count'].astype(str) + ')'
+
+
+fig = px.sunburst(
+    df_counts,
+    path=['cultivation', 'sunlight', 'water'], 
+    values='count',
+    title="Edible Plants: Requirements by Level",
+    color='cultivation',
+    color_discrete_sequence=px.colors.qualitative.Safe
+)
+
+
+fig.update_layout(
+    annotations=[
+        dict(text="<b>Level 1:</b> Cultivation", x=0.8, y=1.1, showarrow=False, font_size=14),
+        dict(text="<b>Level 2:</b> Sunlight", x=0.8, y=1.05, showarrow=False, font_size=14),
+        dict(text="<b>Level 3:</b> Water", x=0.8, y=1.0, showarrow=False, font_size=14)
+    ],
+    margin=dict(t=100) 
+)
+
+
+fig.update_traces(
+    hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Parent: %{parent}'
+)
+
+fig.show()
+```
