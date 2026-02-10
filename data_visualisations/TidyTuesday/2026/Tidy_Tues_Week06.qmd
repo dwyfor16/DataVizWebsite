@@ -1,0 +1,122 @@
+---
+title: "TidyTuesday (2026) Week 5: Edible Plants"
+subtitle: "This week we're exploring edible plants! The Edible Plant Database (EPD) is an outcome of the GROW Observatory, a European Citizen Science project on growing food, soil moisture sensing and land monitoring. It contains information on 146 edible plant species, including their ideal growing conditions and time to harvest and germination."
+author: "Peter Gray"
+date: "2026-02-02" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2026"]
+tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week05.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+::: {layout-ncol=2}
+![Chart A](thumbnails/TidyTues_Week06a.png)
+
+![Chart B](thumbnails/TidyTues_Week06b.png)
+:::
+
+Timeline of Mens and Womens Medal Events
+
+
+
+
+#### 1. Python code
+
+```{python}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from datetime import datetime
+
+
+schedule = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-02-10/schedule.csv')
+
+
+medal_events = schedule[schedule["is_medal_event"] != False]
+medal_events = medal_events[["event_description", "venue_name", "start_datetime_local", "end_datetime_local"]]
+
+def categorize_gender(description):
+    if pd.isna(description):
+        return "Other"
+    description_lower = description.lower()
+    if "men" in description_lower and "women" not in description_lower:
+        return "Male"
+    elif "women" in description_lower:
+        return "Female"
+    elif any(word in description_lower for word in ["team", "mixed", "relay", "2-man", "2-woman", "4-man", "pair"]):
+        return "Team/Mixed"
+    else:
+        return "Other"
+
+medal_events['event_gender'] = medal_events['event_description'].apply(categorize_gender)
+
+
+medal_events['start_datetime_local'] = pd.to_datetime(medal_events['start_datetime_local'])
+medal_events['end_datetime_local'] = pd.to_datetime(medal_events['end_datetime_local'])
+
+
+medal_events_men = medal_events[medal_events["event_gender"] == "Male"]
+fig_men = px.timeline(
+    medal_events_men,
+    x_start="start_datetime_local",
+    x_end="end_datetime_local",
+    y="event_description",
+    color="venue_name",
+    title="Olympic Medal Events Timeline: Male",
+    labels={
+        "event_description": "Event",
+        "venue_name": "Venue"
+    }
+)
+
+fig_men.update_xaxes(
+    dtick="D1",  # Every day
+    tickformat="%d.%m.%Y",  # Day.Month.Year format
+    tickangle=45,
+    title="Date"
+)
+
+# fig_men.show()
+
+### Frauen-Events
+medal_events_women = medal_events[medal_events["event_gender"] == "Female"] 
+fig_women = px.timeline(
+    medal_events_women, 
+    x_start="start_datetime_local",
+    x_end="end_datetime_local",
+    y="event_description",
+    color="venue_name",
+    title="Olympic Medal Events Timeline: Female",
+    labels={
+        "event_description": "Event",
+        "venue_name": "Venue"
+    }
+)
+
+# fig_women.show()
+
+
+
+```

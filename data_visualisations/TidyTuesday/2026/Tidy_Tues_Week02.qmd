@@ -27,7 +27,7 @@ execute:
 ---
 
 ![Chart](thumbnails/TidyTues_Week02.png){#fig-singlechart}
-Tree Plot of African Lnaguages
+Tree Plot of African Languages
 
 
 
