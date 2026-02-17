@@ -1,11 +1,11 @@
 ---
-title: "TidyTuesday (2026) Week 5: Edible Plants"
-subtitle: "This week we're exploring edible plants! The Edible Plant Database (EPD) is an outcome of the GROW Observatory, a European Citizen Science project on growing food, soil moisture sensing and land monitoring. It contains information on 146 edible plant species, including their ideal growing conditions and time to harvest and germination."
+title: "TidyTuesday (2026) Week 6: Winter Olympics 2026"
+subtitle: "This week we're exploring the event schedule for the 2026 Winter Olympics in Milan-Cortina, Italy. The dataset contains detailed information about all 1,866 Olympic events, including both competition and training sessions across various winter sport disciplines."
 author: "Peter Gray"
-date: "2026-02-02" 
+date: "2026-02-10" 
 categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2026"]
 tags: [tidytuesday, python, data visulation, ggplot2, tidyverse]
-image: "thumbnails/TidyTues_Week05.png"
+image: "thumbnails/TidyTues_Week06a.png"
 format:
   html:
     toc: true
