@@ -14,7 +14,7 @@ format:
     code-fold: true
     code-tools: false
     code-summary: "Show code"
-    self-contained: true
+    self-contained: false
 editor_options: 
   chunk_output_type: console
 execute: 

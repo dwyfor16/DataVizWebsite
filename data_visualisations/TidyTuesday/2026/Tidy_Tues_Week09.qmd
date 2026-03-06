@@ -1,0 +1,51 @@
+---
+title: "TidyTuesday (2026) Week 8: Science Foundation Ireland Grants Commitments"
+subtitle: "This week we're exploring Irish STEM research and ancillary projects funded by Science Foundation Ireland (SFI) since its foundation in 2000 to its dissolution on 31st July 2024. The data comes from Ireland's Open Data Portal."
+author: "Peter Gray"
+date: "2026-02-24" 
+categories: ["TidyTuesday", "Data Visualization", "Python Programming", "2026"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week08.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: false
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart A](thumbnails/TidyTues_Week08.png)
+Timeline of Sheep in NZ
+
+
+
+
+#### 1. R code
+
+```{r}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+if(!(require(tidyverse))){install.packages("tidyverse"); library(tidyverse)}
+if(!(require(CustomGGPlot2Theme))){install.packages("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+if(!(require(patchwork))){install.packages("patchwork"); library(patchwork)}
+
+sfi_grants <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-02-24/sfi_grants.csv')
+
+
+
+```
