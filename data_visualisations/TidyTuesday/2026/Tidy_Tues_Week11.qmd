@@ -1,0 +1,78 @@
+---
+title: "TidyTuesday (2026) Week 11: One Million Digits of Pi?"
+subtitle: "This week we're exploring the digits of π with a dataset submission in celebration of Pi Day (March 14). The dataset contains the first one million digits of π, beginning with 3.14159 …, collected from publicly available sources and curated for analysis and visualization."
+author: "Peter Gray"
+date: "2026-03-10" 
+categories: ["TidyTuesday", "Data Visualization", "R Programming", "2026"]
+tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
+image: "thumbnails/TidyTues_Week11.png"
+format:
+  html:
+    toc: true
+    toc-depth: 5
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Show code"
+    self-contained: false
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+![Chart A](thumbnails/TidyTues_Week11.gif)
+A moving pi chart of pi digits
+
+
+
+
+#### 1. R code
+
+```{r, data analysis code}
+# | echo: true
+# | eval: false
+# | warning: false
+# | message: false
+
+if(!(require(tidyverse))){install.packages("tidyverse"); library(tidyverse)}
+if(!(require(gganimate))){install.packages("gganimate"); library(gganimate)}
+
+if(!require(CustomGGPlot2Theme)){devtools::install("CustomGGPlot2Theme"); library(CustomGGPlot2Theme)}
+
+
+
+
+pi_digits <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-03-24/pi_digits.csv')
+
+plot_data <- pi_digits %>%
+  filter(digit_position <= 1000)
+
+# Build the plot
+p <- ggplot(plot_data, aes(x = digit_position, y = digit, group = 1)) +
+  geom_line(color = "#2c3e50", size = 1) +
+  geom_point(color = "#e74c3c", size = 3) +
+
+  geom_text(aes(label = digit), vjust = -1.5, size = 6, fontface = "bold") +
+  scale_y_continuous(breaks = 0:9) +
+  labs(
+    title = "What do the first 1000 digits of pi look like?",
+    subtitle = "Currently at position: {round(frame_along, 0)}",
+    x = "Digit Position",
+    y = "Digit Value"
+  ) +
+  Custom_Style() +
+  transition_reveal(digit_position) +
+
+  view_follow(fixed_x = FALSE, fixed_y = TRUE) 
+
+# Render (increasing frames for a smoother scroll)
+# animate(p, nframes = 200, fps = 12, width = 800, height = 400, end_pause = 30, renderer = gifski_renderer())
+
+
+```
