@@ -29,7 +29,7 @@ website:
     right: "Built Using Quarto<br>Copyright: Peter Gray 2025  "
     center: 
       - text: "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bluesky_logo.svg/1024px-Bluesky_logo.svg.png' alt='Bluesky' style='width: 20px; vertical-align: middle;'>"
-        href: https://bsky.app/profile/dwyfor16.bsky.social
+        href: https://bsky.app/profile/pgdataviz.bsky.social
       - icon: linkedin
         href: https://www.linkedin.com/in/peter-gray-36194935/de
       - icon: github

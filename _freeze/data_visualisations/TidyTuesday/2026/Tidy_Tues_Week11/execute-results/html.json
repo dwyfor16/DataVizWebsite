@@ -1,0 +1,15 @@
+{
+  "hash": "62b272933d59bea7d5f4316e85bc7c5c",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"TidyTuesday (2026) Week 11: One Million Digits of Pi?\"\nsubtitle: \"This week we're exploring the digits of π with a dataset submission in celebration of Pi Day (March 14). The dataset contains the first one million digits of π, beginning with 3.14159 …, collected from publicly available sources and curated for analysis and visualization.\"\nauthor: \"Peter Gray\"\ndate: \"2026-03-25\" \ncategories: [\"TidyTuesday\", \"Data Visualization\", \"R Programming\", \"2026\"]\ntags: [tidytuesday, R, data visulation, ggplot2, tidyverse]\nimage: \"thumbnails/TidyTues_Week11.png\"\nformat:\n  html:\n    toc: true\n    toc-depth: 5\n    code-link: true\n    code-fold: true\n    code-tools: false\n    code-summary: \"Show code\"\n    self-contained: false\neditor_options: \n  chunk_output_type: console\nexecute: \n  freeze: true                                                  \n  cache: true                                                   \n  error: false\n  message: false\n  warning: false\n  eval: true\n---\n\n![Chart A](thumbnails/TidyTues_Week11.gif)\nA moving pi chart of pi digits\n\n\n\n\n#### 1. R code\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# | echo: true\n# | eval: false\n# | warning: false\n# | message: false\n\nif(!(require(tidyverse))){install.packages(\"tidyverse\"); library(tidyverse)}\nif(!(require(gganimate))){install.packages(\"gganimate\"); library(gganimate)}\n\nif(!require(CustomGGPlot2Theme)){devtools::install(\"CustomGGPlot2Theme\"); library(CustomGGPlot2Theme)}\n\n\n\n\npi_digits <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-03-24/pi_digits.csv')\n\nplot_data <- pi_digits %>%\n  filter(digit_position <= 1000)\n\n# Build the plot\np <- ggplot(plot_data, aes(x = digit_position, y = digit, group = 1)) +\n  geom_line(color = \"#2c3e50\", size = 1) +\n  geom_point(color = \"#e74c3c\", size = 3) +\n\n  geom_text(aes(label = digit), vjust = -1.5, size = 6, fontface = \"bold\") +\n  scale_y_continuous(breaks = 0:9) +\n  labs(\n    title = \"What do the first 1000 digits of pi look like?\",\n    subtitle = \"Currently at position: {round(frame_along, 0)}\",\n    x = \"Digit Position\",\n    y = \"Digit Value\"\n  ) +\n  Custom_Style() +\n  transition_reveal(digit_position) +\n\n  view_follow(fixed_x = FALSE, fixed_y = TRUE) \n\n# Render (increasing frames for a smoother scroll)\n# animate(p, nframes = 200, fps = 12, width = 800, height = 400, end_pause = 30, renderer = gifski_renderer())\n```\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

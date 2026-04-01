@@ -2,7 +2,7 @@
 title: "TidyTuesday (2026) Week 11: One Million Digits of Pi?"
 subtitle: "This week we're exploring the digits of π with a dataset submission in celebration of Pi Day (March 14). The dataset contains the first one million digits of π, beginning with 3.14159 …, collected from publicly available sources and curated for analysis and visualization."
 author: "Peter Gray"
-date: "2026-03-10" 
+date: "2026-03-25" 
 categories: ["TidyTuesday", "Data Visualization", "R Programming", "2026"]
 tags: [tidytuesday, R, data visulation, ggplot2, tidyverse]
 image: "thumbnails/TidyTues_Week11.png"

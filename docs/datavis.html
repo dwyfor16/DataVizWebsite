@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -36,15 +36,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3a92c52726aac8c7202cf389d2371ba6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-ff11e4be4b75318577362ce3dcbe0f37.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +116,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -144,8 +143,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./_site/images/logo.png" alt="" class="navbar-logo light-content">
-    <img src="./_site/images/logo.png" alt="" class="navbar-logo dark-content">
+    <img src="./_site/images/logo.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Peter G’s Data Visualisation</span>
@@ -182,7 +180,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(43)</span></div><div class="category" data-category="MjAyNQ==">2025 <span class="quarto-category-count">(37)</span></div><div class="category" data-category="MjAyNg==">2026 <span class="quarto-category-count">(6)</span></div><div class="category" data-category="ZGFzaGJvYXJk">dashboard <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGFzaGJvYXJkcw==">Dashboards <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24=">Data Visualization <span class="quarto-category-count">(43)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtcHk=">Numpy <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UGFuZGFz">Pandas <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cGxvdGx5">plotly <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UG9sYXJz">Polars <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(6)</span></div><div class="category" data-category="UHl0aG9uJTIwUHJvZ3JhbW1pbmc=">Python Programming <span class="quarto-category-count">(12)</span></div><div class="category" data-category="UiUyMFByb2dyYW1taW5n">R Programming <span class="quarto-category-count">(27)</span></div><div class="category" data-category="UnVnYnk=">Rugby <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c2hpbnlhcHA=">shinyapp <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RyZWFtbGl0">streamlit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGlkeVR1ZXNkYXk=">TidyTuesday <span class="quarto-category-count">(42)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(46)</span></div><div class="category" data-category="MjAyNQ==">2025 <span class="quarto-category-count">(37)</span></div><div class="category" data-category="MjAyNg==">2026 <span class="quarto-category-count">(9)</span></div><div class="category" data-category="QWxleCUyME1hbm4=">Alex Mann <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZGFzaGJvYXJk">dashboard <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGFzaGJvYXJkcw==">Dashboards <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMFZpc3VhbGl6YXRpb24=">Data Visualization <span class="quarto-category-count">(46)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TnVtcHk=">Numpy <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UGFuZGFz">Pandas <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cGxvdGx5">plotly <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UG9sYXJz">Polars <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(6)</span></div><div class="category" data-category="UHl0aG9uJTIwUHJvZ3JhbW1pbmc=">Python Programming <span class="quarto-category-count">(12)</span></div><div class="category" data-category="UiUyMFByb2dyYW1taW5n">R Programming <span class="quarto-category-count">(29)</span></div><div class="category" data-category="UnVnYnk=">Rugby <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c2hpbnlhcHA=">shinyapp <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RyZWFtbGl0">streamlit <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGlkeVR1ZXNkYXk=">TidyTuesday <span class="quarto-category-count">(44)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -212,7 +210,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 6, 2026</p>
+      <p class="date-modified">April 1, 2026</p>
     </div>
   </div>
     
@@ -237,34 +235,91 @@ window.Quarto = {
   </div>
 </div>
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1771887600000" data-listing-file-modified-sort="1772779269195" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="92">
-<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week08.html" class="no-external">
+<div class="quarto-post image-right" data-index="0" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1774393200000" data-listing-file-modified-sort="1774468951186" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="169">
+<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week11.html" class="no-external">
+
+<img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week11.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week11.html" class="no-external">TidyTuesday (2026) Week 11: One Million Digits of Pi?</a>
+</h3>
+</div>
+<div class="metadata">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week11.html" class="no-external">
+<div class="listing-date">
+25 Mar, 2026
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1774393200000" data-listing-file-modified-sort="1775065218881" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="117">
+<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week12.html" class="no-external">
+
+<img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week13.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week12.html" class="no-external">TidyTuesday (2026) Week 13: Coastal Ocean Temperature by Depth</a>
+</h3>
+</div>
+<div class="metadata">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week12.html" class="no-external">
+<div class="listing-date">
+25 Mar, 2026
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1773097200000" data-listing-file-modified-sort="1773169089971" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="648">
+<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week10.html" class="no-external">
+
+<img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week10.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week10.html" class="no-external">TidyTuesday (2026) Week 10: How likely is ‘likely’?</a>
+</h3>
+</div>
+<div class="metadata">
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week10.html" class="no-external">
+<div class="listing-date">
+10 Mar, 2026
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="UnVnYnklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ0FsZXglMjBNYW5uJTJDMjAyNg==" data-listing-date-sort="1772838000000" data-listing-file-modified-sort="1772878332101" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="400">
+<div class="thumbnail"><a href="./data_visualisations/RugbyAnalysis/6N_2026_Backrow_Size.html" class="no-external">
+
+<img loading="lazy" src="./data_visualisations/RugbyAnalysis/thumbnails/6N_Back_Row_Sizes.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./data_visualisations/RugbyAnalysis/6N_2026_Backrow_Size.html" class="no-external">A comaprison of Back Row Heights and Weights in the 2026 Six Nations</a>
+</h3>
+</div>
+<div class="metadata">
+<a href="./data_visualisations/RugbyAnalysis/6N_2026_Backrow_Size.html" class="no-external">
+<div class="listing-date">
+7 Mar, 2026
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1771887600000" data-listing-file-modified-sort="1772869847902" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="93">
+<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week09.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week09.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week08.html" class="no-external">TidyTuesday (2026) Week 9: Golem Grad Tortoise Data</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week08.html" class="no-external">
-<div class="listing-date">
-24 Feb, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1771887600000" data-listing-file-modified-sort="1772778733016" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="23">
-<div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week09.html" class="no-external">
-
-<img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week08.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week09.html" class="no-external">TidyTuesday (2026) Week 8: Science Foundation Ireland Grants Commitments</a>
+<a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week09.html" class="no-external">TidyTuesday (2026) Week 9: Golem Grad Tortoise Data</a>
 </h3>
 </div>
 <div class="metadata">
@@ -275,7 +330,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1771282800000" data-listing-file-modified-sort="1771361261001" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="300">
+<div class="quarto-post image-right" data-index="5" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1771282800000" data-listing-file-modified-sort="1771361261001" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="300">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week07.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week07.png" class="thumbnail-image">
@@ -294,7 +349,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1770678000000" data-listing-file-modified-sort="1770982756256" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="297">
+<div class="quarto-post image-right" data-index="6" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1770678000000" data-listing-file-modified-sort="1770982756256" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="297">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week06.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week06a.png" class="thumbnail-image">
@@ -313,7 +368,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1769986800000" data-listing-file-modified-sort="1770043097112" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="175">
+<div class="quarto-post image-right" data-index="7" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNg==" data-listing-date-sort="1769986800000" data-listing-file-modified-sort="1770043097112" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="175">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week05.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week05.png" class="thumbnail-image">
@@ -332,7 +387,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1768172400000" data-listing-file-modified-sort="1770043109979" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="236">
+<div class="quarto-post image-right" data-index="8" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjY=" data-listing-date-sort="1768172400000" data-listing-file-modified-sort="1770043109979" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="236">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2026/Tidy_Tues_Week02.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2026/thumbnails/TidyTues_Week02.png" class="thumbnail-image">
@@ -351,7 +406,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1765234800000" data-listing-file-modified-sort="1765533017370" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="616">
+<div class="quarto-post image-right" data-index="9" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1765234800000" data-listing-file-modified-sort="1765533017370" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="616">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week49.html" class="no-external">
 
 <img loading="lazy" src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week49.png" class="thumbnail-image">
@@ -370,10 +425,10 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1763420400000" data-listing-file-modified-sort="1765303633445" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="85">
+<div class="quarto-post image-right" data-index="10" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1763420400000" data-listing-file-modified-sort="1765303633445" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="85">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week46.html" class="no-external">
 
-<img loading="lazy" src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week46.png" class="thumbnail-image">
+<img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week46.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
@@ -389,10 +444,10 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1762815600000" data-listing-file-modified-sort="1762873581649" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339">
+<div class="quarto-post image-right" data-index="11" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1762815600000" data-listing-file-modified-sort="1762873581649" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week45.html" class="no-external">
 
-<img loading="lazy" src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week45.png" class="thumbnail-image">
+<img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week45.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
@@ -408,10 +463,10 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1762383600000" data-listing-file-modified-sort="1762425223545" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="222">
+<div class="quarto-post image-right" data-index="12" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1762383600000" data-listing-file-modified-sort="1762425223545" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="222">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week44.html" class="no-external">
 
-<img loading="lazy" src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week44.png" class="thumbnail-image">
+<img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week44.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
@@ -427,7 +482,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1761692400000" data-listing-file-modified-sort="1762331117365" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="500">
+<div class="quarto-post image-right" data-index="13" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1761692400000" data-listing-file-modified-sort="1762331117365" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="500">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week43.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week43.png" class="thumbnail-image">
@@ -446,7 +501,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1761170400000" data-listing-file-modified-sort="1761198984610" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="946">
+<div class="quarto-post image-right" data-index="14" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1761170400000" data-listing-file-modified-sort="1761198984610" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="946">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week42.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week42.png" class="thumbnail-image">
@@ -465,7 +520,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1760911200000" data-listing-file-modified-sort="1760982931624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="550">
+<div class="quarto-post image-right" data-index="15" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1760911200000" data-listing-file-modified-sort="1760982931624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="550">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week41.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week41.png" class="thumbnail-image">
@@ -484,7 +539,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1760392800000" data-listing-file-modified-sort="1760444213621" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="643">
+<div class="quarto-post image-right" data-index="16" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1760392800000" data-listing-file-modified-sort="1760444213621" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="643">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week40.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week40.png" class="thumbnail-image">
@@ -503,7 +558,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1758578400000" data-listing-file-modified-sort="1758119162158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="24" data-listing-word-count-sort="4787">
+<div class="quarto-post image-right" data-index="17" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1758578400000" data-listing-file-modified-sort="1758119162158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="24" data-listing-word-count-sort="4787">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week38.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week38.png" class="thumbnail-image">
@@ -522,7 +577,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1757887200000" data-listing-file-modified-sort="1758006571023" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1015">
+<div class="quarto-post image-right" data-index="18" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1757887200000" data-listing-file-modified-sort="1758006571023" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1015">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week37.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week37.png" class="thumbnail-image">
@@ -541,7 +596,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNSUyQ3N0cmVhbWxpdCUyQ2Rhc2hib2FyZA==" data-listing-date-sort="1757282400000" data-listing-file-modified-sort="1758006236579" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="892">
+<div class="quarto-post image-right" data-index="19" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNSUyQ3N0cmVhbWxpdCUyQ2Rhc2hib2FyZA==" data-listing-date-sort="1757282400000" data-listing-file-modified-sort="1758006236579" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="892">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week36.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week36a.png" class="thumbnail-image">
@@ -560,7 +615,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="17" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1755554400000" data-listing-file-modified-sort="1755615564928" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="389">
+<div class="quarto-post image-right" data-index="20" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1755554400000" data-listing-file-modified-sort="1755615564928" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="389">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week33.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week33.png" class="thumbnail-image">
@@ -579,7 +634,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1755554400000" data-listing-file-modified-sort="1756320515225" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="536">
+<div class="quarto-post image-right" data-index="21" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1755554400000" data-listing-file-modified-sort="1756320515225" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="536">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week34.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week34.png" class="thumbnail-image">
@@ -598,7 +653,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1754344800000" data-listing-file-modified-sort="1754409852633" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="106">
+<div class="quarto-post image-right" data-index="22" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1754344800000" data-listing-file-modified-sort="1754409852633" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="106">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week31.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week31.png" class="thumbnail-image">
@@ -617,7 +672,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="20" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1754344800000" data-listing-file-modified-sort="1755101363325" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="205">
+<div class="quarto-post image-right" data-index="23" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1754344800000" data-listing-file-modified-sort="1755101363325" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="205">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week32.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week32.png" class="thumbnail-image">
@@ -636,7 +691,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="21" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1752530400000" data-listing-file-modified-sort="1753257800853" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="310">
+<div class="quarto-post image-right" data-index="24" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1752530400000" data-listing-file-modified-sort="1753257800853" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="310">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/Tidy_Tues_Week29.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week29.png" class="thumbnail-image">
@@ -655,7 +710,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="22" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1752530400000" data-listing-file-modified-sort="1753254381201" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="307">
+<div class="quarto-post image-right" data-index="25" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1752530400000" data-listing-file-modified-sort="1753254381201" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="307">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week28.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week28.png" class="thumbnail-image">
@@ -674,7 +729,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="23" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1751925600000" data-listing-file-modified-sort="1751912973452" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="325">
+<div class="quarto-post image-right" data-index="26" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1751925600000" data-listing-file-modified-sort="1751912973452" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="325">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week27.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week27.png" class="thumbnail-image">
@@ -693,7 +748,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="24" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDMjAyNQ==" data-listing-date-sort="1751320800000" data-listing-file-modified-sort="1751813916865" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="281">
+<div class="quarto-post image-right" data-index="27" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDTWFjaGluZSUyMExlYXJuaW5nJTJDMjAyNQ==" data-listing-date-sort="1751320800000" data-listing-file-modified-sort="1751813916865" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="281">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week26.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week26.png" class="thumbnail-image">
@@ -712,7 +767,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="25" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDUiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1750716000000" data-listing-file-modified-sort="1750784265821" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="108">
+<div class="quarto-post image-right" data-index="28" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyMFByb2dyYW1taW5nJTJDUiUyMFByb2dyYW1taW5nJTJDMjAyNQ==" data-listing-date-sort="1750716000000" data-listing-file-modified-sort="1750784265821" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="108">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week25.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week25.png" class="thumbnail-image">
@@ -731,7 +786,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="26" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQ1BhbmRhcyUyQ0Rhc2hib2FyZHMlMkNOdW1weSUyQzIwMjU=" data-listing-date-sort="1749938400000" data-listing-file-modified-sort="1750143214279" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="404">
+<div class="quarto-post image-right" data-index="29" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQ1BhbmRhcyUyQ0Rhc2hib2FyZHMlMkNOdW1weSUyQzIwMjU=" data-listing-date-sort="1749938400000" data-listing-file-modified-sort="1750143214279" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="404">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week23.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week23.png" class="thumbnail-image">
@@ -750,7 +805,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="27" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQ1BvbGFycyUyQ051bXB5JTJDMjAyNQ==" data-listing-date-sort="1748296800000" data-listing-file-modified-sort="1748339729448" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="191">
+<div class="quarto-post image-right" data-index="30" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1B5dGhvbiUyQ1BvbGFycyUyQ051bXB5JTJDMjAyNQ==" data-listing-date-sort="1748296800000" data-listing-file-modified-sort="1748339729448" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="191">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week21.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week21.png" class="thumbnail-image">
@@ -769,7 +824,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="28" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1747692000000" data-listing-file-modified-sort="1747762979376" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="823">
+<div class="quarto-post image-right" data-index="31" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1747692000000" data-listing-file-modified-sort="1747762979376" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="823">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week20.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week20.png" class="thumbnail-image">
@@ -788,7 +843,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="29" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1747000800000" data-listing-file-modified-sort="1750780734240" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="189">
+<div class="quarto-post image-right" data-index="32" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1747000800000" data-listing-file-modified-sort="1750780734240" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="189">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week19.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week19.png" class="thumbnail-image">
@@ -807,7 +862,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="30" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1745186400000" data-listing-file-modified-sort="1745313335413" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="431">
+<div class="quarto-post image-right" data-index="33" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1745186400000" data-listing-file-modified-sort="1745313335413" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="431">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week16.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week16.png" class="thumbnail-image">
@@ -826,7 +881,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="31" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1744754400000" data-listing-file-modified-sort="1744817259163" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="313">
+<div class="quarto-post image-right" data-index="34" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQ1B5dGhvbiUyQzIwMjU=" data-listing-date-sort="1744754400000" data-listing-file-modified-sort="1744817259163" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="313">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week15.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week15a.png" class="thumbnail-image">
@@ -845,7 +900,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="32" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1744063200000" data-listing-file-modified-sort="1744223107416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="480">
+<div class="quarto-post image-right" data-index="35" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1744063200000" data-listing-file-modified-sort="1744223107416" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="480">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week14.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week14.jpg" class="thumbnail-image">
@@ -864,7 +919,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="33" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1743289200000" data-listing-file-modified-sort="1743255690726" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618">
+<div class="quarto-post image-right" data-index="36" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1743289200000" data-listing-file-modified-sort="1743255690726" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="618">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week13.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week13a.png" class="thumbnail-image">
@@ -883,7 +938,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="34" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1743116400000" data-listing-file-modified-sort="1743228458370" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="248">
+<div class="quarto-post image-right" data-index="37" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1743116400000" data-listing-file-modified-sort="1743228458370" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="248">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week12.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week12.png" class="thumbnail-image">
@@ -902,7 +957,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="35" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1742338800000" data-listing-file-modified-sort="1743063713391" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2658">
+<div class="quarto-post image-right" data-index="38" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1742338800000" data-listing-file-modified-sort="1743063713391" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2658">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week11.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week11.png" class="thumbnail-image">
@@ -921,7 +976,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="36" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1742166000000" data-listing-file-modified-sort="1742401680424" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2684">
+<div class="quarto-post image-right" data-index="39" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1742166000000" data-listing-file-modified-sort="1742401680424" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2684">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week10.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week10.png" class="thumbnail-image">
@@ -940,7 +995,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="37" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1741042800000" data-listing-file-modified-sort="1741071483587" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3737">
+<div class="quarto-post image-right" data-index="40" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1741042800000" data-listing-file-modified-sort="1741071483587" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3737">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week09.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week09a.png" class="thumbnail-image">
@@ -959,7 +1014,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="38" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1740438000000" data-listing-file-modified-sort="1740489252656" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2285">
+<div class="quarto-post image-right" data-index="41" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1740438000000" data-listing-file-modified-sort="1740489252656" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2285">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week08.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week08a.png" class="thumbnail-image">
@@ -978,7 +1033,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="39" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1739919600000" data-listing-file-modified-sort="1740488732251" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2271">
+<div class="quarto-post image-right" data-index="42" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1739919600000" data-listing-file-modified-sort="1740488732251" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2271">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week07.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week07a.png" class="thumbnail-image">
@@ -997,26 +1052,26 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="40" data-categories="RGF0YSUyMFZpc3VhbGl6YXRpb24lMkNSJTIwUHJvZ3JhbW1pbmclMkMyMDI1JTJDUnVnYnklMkNzaGlueWFwcCUyQ3Bsb3RseQ==" data-listing-date-sort="1739746800000" data-listing-file-modified-sort="1743185044122" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="33">
-<div class="thumbnail"><a href="./data_visualisations/RugbyResults/6NationResultsWebApp.html" class="no-external">
+<div class="quarto-post image-right" data-index="43" data-categories="RGF0YSUyMFZpc3VhbGl6YXRpb24lMkNSJTIwUHJvZ3JhbW1pbmclMkMyMDI1JTJDUnVnYnklMkNzaGlueWFwcCUyQ3Bsb3RseQ==" data-listing-date-sort="1739746800000" data-listing-file-modified-sort="1743185044122" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="33">
+<div class="thumbnail"><a href="./data_visualisations/RugbyAnalysis/RugbyResultsApp/6NationResultsWebApp.html" class="no-external">
 
-<img loading="lazy" data-src="./data_visualisations/RugbyResults/thumbnails/WalesversusIreland.png" class="thumbnail-image">
+<img loading="lazy" data-src="./data_visualisations/RugbyAnalysis/RugbyResultsApp/thumbnails/WalesversusIreland.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./data_visualisations/RugbyResults/6NationResultsWebApp.html" class="no-external">Rugby Results Web App</a>
+<a href="./data_visualisations/RugbyAnalysis/RugbyResultsApp/6NationResultsWebApp.html" class="no-external">Rugby Results Web App</a>
 </h3>
 </div>
 <div class="metadata">
-<a href="./data_visualisations/RugbyResults/6NationResultsWebApp.html" class="no-external">
+<a href="./data_visualisations/RugbyAnalysis/RugbyResultsApp/6NationResultsWebApp.html" class="no-external">
 <div class="listing-date">
 17 Feb, 2025
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="41" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1739228400000" data-listing-file-modified-sort="1740488699029" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1711">
+<div class="quarto-post image-right" data-index="44" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1739228400000" data-listing-file-modified-sort="1740488699029" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1711">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week06.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week06.png" class="thumbnail-image">
@@ -1035,7 +1090,7 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="42" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1738450800000" data-listing-file-modified-sort="1740488727769" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2529">
+<div class="quarto-post image-right" data-index="45" data-categories="VGlkeVR1ZXNkYXklMkNEYXRhJTIwVmlzdWFsaXphdGlvbiUyQ1IlMjBQcm9ncmFtbWluZyUyQzIwMjU=" data-listing-date-sort="1738450800000" data-listing-file-modified-sort="1740488727769" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2529">
 <div class="thumbnail"><a href="./data_visualisations/TidyTuesday/2025/TidyTues_Week05.html" class="no-external">
 
 <img loading="lazy" data-src="./data_visualisations/TidyTuesday/2025/thumbnails/TidyTues_Week05.png" class="thumbnail-image">
@@ -1116,14 +1171,13 @@ window.Quarto = {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -1138,7 +1192,7 @@ window.Quarto = {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/pgdatavizandstats\.netlify\.app");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1474,7 +1528,7 @@ window.Quarto = {
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://bsky.app/profile/dwyfor16.bsky.social">
+    <a class="nav-link" href="https://bsky.app/profile/pgdataviz.bsky.social">
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Bluesky_logo.svg/1024px-Bluesky_logo.svg.png" alt="Bluesky" style="width: 20px; vertical-align: middle;"></p>
 </a>
   </li>  
