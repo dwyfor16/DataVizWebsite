@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,6 +10,9 @@
 
 <title>Biostatistics</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -40,10 +43,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ff11e4be4b75318577362ce3dcbe0f37.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-8d669509fc79774859768fd5be799299.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +105,7 @@ ul.task-list li input[type="checkbox"] {
   </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -115,7 +118,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -142,7 +145,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./_site/images/logo.png" alt="" class="navbar-logo">
+    <img src="./_site/images/logo.png" alt="" class="navbar-logo light-content">
+    <img src="./_site/images/logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Peter G’s Data Visualisation</span>
@@ -179,7 +183,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="MjAyMw==">2023 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="MjAyNQ==">2025 <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Qmlvc3RhdGlzdGljcw==">Biostatistics <span class="quarto-category-count">(3)</span></div><div class="category" data-category="RGF0YSUyMEFuYWx5c2lz">Data Analysis <span class="quarto-category-count">(4)</span></div><div class="category" data-category="RGF0YSUyMENsZWFuaW5n">Data Cleaning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RGF0YSUyMFNjaWVuY2U=">Data Science <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RW1lcmdlbmN5JTIwRGVwYXJ0bWVudA==">Emergency Department <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2VybWFueQ==">Germany <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW1wdXRhdGlvbiUyMg==">Imputation" <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TG93ZXIlMjBCYWNrJTIwUGFpbg==">Lower Back Pain <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVsdGlwbGUlMjBJbXB1dGF0aW9uJTIwQ2hhaW5lZCUyMEVxdWF0aW9ucw==">Multiple Imputation Chained Equations <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UiUyMFByb2dyYW1taW5n">R Programming <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVncmVzc2lvbiUyMEFuYWx5c2lz">Regression Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGltZSUyMHRvJTIwRXZlbnQlMjBBbmFseXNpcw==">Time to Event Analysis <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(6)</span></div><div class="category" data-category="MjAxMg==">2012 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="MjAyMw==">2023 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="MjAyNQ==">2025 <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Qmlvc3RhdGlzdGljcw==">Biostatistics <span class="quarto-category-count">(3)</span></div><div class="category" data-category="RGF0YSUyMEFuYWx5c2lz">Data Analysis <span class="quarto-category-count">(4)</span></div><div class="category" data-category="RGF0YSUyMENsZWFuaW5n">Data Cleaning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RGF0YSUyMFNjaWVuY2U=">Data Science <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RW1lcmdlbmN5JTIwRGVwYXJ0bWVudA==">Emergency Department <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rmx1b3Jlc2NlbmNlJTIwTWljcm9zY29weQ==">Fluorescence Microscopy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R2VybWFueQ==">Germany <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW1wdXRhdGlvbiUyMg==">Imputation" <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TG93ZXIlMjBCYWNrJTIwUGFpbg==">Lower Back Pain <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TW9sZWN1bGFyJTIwUGh5c2lvbG9neQ==">Molecular Physiology <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVsdGlwbGUlMjBJbXB1dGF0aW9uJTIwQ2hhaW5lZCUyMEVxdWF0aW9ucw==">Multiple Imputation Chained Equations <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TmV1cm9zY2llbmNl">Neuroscience <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UiUyMFByb2dyYW1taW5n">R Programming <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVncmVzc2lvbiUyMEFuYWx5c2lz">Regression Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGltZSUyMHRvJTIwRXZlbnQlMjBBbmFseXNpcw==">Time to Event Analysis <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -209,7 +213,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 1, 2026</p>
+      <p class="date-modified">June 5, 2026</p>
     </div>
   </div>
     
@@ -324,20 +328,39 @@ window.Quarto = {
 </div>
 </div>
 <div class="quarto-post image-right" data-index="4" data-categories="Qmlvc3RhdGlzdGljcyUyQ0xvd2VyJTIwQmFjayUyMFBhaW4lMkNSJTIwUHJvZ3JhbW1pbmclMkMyMDIzJTJDRGF0YSUyMEFuYWx5c2lzJTJDR2VybWFueSUyQ0VtZXJnZW5jeSUyMERlcGFydG1lbnQ=" data-listing-date-sort="1693519200000" data-listing-file-modified-sort="1755603318761" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="21">
-<div class="thumbnail"><a href="./biostatistics/MastersThesis.html" class="no-external">
+<div class="thumbnail"><a href="./biostatistics/MastersThesis_Epi.html" class="no-external">
 
 <img loading="lazy" src="./biostatistics/Images/Thumbnails/Thesis.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./biostatistics/MastersThesis.html" class="no-external">MSc Epidemiology: Thesis</a>
+<a href="./biostatistics/MastersThesis_Epi.html" class="no-external">MSc Epidemiology: Thesis</a>
 </h3>
 </div>
 <div class="metadata">
-<a href="./biostatistics/MastersThesis.html" class="no-external">
+<a href="./biostatistics/MastersThesis_Epi.html" class="no-external">
 <div class="listing-date">
 1 Sep, 2023
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-categories="TmV1cm9zY2llbmNlJTJDTW9sZWN1bGFyJTIwUGh5c2lvbG9neSUyQzIwMTIlMkNGbHVvcmVzY2VuY2UlMjBNaWNyb3Njb3B5" data-listing-date-sort="1346450400000" data-listing-file-modified-sort="1780649147124" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="43">
+<div class="thumbnail"><a href="./biostatistics/MastersThesis_Neuro.html" class="no-external">
+
+<img loading="lazy" src="./biostatistics/Images/Thumbnails/Thesis_Cardiff.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./biostatistics/MastersThesis_Neuro.html" class="no-external">MRes Neurophysiology: Thesis</a>
+</h3>
+</div>
+<div class="metadata">
+<a href="./biostatistics/MastersThesis_Neuro.html" class="no-external">
+<div class="listing-date">
+1 Sep, 2012
 </div>
 </a>
 </div>
@@ -396,13 +419,14 @@ window.Quarto = {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -417,7 +441,7 @@ window.Quarto = {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/pgdatavizandstats\.netlify\.app");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

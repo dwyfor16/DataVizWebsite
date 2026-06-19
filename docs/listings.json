@@ -9,6 +9,8 @@
   {
     "listing": "/datavis.html",
     "items": [
+      "/data_visualisations/TidyTuesday/2026/Tidy_Tues_Week18.html",
+      "/data_visualisations/TidyTuesday/2026/Tidy_Tues_Week16.html",
       "/data_visualisations/TidyTuesday/2026/Tidy_Tues_Week14.html",
       "/data_visualisations/TidyTuesday/2026/Tidy_Tues_Week13.html",
       "/data_visualisations/TidyTuesday/2026/Tidy_Tues_Week11.html",
@@ -65,7 +67,8 @@
       "/biostatistics/Obesity_Prediction.html",
       "/biostatistics/Imputation_TIme_to_Event_Analysis.html",
       "/biostatistics/Breast_Cancer_KM_plots.html",
-      "/biostatistics/MastersThesis.html"
+      "/biostatistics/MastersThesis_Epi.html",
+      "/biostatistics/MastersThesis_Neuro.html"
     ]
   }
 ]

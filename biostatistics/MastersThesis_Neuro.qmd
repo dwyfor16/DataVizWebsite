@@ -1,0 +1,33 @@
+---
+title: "MRes Neurophysiology: Thesis"
+subtitle: "RasGRF-1 controls Glutamate-Mediated Striatal ERK activation in mature brains in both the Direct and Indirect pathways of the striatum. Evidence at a single cell resolution using an ex vivo slice system"
+author: "Peter Gray"
+date: "2012-09" 
+categories: ["Neuroscience", "Molecular Physiology",  "2012", "Fluorescence Microscopy"]
+tags: [Neuroscience, Molecular Physiology, Fluorescence Microscopy]
+image: "Images/Thumbnails/Thesis_Cardiff.png"
+format:
+  html:
+    code-link: true
+    code-fold: true
+    code-tools: false
+    code-summary: "Display code"
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  freeze: true                                                  
+  cache: true                                                   
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+## Masters thesis
+
+A copy of my Master's of Research Thesis from 2012 entitled ""RasGRF-1 controls Glutamate-Mediated Striatal ERK activation in mature brains in both the Direct and Indirect pathways of the striatum. Evidence at a single cell resolution using an ex vivo slice system"
+
+
+![Document](Data/MResThesis.pdf){width=640px height=480px}
+

@@ -1,5 +1,5 @@
 ---
-title: "Biostatistics"
+title: "Biostatistics and Programming"
 description: "A webpage showing my work in biostatistics"
 date-modified: now
 categories: [Biostatistics, R, Time to Event Analysis, Quarto, Python]
